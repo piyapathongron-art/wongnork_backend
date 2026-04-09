@@ -1,0 +1,32 @@
+@BASE_URL=http://localhost:3000
+
+### Register
+POST {{BASE_URL}}/api/auth/register
+Content-Type: application/json
+
+{   
+    "username" : "Prame2",
+    "password" : "1234",
+    "firstName" : "Suphawit",
+    "lastName" : "Auchariyamet"
+}
+### log in
+POST {{BASE_URL}}/api/auth/login
+Content-Type: application/json
+
+{   
+    "username" : "Prame2",
+    "password" : "1234",
+    "firstName" : "Suphawit",
+    "lastName" : "Auchariyamet"
+}
+### get
+GET {{BASE_URL}}/api/auth/me
+Content-Type: application/json
+
+{   
+    "username" : "Prame2",
+    "password" : "1234",
+    "firstName" : "Suphawit",
+    "lastName" : "Auchariyamet"
+}
