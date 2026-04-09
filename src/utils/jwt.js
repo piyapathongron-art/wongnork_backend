@@ -5,7 +5,7 @@ import createError from "http-errors";
 const KEY = process.env.JWT_SECRET
 
 export function createToken(payload){
-    return jwt.sign(payload, KEY, {algorithm:"HS256", expiresIn: "1h"})
+    return jwt.sign(payload, KEY, {algorithm:"HS256", expiresIn: "17d"})
 }
 
 export function verifyToken(token){
