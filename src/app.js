@@ -4,6 +4,7 @@ import cors from "cors";
 import errorHandlerMiddleware from "./middlewares/error.middleware.js";
 import notFoundMiddleware from "./middlewares/notfound.middleware.js";
 import authRoute from "./routes/auth.route.js";
+import restaurantsRoute from "./routes/restaurants.route.js";
 
 const app = express();
 
@@ -19,9 +20,7 @@ app.use(helmet())
 
 app.use('/api/auth',authRoute)
 
-app.use('/api/restaurants',(req,res)=>{
-    res.json("restaurants service")
-})
+app.use('/api/restaurants',restaurantsRoute)
 
 app.use('/api/menu',(req,res)=>{
     res.json("menu service")
