@@ -1,6 +1,8 @@
 import createHttpError from "http-errors"
-import { registerSchema } from "../validations/schema.js"
+import { loginSchema, registerSchema } from "../validations/schema.js"
 import { createNewUser, findUseerByEmail } from "../services/auth.service.js"
+import { comparePassword } from "../utils/bcryptUtils.js";
+import { createToken } from "../utils/jwt.js";
 
 export async function authRegisterController(req, res, next) {
   const data = await registerSchema.parseAsync(req.body);
@@ -52,5 +54,7 @@ export async function authLoginController(req,res,next){
 }
 
 export function authGetmeController(req,res){
-    res.json("get me path")
+    res.json({
+      data:req.user
+    })
 }
