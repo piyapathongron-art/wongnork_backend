@@ -18,18 +18,10 @@ POST {{BASE_URL}}/api/auth/login
 Content-Type: application/json
 
 {   
-    "username" : "Prame2",
-    "password" : "1234",
-    "firstName" : "Suphawit",
-    "lastName" : "Auchariyamet"
+    "email" : "prame135@gmail.com",
+    "password" : "123456"
 }
 ### get
 GET {{BASE_URL}}/api/auth/me
 Content-Type: application/json
-
-{   
-    "username" : "Prame2",
-    "password" : "1234",
-    "firstName" : "Suphawit",
-    "lastName" : "Auchariyamet"
-}
+Authorization: :Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQyYmEzMGVjLWNhNWYtNDkyMy1iNWE5LTRhZDQ2YzVjZjVmYiIsImVtYWlsIjoicHJhbWUxMzVAZ21haWwuY29tIiwibmFtZSI6InByYW1lMiIsImF2YXRhclVybCI6bnVsbCwicm9sZSI6IlVTRVIiLCJwcm92aWRlciI6IkxPQ0FMIiwiZ29vZ2xlSWQiOm51bGwsImlhdCI6MTc3NTcxODA1MywiZXhwIjoxNzc3MTg2ODUzfQ.l9DKA50hi9cGVLA5WerUCpBXUjfMPuueMPZP2FRh4QU

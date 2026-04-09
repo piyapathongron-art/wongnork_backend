@@ -1,6 +1,6 @@
-import createHttpError from "http-errors";
-import { registerSchema } from "../validations/schema.js";
-import { createNewUser, findUseerByEmail } from "../services/auth.service.js";
+import createHttpError from "http-errors"
+import { registerSchema } from "../validations/schema.js"
+import { createNewUser, findUseerByEmail } from "../services/auth.service.js"
 
 export async function authRegisterController(req, res, next) {
   const data = await registerSchema.parseAsync(req.body);
@@ -21,13 +21,36 @@ export async function authRegisterController(req, res, next) {
   });
 }
 
-export function authLoginController(req, res) {
-  res.json({
-    msg: "login path",
-    body: req.body,
-  });
+export async function authLoginController(req,res,next){
+        const data = loginSchema.parse(req.body)
+
+        const foundUser = await findUseerByEmail(data.email)
+        if(!foundUser){
+          return next(createHttpError[401]('This email does not exist'))
+        }
+        let checkedPassword = await comparePassword(data.password,foundUser.password)
+        if(!checkedPassword){
+          return next(createHttpError[401]('Password Wrong'))
+        }
+         const payload ={
+                id:foundUser.id,
+                email:foundUser.email,
+                name:foundUser.name,
+                avatarUrl:foundUser.avatarUrl,
+                role:foundUser.role,
+                provider:foundUser.provider,
+                googleId:foundUser.googleId
+            }
+           const token = await createToken(payload)
+
+       res.json({
+        msg : "login done",
+        body : req.body,
+        token : token,
+        payload  : payload
+    })
 }
 
-export function authGetmeController(req, res) {
-  res.json("get me path");
+export function authGetmeController(req,res){
+    res.json("get me path")
 }
