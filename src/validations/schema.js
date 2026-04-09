@@ -32,3 +32,19 @@ export const registerSchema = z.object({
     // สังเกตว่าเราไม่คืนค่า confirmPassword ออกไป ทำให้ข้อมูลคลีนมาก
   };
 });
+
+
+export const loginSchema = z.object({
+  email: z
+    .email("รูปแบบอีเมลไม่ถูกต้อง")
+    .min(1, "กรุณากรอกอีเมล")
+    .transform(val => val.trim().toLowerCase()), // คลีนช่องว่างและพิมพ์เล็ก
+
+  password: z.string()
+    .min(1, "กรุณากรอกรหัสผ่าน")
+}).transform(data => ({
+  email: data.email, // 👈 ส่งไปตรงๆ แบบนี้เลย
+  password: data.password
+}));
+
+

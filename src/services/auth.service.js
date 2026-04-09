@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma.js";
+import { createToken } from "../utils/jwt.js";
 
 export const findUseerByEmail = async (email) =>{
     const user = await prisma.user.findUnique({
@@ -15,3 +16,4 @@ export const createNewUser = async  (data)=>{
     })
     return newUser
 }
+
