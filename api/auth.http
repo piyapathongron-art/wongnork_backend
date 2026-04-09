@@ -4,12 +4,15 @@
 POST {{BASE_URL}}/api/auth/register
 Content-Type: application/json
 
-{   
-    "username" : "Prame2",
-    "password" : "1234",
-    "firstName" : "Suphawit",
-    "lastName" : "Auchariyamet"
+   
+    {
+    "name" : "prame4",
+    "email" : "prame4@gmail.com",
+    "password" : "123456",
+    "confirmPassword" : "123456"
 }
+   
+
 ### log in
 POST {{BASE_URL}}/api/auth/login
 Content-Type: application/json
