@@ -10,7 +10,7 @@ export function adminAuthen(req, res, next) {
 
 export function ownerAuthen(req, res, next) {
     const userRole = req.user.role
-    if (userRole !== "ADMIN" || "OWENER") {
+    if (userRole !== "ADMIN" || "OWNER") {
         throw createHttpError(401, "admin or owner only")
     }
     next()

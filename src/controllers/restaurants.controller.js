@@ -23,11 +23,12 @@ export async function getRestaurantByIdController(req, res, next) {
 
 
 export async function createRestaurantController(req, res, next) {
+    const ownerId = req.user.id
     if (!req.body) {
         return next(createHttpError[400]("Please provide restaurant data"))
     }
     const data = await createRestaurantSchema.parseAsync(req.body)
-    const result = await createRestaurantService(data)
+    const result = await createRestaurantService(data, ownerId)
     res.json({
         message: "Create Restaurant Successful",
         restaurant: result
@@ -36,11 +37,12 @@ export async function createRestaurantController(req, res, next) {
 
 export async function updateRestaurantController(req, res, next) {
     const id = req.params.id
+    const ownerId = req.user.id
     if (!req.body) {
         return next(createHttpError[400]("Please provide restaurant data"))
     }
     const data = await updateRestaurantSchema.parseAsync(req.body)
-    const restaurant = await updateRestaurantService(id, data)
+    const restaurant = await updateRestaurantService(id, data, ownerId)
     res.json({
         message: "Update Restaurant Successful",
         newRestaurant: restaurant
@@ -49,7 +51,8 @@ export async function updateRestaurantController(req, res, next) {
 
 export async function deleteRestaurantController(req, res, next) {
     const id = req.params.id;
-    const result = await deleteRestaurantService(id)
+    const ownerId = req.user.id
+    const result = await deleteRestaurantService(id, ownerId)
     res.json({
         message: "Delete Restaurant Successful",
         deletedRestaurant: {

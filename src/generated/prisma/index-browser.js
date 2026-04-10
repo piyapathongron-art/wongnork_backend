@@ -140,6 +140,7 @@ exports.Prisma.RestaurantScalarFieldEnum = {
   lat: 'lat',
   lng: 'lng',
   category: 'category',
+  ownerId: 'ownerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -151,6 +152,13 @@ exports.Prisma.RestaurantImageScalarFieldEnum = {
   isCover: 'isCover',
   restaurantId: 'restaurantId',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.SavedRestaurantScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  restaurantId: 'restaurantId',
+  savedAt: 'savedAt'
 };
 
 exports.Prisma.MenuScalarFieldEnum = {
@@ -219,12 +227,19 @@ exports.Prisma.RestaurantOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
-  category: 'category'
+  category: 'category',
+  ownerId: 'ownerId'
 };
 
 exports.Prisma.RestaurantImageOrderByRelevanceFieldEnum = {
   id: 'id',
   url: 'url',
+  restaurantId: 'restaurantId'
+};
+
+exports.Prisma.SavedRestaurantOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
   restaurantId: 'restaurantId'
 };
 
@@ -260,7 +275,7 @@ exports.Prisma.ReviewOrderByRelevanceFieldEnum = {
 };
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
-  OWENER: 'OWENER',
+  OWNER: 'OWNER',
   ADMIN: 'ADMIN'
 };
 
@@ -280,6 +295,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Restaurant: 'Restaurant',
   RestaurantImage: 'RestaurantImage',
+  SavedRestaurant: 'SavedRestaurant',
   Menu: 'Menu',
   Party: 'Party',
   PartyMember: 'PartyMember',
