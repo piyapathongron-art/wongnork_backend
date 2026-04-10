@@ -1,6 +1,6 @@
 import createHttpError from "http-errors";
 import { loginSchema, registerSchema } from "../validations/schema.js";
-import { createNewUser, findUseerByEmail } from "../services/auth.service.js";
+import { createNewUser, findUseerByEmail, findUserBy } from "../services/auth.service.js";
 import { comparePassword } from "../utils/bcryptUtils.js";
 import { createToken } from "../utils/jwt.js";
 
@@ -59,8 +59,10 @@ export async function authLoginController(req, res, next) {
   });
 }
 
-export function authGetmeController(req, res) {
+export async function authGetmeController(req, res) {
+  const id = req.user.id
+  const user = await findUserBy('id', id)
   res.json({
-    data: req.user,
+    data: user,
   });
 }
