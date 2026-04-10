@@ -1,5 +1,5 @@
 import express from "express"
-import { deleteRestaurantController, getAllRestaurantController, getRestaurantByIdController, postRestaurantController, putRestaurantController } from "../controllers/restaurants.controller.js"
+import { createRestaurantController, deleteRestaurantController, getAllRestaurantController, getRestaurantByIdController, updateRestaurantController } from "../controllers/restaurants.controller.js"
 
 const restaurantsRoute = express.Router()
 
@@ -7,9 +7,9 @@ restaurantsRoute.get('/',getAllRestaurantController)
 
 restaurantsRoute.get('/:id',getRestaurantByIdController)
 
-restaurantsRoute.post('/',postRestaurantController)
+restaurantsRoute.post('/',createRestaurantController)
 
-restaurantsRoute.put('/:id',putRestaurantController)
+restaurantsRoute.put('/:id',updateRestaurantController)
 
 restaurantsRoute.delete('/:id',deleteRestaurantController)
 
