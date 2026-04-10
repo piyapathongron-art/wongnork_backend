@@ -1,5 +1,4 @@
 import { prisma } from "../lib/prisma.js";
-import { createToken } from "../utils/jwt.js";
 
 export const findUseerByEmail = async (email) => {
   const user = await prisma.user.findUnique({
@@ -15,4 +14,20 @@ export const createNewUser = async (data) => {
     data,
   });
   return newUser;
+};
+
+export const findUserBy = async (col, val) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      [col]: val,
+    },
+    include: {
+      reviews: true,
+      partiesLed: true,
+      joinedParties: true,
+      ownedRestaurants: true,
+      savedRestaurants: true,
+    }
+  });
+  return user;
 };
