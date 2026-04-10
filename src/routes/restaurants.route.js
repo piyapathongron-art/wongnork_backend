@@ -1,16 +1,17 @@
 import express from "express"
 import { createRestaurantController, deleteRestaurantController, getAllRestaurantController, getRestaurantByIdController, updateRestaurantController } from "../controllers/restaurants.controller.js"
+import authUserCheck from "../middlewares/userAuthen.middleware.js"
 
 const restaurantsRoute = express.Router()
 
-restaurantsRoute.get('/',getAllRestaurantController)
+restaurantsRoute.get('/', getAllRestaurantController)
 
-restaurantsRoute.get('/:id',getRestaurantByIdController)
+restaurantsRoute.get('/:id', getRestaurantByIdController)
 
-restaurantsRoute.post('/',createRestaurantController)
+restaurantsRoute.post('/', authUserCheck, createRestaurantController)
 
-restaurantsRoute.put('/:id',updateRestaurantController)
+restaurantsRoute.put('/:id', authUserCheck, updateRestaurantController)
 
-restaurantsRoute.delete('/:id',deleteRestaurantController)
+restaurantsRoute.delete('/:id', authUserCheck, deleteRestaurantController)
 
- export default restaurantsRoute
+export default restaurantsRoute
