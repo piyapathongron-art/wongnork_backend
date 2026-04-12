@@ -8,12 +8,16 @@ import {
 } from "../controllers/restaurants.controller.js";
 import authUserCheck from "../middlewares/userAuthen.middleware.js";
 import menuRoute from "./menu.route.js";
+import { createPartyController } from "../controllers/party.controller.js";
 
 const restaurantsRoute = express.Router();
 
-// 🍕 Nested Routes: เชื่อมโยงเมนูเข้ากับร้านอาหาร
-// ตัวอย่าง: /api/restaurants/:restaurantId/menus
+// 🍕 Nested Routes: เมนูของร้าน
 restaurantsRoute.use("/:restaurantId/menus", menuRoute);
+
+// 🥳 Nested Routes: ปาร์ตี้ของร้าน
+// POST: /api/restaurants/:restaurantId/parties
+restaurantsRoute.post("/:restaurantId/parties", authUserCheck, createPartyController);
 
 // 🏠 Restaurant Endpoints
 restaurantsRoute.get("/", getAllRestaurantController);
