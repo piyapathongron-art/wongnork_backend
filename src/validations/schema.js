@@ -64,6 +64,34 @@ const restaurantSchema = z.object({
 
 // สำหรับ Create สามารถดึง Schema ตัวหลักไปใช้ได้เลย
 export const createRestaurantSchema = restaurantSchema;
-  
+
 // สำหรับ Update ใช้ .partial() เพื่อให้สามารถส่งมาแค่อย่างใดอย่างหนึ่งได้
 export const updateRestaurantSchema = restaurantSchema.partial();
+
+// --- Menu Validation Schema ---
+const menuSchema = z.object({
+  name: z.string()
+    .min(1, "กรุณากรอกชื่อเมนู")
+    .max(255, "ชื่อเมนูต้องไม่เกิน 255 ตัวอักษร"),
+
+  description: z.string()
+    .max(500, "รายละเอียดเมนูต้องไม่เกิน 500 ตัวอักษร")
+    .optional()
+    .nullable(),
+
+  price: z.number({ 
+    required_error: "กรุณากรอกราคา", 
+    invalid_type_error: "ราคาต้องเป็นตัวเลข" 
+  }).min(0, "ราคาต้องไม่ต่ำกว่า 0"),
+
+  category: z.string()
+    .default("others"),
+
+  imageUrl: z.string()
+    .url("รูปแบบ URL ของรูปภาพไม่ถูกต้อง")
+    .optional()
+    .nullable(),
+});
+
+export const createMenuSchema = menuSchema;
+export const updateMenuSchema = menuSchema.partial();
