@@ -124,4 +124,17 @@ export const createPartySchema = z.object({
 
   serviceCharge: z.number().min(0).optional().default(0),
   vat: z.number().min(0).optional().default(0),
-});
+  });
+
+  // --- Review Validation Schema ---
+  export const createReviewSchema = z.object({
+  rating: z.number({ 
+    required_error: "กรุณาให้คะแนน", 
+    invalid_type_error: "คะแนนต้องเป็นตัวเลข" 
+  }).min(1, "คะแนนต่ำสุดคือ 1").max(5, "คะแนนสูงสุดคือ 5"),
+
+  comment: z.string()
+    .max(1000, "คอมเมนต์ต้องไม่เกิน 1000 ตัวอักษร")
+    .optional()
+    .nullable(),
+  });

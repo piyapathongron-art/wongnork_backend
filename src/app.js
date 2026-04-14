@@ -7,6 +7,7 @@ import authRoute from "./routes/auth.route.js";
 import restaurantsRoute from "./routes/restaurants.route.js";
 import cloudinaryRoute from "./routes/cloudinary.route.js";
 import partyRoute from "./routes/party.route.js";
+import reviewRoute from "./routes/review.route.js";
 
 const app = express();
 
@@ -28,12 +29,10 @@ app.use("/api/restaurants", restaurantsRoute);
 
 app.use("/api/parties", partyRoute);
 
+app.use("/api/reviews", reviewRoute);
+
 app.use("/api/menu", (req, res) => {
   res.json("menu service");
-});
-
-app.use("/api/review", (req, res) => {
-  res.json("review service");
 });
 
 app.use("/api/feature", (req, res) => {
