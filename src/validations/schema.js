@@ -60,6 +60,13 @@ const restaurantSchema = z.object({
   lng: z.number({ required_error: "กรุณากรอกลองจิจูด", invalid_type_error: "ลองจิจูดต้องเป็นตัวเลข" })
     .min(-180, "ลองจิจูดต้องไม่ต่ำกว่า -180")
     .max(180, "ลองจิจูดต้องไม่เกิน 180"),
+  
+  operatingHours: z.array(z.object({
+    day: z.enum(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']),
+    openTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "รูปแบบเวลาไม่ถูกต้อง (HH:mm)"),
+    closeTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "รูปแบบเวลาไม่ถูกต้อง (HH:mm)"),
+    isClosed: z.boolean().default(false)
+  })).optional()
 });
 
 // สำหรับ Create สามารถดึง Schema ตัวหลักไปใช้ได้เลย
