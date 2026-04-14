@@ -9,19 +9,19 @@ import {
 
 const partyRoute = express.Router();
 
-// 📄 ดึงรายการปาร์ตี้ทั้งหมด (OPEN)
+// ดึงรายการปาร์ตี้ทั้งหมด (OPEN)
 // GET: /api/parties
 partyRoute.get("/", getAllPartiesController);
 
-// 🔍 ดูรายละเอียดตี้รายอัน
+// ดูรายละเอียดตี้รายอัน
 // GET: /api/parties/:id
 partyRoute.get("/:id", getPartyByIdController);
 
-// 🔒 เข้าร่วมตี้
+// เข้าร่วมตี้
 // POST: /api/parties/:id/join
 partyRoute.post("/:id/join", authUserCheck, joinPartyController);
 
-// 🔒 ออกจากตี้
+// ออกจากตี้
 // DELETE: /api/parties/:id/leave
 partyRoute.delete("/:id/leave", authUserCheck, leavePartyController);
 

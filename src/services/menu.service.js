@@ -1,4 +1,4 @@
-import prisma from "../lib/prisma.js";
+import { prisma } from "../lib/prisma.js";
 
 // ดึงรายการเมนูทั้งหมดของร้านอาหาร
 export const getMenusByRestaurantService = async (restaurantId) => {

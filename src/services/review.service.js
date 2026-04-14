@@ -1,4 +1,4 @@
-import prisma from "../lib/prisma.js";
+import { prisma } from "../lib/prisma.js";
 
 // ดึงรีวิวทั้งหมดของร้าน
 export const getReviewsByRestaurantService = async (restaurantId) => {

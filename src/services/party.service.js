@@ -1,4 +1,6 @@
-import prisma from "../lib/prisma.js";
+import { prisma } from "../lib/prisma.js";
+
+
 
 // ดึงรายการปาร์ตี้ทั้งหมด (ที่ยังเปิดอยู่)
 export const getAllPartiesService = async () => {
@@ -69,10 +71,10 @@ export const joinPartyService = async (partyId, userId) => {
       include: { _count: { select: { members: true } } }
     });
 
-    if (!party) throw new Error("Party not found");
-    if (party.status !== "OPEN") throw new Error("Party is not open for joining");
+    if (!party) throw createHttpError(404, "Party not found");
+    if (party.status !== "OPEN") throw createHttpError(400, "Party is not open for joining");
     if (party._count.members >= party.maxParticipants) {
-      throw new Error("Party is already full");
+      throw createHttpError(400, "Party is already full");
     }
 
     // 2. เพิ่มสมาชิกใหม่
