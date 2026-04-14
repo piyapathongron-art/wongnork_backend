@@ -14,12 +14,14 @@ cloudinaryRoute.get("/get-signature", (req, res) => {
   try {
     // 1. สร้าง Timestamp ปัจจุบัน
     const timestamp = Math.round(new Date().getTime() / 1000);
+    const folder = req.query.folder || "wongnork";
 
-    // 2. สร้าง Signature โดยใช้ Secret Key (ซึ่งอยู่ใน Backend อย่างปลอดภัย)
-    // หมายเหตุ: หากคุณต้องการระบุโฟลเดอร์ ให้เพิ่ม folder: 'ชื่อโฟลเดอร์' ลงใน object แรก
+    // 2. สร้าง Signature โดยใช้ Secret Key
+    // ต้องรวม parameter ทั้งหมดที่จะส่งจาก Frontend (ยกเว้น file และ api_key)
     const signature = cloudinary.utils.api_sign_request(
       {
         timestamp: timestamp,
+        folder: folder,
       },
       process.env.CLOUDINARY_API_SECRET,
     );
@@ -29,6 +31,8 @@ cloudinaryRoute.get("/get-signature", (req, res) => {
       timestamp,
       signature,
       api_key: process.env.CLOUDINARY_API_KEY,
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      folder: folder
     });
   } catch (error) {
     console.error("Error generating signature:", error);
