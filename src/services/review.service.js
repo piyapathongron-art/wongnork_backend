@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma.js";
+import createHttpError from "http-errors"
 
 // ดึงรีวิวทั้งหมดของร้าน
 export const getReviewsByRestaurantService = async (restaurantId) => {
@@ -15,6 +16,15 @@ export const getReviewsByRestaurantService = async (restaurantId) => {
 
 // สร้างรีวิวใหม่
 export const createReviewService = async (restaurantId, userId, data) => {
+  const checkExistRestaurant = await prisma.restaurant.findUnique({
+    where: {
+      id: restaurantId,
+      deletedAt: null
+    }
+  })
+
+  if (!checkExistRestaurant) throw createHttpError(404, "restaurant is not exist")
+
   return await prisma.review.create({
     data: {
       ...data,

@@ -13,23 +13,172 @@ import { createPartyController } from "../controllers/party.controller.js";
 
 const restaurantsRoute = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Restaurants
+ *   description: Restaurant management API
+ */
+
 //  Nested Routes: เมนูของร้าน
 restaurantsRoute.use("/:restaurantId/menus", menuRoute);
 
 // Nested Routes: รีวิวของร้าน
 restaurantsRoute.use("/:restaurantId/reviews", reviewRoute);
 
-// Nested Routes: ปาร์ตี้ของร้าน
-// POST: /api/restaurants/:restaurantId/parties
+/**
+ * @swagger
+ * /api/restaurants/{restaurantId}/parties:
+ *   post:
+ *     summary: Create a party for a specific restaurant
+ *     tags: [Parties]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: restaurantId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               maxMembers:
+ *                 type: integer
+ *               appointmentTime:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       201:
+ *         description: Party created successfully
+ */
 restaurantsRoute.post("/:restaurantId/parties", authUserCheck, createPartyController);
 
-// Restaurant Endpoints
+/**
+ * @swagger
+ * /api/restaurants:
+ *   get:
+ *     summary: Get all restaurants
+ *     tags: [Restaurants]
+ *     responses:
+ *       200:
+ *         description: List of all restaurants
+ *   post:
+ *     summary: Create a new restaurant
+ *     tags: [Restaurants]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Restaurant'
+ *     responses:
+ *       201:
+ *         description: Restaurant created successfully
+ */
 restaurantsRoute.get("/", getAllRestaurantController);
-restaurantsRoute.get("/:id", getRestaurantByIdController);
-
-// Protected Routes (ต้อง Login)
 restaurantsRoute.post("/", authUserCheck, createRestaurantController);
+
+/**
+ * @swagger
+ * /api/restaurants/{id}:
+ *   get:
+ *     summary: Get restaurant by ID
+ *     tags: [Restaurants]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Restaurant details
+ *   put:
+ *     summary: Update restaurant by ID
+ *     tags: [Restaurants]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Restaurant'
+ *     responses:
+ *       200:
+ *         description: Restaurant updated
+ *   delete:
+ *     summary: Delete restaurant by ID
+ *     tags: [Restaurants]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Restaurant deleted
+ */
+restaurantsRoute.get("/:id", getRestaurantByIdController);
 restaurantsRoute.put("/:id", authUserCheck, updateRestaurantController);
 restaurantsRoute.delete("/:id", authUserCheck, deleteRestaurantController);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Restaurant:
+ *       type: object
+ *       required:
+ *         - name
+ *         - category
+ *         - latitude
+ *         - longitude
+ *       properties:
+ *         name:
+ *           type: string
+ *         category:
+ *           type: string
+ *         latitude:
+ *           type: number
+ *         longitude:
+ *           type: number
+ *         address:
+ *           type: string
+ *         description:
+ *           type: string
+ *         operatingHours:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               day:
+ *                 type: string
+ *                 enum: [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]
+ *               openTime:
+ *                 type: string
+ *               closeTime:
+ *                 type: string
+ *               isClosed:
+ *                 type: boolean
+ */
 
 export default restaurantsRoute;

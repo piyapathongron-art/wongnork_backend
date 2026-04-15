@@ -146,6 +146,15 @@ exports.Prisma.RestaurantScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
+exports.Prisma.OperatingHourScalarFieldEnum = {
+  id: 'id',
+  day: 'day',
+  openTime: 'openTime',
+  closeTime: 'closeTime',
+  isClosed: 'isClosed',
+  restaurantId: 'restaurantId'
+};
+
 exports.Prisma.RestaurantImageScalarFieldEnum = {
   id: 'id',
   url: 'url',
@@ -181,6 +190,8 @@ exports.Prisma.PartyScalarFieldEnum = {
   maxParticipants: 'maxParticipants',
   status: 'status',
   contactInfo: 'contactInfo',
+  serviceCharge: 'serviceCharge',
+  vat: 'vat',
   restaurantId: 'restaurantId',
   leaderId: 'leaderId',
   createdAt: 'createdAt',
@@ -192,6 +203,13 @@ exports.Prisma.PartyMemberScalarFieldEnum = {
   joinedAt: 'joinedAt',
   partyId: 'partyId',
   userId: 'userId'
+};
+
+exports.Prisma.MemberOrderItemScalarFieldEnum = {
+  id: 'id',
+  memberId: 'memberId',
+  menuId: 'menuId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ReviewScalarFieldEnum = {
@@ -231,6 +249,13 @@ exports.Prisma.RestaurantOrderByRelevanceFieldEnum = {
   ownerId: 'ownerId'
 };
 
+exports.Prisma.OperatingHourOrderByRelevanceFieldEnum = {
+  id: 'id',
+  openTime: 'openTime',
+  closeTime: 'closeTime',
+  restaurantId: 'restaurantId'
+};
+
 exports.Prisma.RestaurantImageOrderByRelevanceFieldEnum = {
   id: 'id',
   url: 'url',
@@ -267,6 +292,12 @@ exports.Prisma.PartyMemberOrderByRelevanceFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.MemberOrderItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  memberId: 'memberId',
+  menuId: 'menuId'
+};
+
 exports.Prisma.ReviewOrderByRelevanceFieldEnum = {
   id: 'id',
   comment: 'comment',
@@ -284,6 +315,16 @@ exports.Provider = exports.$Enums.Provider = {
   GOOGLE: 'GOOGLE'
 };
 
+exports.DayOfWeek = exports.$Enums.DayOfWeek = {
+  MONDAY: 'MONDAY',
+  TUESDAY: 'TUESDAY',
+  WEDNESDAY: 'WEDNESDAY',
+  THURSDAY: 'THURSDAY',
+  FRIDAY: 'FRIDAY',
+  SATURDAY: 'SATURDAY',
+  SUNDAY: 'SUNDAY'
+};
+
 exports.PartyStatus = exports.$Enums.PartyStatus = {
   OPEN: 'OPEN',
   FULL: 'FULL',
@@ -294,11 +335,13 @@ exports.PartyStatus = exports.$Enums.PartyStatus = {
 exports.Prisma.ModelName = {
   User: 'User',
   Restaurant: 'Restaurant',
+  OperatingHour: 'OperatingHour',
   RestaurantImage: 'RestaurantImage',
   SavedRestaurant: 'SavedRestaurant',
   Menu: 'Menu',
   Party: 'Party',
   PartyMember: 'PartyMember',
+  MemberOrderItem: 'MemberOrderItem',
   Review: 'Review'
 };
 

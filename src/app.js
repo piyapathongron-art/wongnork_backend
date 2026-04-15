@@ -8,6 +8,7 @@ import restaurantsRoute from "./routes/restaurants.route.js";
 import cloudinaryRoute from "./routes/cloudinary.route.js";
 import partyRoute from "./routes/party.route.js";
 import reviewRoute from "./routes/review.route.js";
+import { swaggerDocs } from "./config/swagger.js";
 
 const app = express();
 
@@ -22,6 +23,9 @@ app.use(
 );
 
 app.use(helmet());
+
+// Swagger Documentation
+swaggerDocs(app);
 
 app.use("/api/auth", authRoute);
 
