@@ -7,11 +7,16 @@ import {
   getMenusByRestaurantService,
   updateMenuService,
 } from "../services/menu.service.js";
+import { findRestaurantBy } from "../services/restaurants.service.js";
 
 // ดึงเมนูทั้งหมดของร้าน
 export const getMenusController = async (req, res, next) => {
   try {
     const { restaurantId } = req.params;
+    const findRestaurant = await findRestaurantBy("id", restaurantId);
+    if (!findRestaurant) {
+      throw createHttpError[404]("This restaurant does not exist");
+    }
     const menus = await getMenusByRestaurantService(restaurantId);
     res.json({ message: "Success", data: menus });
   } catch (error) {
