@@ -14,9 +14,13 @@ const options = {
     },
     servers: [
       {
+        url: "https://joint-rocky-shorter-average.trycloudflare.com",
+        description: "Production server",
+      },
+      {
         url: "http://localhost:3000",
         description: "Development server",
-      },
+      }
     ],
     components: {
       securitySchemes: {
@@ -39,6 +43,7 @@ const options = {
 const specs = swaggerJsdoc(options);
 
 export const swaggerDocs = (app) => {
+  app.set("trust proxy", true);
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
   console.log("Swagger Docs available at http://localhost:3000/api-docs");
 };
