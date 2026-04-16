@@ -24,6 +24,11 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type Restaurant = $Result.DefaultSelection<Prisma.$RestaurantPayload>
 /**
+ * Model OperatingHour
+ * 
+ */
+export type OperatingHour = $Result.DefaultSelection<Prisma.$OperatingHourPayload>
+/**
  * Model RestaurantImage
  * 
  */
@@ -48,6 +53,11 @@ export type Party = $Result.DefaultSelection<Prisma.$PartyPayload>
  * 
  */
 export type PartyMember = $Result.DefaultSelection<Prisma.$PartyMemberPayload>
+/**
+ * Model MemberOrderItem
+ * 
+ */
+export type MemberOrderItem = $Result.DefaultSelection<Prisma.$MemberOrderItemPayload>
 /**
  * Model Review
  * 
@@ -84,6 +94,19 @@ export const PartyStatus: {
 
 export type PartyStatus = (typeof PartyStatus)[keyof typeof PartyStatus]
 
+
+export const DayOfWeek: {
+  MONDAY: 'MONDAY',
+  TUESDAY: 'TUESDAY',
+  WEDNESDAY: 'WEDNESDAY',
+  THURSDAY: 'THURSDAY',
+  FRIDAY: 'FRIDAY',
+  SATURDAY: 'SATURDAY',
+  SUNDAY: 'SUNDAY'
+};
+
+export type DayOfWeek = (typeof DayOfWeek)[keyof typeof DayOfWeek]
+
 }
 
 export type Role = $Enums.Role
@@ -97,6 +120,10 @@ export const Provider: typeof $Enums.Provider
 export type PartyStatus = $Enums.PartyStatus
 
 export const PartyStatus: typeof $Enums.PartyStatus
+
+export type DayOfWeek = $Enums.DayOfWeek
+
+export const DayOfWeek: typeof $Enums.DayOfWeek
 
 /**
  * ##  Prisma Client ʲˢ
@@ -240,6 +267,16 @@ export class PrismaClient<
   get restaurant(): Prisma.RestaurantDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.operatingHour`: Exposes CRUD operations for the **OperatingHour** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OperatingHours
+    * const operatingHours = await prisma.operatingHour.findMany()
+    * ```
+    */
+  get operatingHour(): Prisma.OperatingHourDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.restaurantImage`: Exposes CRUD operations for the **RestaurantImage** model.
     * Example usage:
     * ```ts
@@ -288,6 +325,16 @@ export class PrismaClient<
     * ```
     */
   get partyMember(): Prisma.PartyMemberDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.memberOrderItem`: Exposes CRUD operations for the **MemberOrderItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MemberOrderItems
+    * const memberOrderItems = await prisma.memberOrderItem.findMany()
+    * ```
+    */
+  get memberOrderItem(): Prisma.MemberOrderItemDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.review`: Exposes CRUD operations for the **Review** model.
@@ -734,11 +781,13 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Restaurant: 'Restaurant',
+    OperatingHour: 'OperatingHour',
     RestaurantImage: 'RestaurantImage',
     SavedRestaurant: 'SavedRestaurant',
     Menu: 'Menu',
     Party: 'Party',
     PartyMember: 'PartyMember',
+    MemberOrderItem: 'MemberOrderItem',
     Review: 'Review'
   };
 
@@ -755,7 +804,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "restaurant" | "restaurantImage" | "savedRestaurant" | "menu" | "party" | "partyMember" | "review"
+      modelProps: "user" | "restaurant" | "operatingHour" | "restaurantImage" | "savedRestaurant" | "menu" | "party" | "partyMember" | "memberOrderItem" | "review"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -888,6 +937,72 @@ export namespace Prisma {
           count: {
             args: Prisma.RestaurantCountArgs<ExtArgs>
             result: $Utils.Optional<RestaurantCountAggregateOutputType> | number
+          }
+        }
+      }
+      OperatingHour: {
+        payload: Prisma.$OperatingHourPayload<ExtArgs>
+        fields: Prisma.OperatingHourFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OperatingHourFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OperatingHourPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OperatingHourFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OperatingHourPayload>
+          }
+          findFirst: {
+            args: Prisma.OperatingHourFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OperatingHourPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OperatingHourFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OperatingHourPayload>
+          }
+          findMany: {
+            args: Prisma.OperatingHourFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OperatingHourPayload>[]
+          }
+          create: {
+            args: Prisma.OperatingHourCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OperatingHourPayload>
+          }
+          createMany: {
+            args: Prisma.OperatingHourCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.OperatingHourDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OperatingHourPayload>
+          }
+          update: {
+            args: Prisma.OperatingHourUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OperatingHourPayload>
+          }
+          deleteMany: {
+            args: Prisma.OperatingHourDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OperatingHourUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.OperatingHourUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OperatingHourPayload>
+          }
+          aggregate: {
+            args: Prisma.OperatingHourAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOperatingHour>
+          }
+          groupBy: {
+            args: Prisma.OperatingHourGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OperatingHourGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OperatingHourCountArgs<ExtArgs>
+            result: $Utils.Optional<OperatingHourCountAggregateOutputType> | number
           }
         }
       }
@@ -1221,6 +1336,72 @@ export namespace Prisma {
           }
         }
       }
+      MemberOrderItem: {
+        payload: Prisma.$MemberOrderItemPayload<ExtArgs>
+        fields: Prisma.MemberOrderItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MemberOrderItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberOrderItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MemberOrderItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberOrderItemPayload>
+          }
+          findFirst: {
+            args: Prisma.MemberOrderItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberOrderItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MemberOrderItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberOrderItemPayload>
+          }
+          findMany: {
+            args: Prisma.MemberOrderItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberOrderItemPayload>[]
+          }
+          create: {
+            args: Prisma.MemberOrderItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberOrderItemPayload>
+          }
+          createMany: {
+            args: Prisma.MemberOrderItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.MemberOrderItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberOrderItemPayload>
+          }
+          update: {
+            args: Prisma.MemberOrderItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberOrderItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.MemberOrderItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MemberOrderItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.MemberOrderItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MemberOrderItemPayload>
+          }
+          aggregate: {
+            args: Prisma.MemberOrderItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMemberOrderItem>
+          }
+          groupBy: {
+            args: Prisma.MemberOrderItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MemberOrderItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MemberOrderItemCountArgs<ExtArgs>
+            result: $Utils.Optional<MemberOrderItemCountAggregateOutputType> | number
+          }
+        }
+      }
       Review: {
         payload: Prisma.$ReviewPayload<ExtArgs>
         fields: Prisma.ReviewFieldRefs
@@ -1397,11 +1578,13 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     restaurant?: RestaurantOmit
+    operatingHour?: OperatingHourOmit
     restaurantImage?: RestaurantImageOmit
     savedRestaurant?: SavedRestaurantOmit
     menu?: MenuOmit
     party?: PartyOmit
     partyMember?: PartyMemberOmit
+    memberOrderItem?: MemberOrderItemOmit
     review?: ReviewOmit
   }
 
@@ -1554,6 +1737,7 @@ export namespace Prisma {
     reviews: number
     menus: number
     parties: number
+    operatingHours: number
     savedBy: number
   }
 
@@ -1562,6 +1746,7 @@ export namespace Prisma {
     reviews?: boolean | RestaurantCountOutputTypeCountReviewsArgs
     menus?: boolean | RestaurantCountOutputTypeCountMenusArgs
     parties?: boolean | RestaurantCountOutputTypeCountPartiesArgs
+    operatingHours?: boolean | RestaurantCountOutputTypeCountOperatingHoursArgs
     savedBy?: boolean | RestaurantCountOutputTypeCountSavedByArgs
   }
 
@@ -1607,8 +1792,46 @@ export namespace Prisma {
   /**
    * RestaurantCountOutputType without action
    */
+  export type RestaurantCountOutputTypeCountOperatingHoursArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OperatingHourWhereInput
+  }
+
+  /**
+   * RestaurantCountOutputType without action
+   */
   export type RestaurantCountOutputTypeCountSavedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SavedRestaurantWhereInput
+  }
+
+
+  /**
+   * Count Type MenuCountOutputType
+   */
+
+  export type MenuCountOutputType = {
+    orderItems: number
+  }
+
+  export type MenuCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orderItems?: boolean | MenuCountOutputTypeCountOrderItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MenuCountOutputType without action
+   */
+  export type MenuCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuCountOutputType
+     */
+    select?: MenuCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MenuCountOutputType without action
+   */
+  export type MenuCountOutputTypeCountOrderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemberOrderItemWhereInput
   }
 
 
@@ -1640,6 +1863,37 @@ export namespace Prisma {
    */
   export type PartyCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PartyMemberWhereInput
+  }
+
+
+  /**
+   * Count Type PartyMemberCountOutputType
+   */
+
+  export type PartyMemberCountOutputType = {
+    orderItems: number
+  }
+
+  export type PartyMemberCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orderItems?: boolean | PartyMemberCountOutputTypeCountOrderItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PartyMemberCountOutputType without action
+   */
+  export type PartyMemberCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyMemberCountOutputType
+     */
+    select?: PartyMemberCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PartyMemberCountOutputType without action
+   */
+  export type PartyMemberCountOutputTypeCountOrderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemberOrderItemWhereInput
   }
 
 
@@ -3020,6 +3274,7 @@ export namespace Prisma {
     reviews?: boolean | Restaurant$reviewsArgs<ExtArgs>
     menus?: boolean | Restaurant$menusArgs<ExtArgs>
     parties?: boolean | Restaurant$partiesArgs<ExtArgs>
+    operatingHours?: boolean | Restaurant$operatingHoursArgs<ExtArgs>
     owner?: boolean | Restaurant$ownerArgs<ExtArgs>
     savedBy?: boolean | Restaurant$savedByArgs<ExtArgs>
     _count?: boolean | RestaurantCountOutputTypeDefaultArgs<ExtArgs>
@@ -3046,6 +3301,7 @@ export namespace Prisma {
     reviews?: boolean | Restaurant$reviewsArgs<ExtArgs>
     menus?: boolean | Restaurant$menusArgs<ExtArgs>
     parties?: boolean | Restaurant$partiesArgs<ExtArgs>
+    operatingHours?: boolean | Restaurant$operatingHoursArgs<ExtArgs>
     owner?: boolean | Restaurant$ownerArgs<ExtArgs>
     savedBy?: boolean | Restaurant$savedByArgs<ExtArgs>
     _count?: boolean | RestaurantCountOutputTypeDefaultArgs<ExtArgs>
@@ -3058,6 +3314,7 @@ export namespace Prisma {
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
       menus: Prisma.$MenuPayload<ExtArgs>[]
       parties: Prisma.$PartyPayload<ExtArgs>[]
+      operatingHours: Prisma.$OperatingHourPayload<ExtArgs>[]
       owner: Prisma.$UserPayload<ExtArgs> | null
       savedBy: Prisma.$SavedRestaurantPayload<ExtArgs>[]
     }
@@ -3416,6 +3673,7 @@ export namespace Prisma {
     reviews<T extends Restaurant$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Restaurant$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     menus<T extends Restaurant$menusArgs<ExtArgs> = {}>(args?: Subset<T, Restaurant$menusArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     parties<T extends Restaurant$partiesArgs<ExtArgs> = {}>(args?: Subset<T, Restaurant$partiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    operatingHours<T extends Restaurant$operatingHoursArgs<ExtArgs> = {}>(args?: Subset<T, Restaurant$operatingHoursArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OperatingHourPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     owner<T extends Restaurant$ownerArgs<ExtArgs> = {}>(args?: Subset<T, Restaurant$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     savedBy<T extends Restaurant$savedByArgs<ExtArgs> = {}>(args?: Subset<T, Restaurant$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedRestaurantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -3901,6 +4159,30 @@ export namespace Prisma {
   }
 
   /**
+   * Restaurant.operatingHours
+   */
+  export type Restaurant$operatingHoursArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OperatingHour
+     */
+    select?: OperatingHourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OperatingHour
+     */
+    omit?: OperatingHourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OperatingHourInclude<ExtArgs> | null
+    where?: OperatingHourWhereInput
+    orderBy?: OperatingHourOrderByWithRelationInput | OperatingHourOrderByWithRelationInput[]
+    cursor?: OperatingHourWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OperatingHourScalarFieldEnum | OperatingHourScalarFieldEnum[]
+  }
+
+  /**
    * Restaurant.owner
    */
   export type Restaurant$ownerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3959,6 +4241,951 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: RestaurantInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OperatingHour
+   */
+
+  export type AggregateOperatingHour = {
+    _count: OperatingHourCountAggregateOutputType | null
+    _min: OperatingHourMinAggregateOutputType | null
+    _max: OperatingHourMaxAggregateOutputType | null
+  }
+
+  export type OperatingHourMinAggregateOutputType = {
+    id: string | null
+    day: $Enums.DayOfWeek | null
+    openTime: string | null
+    closeTime: string | null
+    isClosed: boolean | null
+    restaurantId: string | null
+  }
+
+  export type OperatingHourMaxAggregateOutputType = {
+    id: string | null
+    day: $Enums.DayOfWeek | null
+    openTime: string | null
+    closeTime: string | null
+    isClosed: boolean | null
+    restaurantId: string | null
+  }
+
+  export type OperatingHourCountAggregateOutputType = {
+    id: number
+    day: number
+    openTime: number
+    closeTime: number
+    isClosed: number
+    restaurantId: number
+    _all: number
+  }
+
+
+  export type OperatingHourMinAggregateInputType = {
+    id?: true
+    day?: true
+    openTime?: true
+    closeTime?: true
+    isClosed?: true
+    restaurantId?: true
+  }
+
+  export type OperatingHourMaxAggregateInputType = {
+    id?: true
+    day?: true
+    openTime?: true
+    closeTime?: true
+    isClosed?: true
+    restaurantId?: true
+  }
+
+  export type OperatingHourCountAggregateInputType = {
+    id?: true
+    day?: true
+    openTime?: true
+    closeTime?: true
+    isClosed?: true
+    restaurantId?: true
+    _all?: true
+  }
+
+  export type OperatingHourAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OperatingHour to aggregate.
+     */
+    where?: OperatingHourWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OperatingHours to fetch.
+     */
+    orderBy?: OperatingHourOrderByWithRelationInput | OperatingHourOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OperatingHourWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OperatingHours from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OperatingHours.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OperatingHours
+    **/
+    _count?: true | OperatingHourCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OperatingHourMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OperatingHourMaxAggregateInputType
+  }
+
+  export type GetOperatingHourAggregateType<T extends OperatingHourAggregateArgs> = {
+        [P in keyof T & keyof AggregateOperatingHour]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOperatingHour[P]>
+      : GetScalarType<T[P], AggregateOperatingHour[P]>
+  }
+
+
+
+
+  export type OperatingHourGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OperatingHourWhereInput
+    orderBy?: OperatingHourOrderByWithAggregationInput | OperatingHourOrderByWithAggregationInput[]
+    by: OperatingHourScalarFieldEnum[] | OperatingHourScalarFieldEnum
+    having?: OperatingHourScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OperatingHourCountAggregateInputType | true
+    _min?: OperatingHourMinAggregateInputType
+    _max?: OperatingHourMaxAggregateInputType
+  }
+
+  export type OperatingHourGroupByOutputType = {
+    id: string
+    day: $Enums.DayOfWeek
+    openTime: string
+    closeTime: string
+    isClosed: boolean
+    restaurantId: string
+    _count: OperatingHourCountAggregateOutputType | null
+    _min: OperatingHourMinAggregateOutputType | null
+    _max: OperatingHourMaxAggregateOutputType | null
+  }
+
+  type GetOperatingHourGroupByPayload<T extends OperatingHourGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OperatingHourGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OperatingHourGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OperatingHourGroupByOutputType[P]>
+            : GetScalarType<T[P], OperatingHourGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OperatingHourSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    day?: boolean
+    openTime?: boolean
+    closeTime?: boolean
+    isClosed?: boolean
+    restaurantId?: boolean
+    restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["operatingHour"]>
+
+
+
+  export type OperatingHourSelectScalar = {
+    id?: boolean
+    day?: boolean
+    openTime?: boolean
+    closeTime?: boolean
+    isClosed?: boolean
+    restaurantId?: boolean
+  }
+
+  export type OperatingHourOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "day" | "openTime" | "closeTime" | "isClosed" | "restaurantId", ExtArgs["result"]["operatingHour"]>
+  export type OperatingHourInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
+  }
+
+  export type $OperatingHourPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OperatingHour"
+    objects: {
+      restaurant: Prisma.$RestaurantPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      day: $Enums.DayOfWeek
+      openTime: string
+      closeTime: string
+      isClosed: boolean
+      restaurantId: string
+    }, ExtArgs["result"]["operatingHour"]>
+    composites: {}
+  }
+
+  type OperatingHourGetPayload<S extends boolean | null | undefined | OperatingHourDefaultArgs> = $Result.GetResult<Prisma.$OperatingHourPayload, S>
+
+  type OperatingHourCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OperatingHourFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OperatingHourCountAggregateInputType | true
+    }
+
+  export interface OperatingHourDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OperatingHour'], meta: { name: 'OperatingHour' } }
+    /**
+     * Find zero or one OperatingHour that matches the filter.
+     * @param {OperatingHourFindUniqueArgs} args - Arguments to find a OperatingHour
+     * @example
+     * // Get one OperatingHour
+     * const operatingHour = await prisma.operatingHour.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OperatingHourFindUniqueArgs>(args: SelectSubset<T, OperatingHourFindUniqueArgs<ExtArgs>>): Prisma__OperatingHourClient<$Result.GetResult<Prisma.$OperatingHourPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OperatingHour that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OperatingHourFindUniqueOrThrowArgs} args - Arguments to find a OperatingHour
+     * @example
+     * // Get one OperatingHour
+     * const operatingHour = await prisma.operatingHour.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OperatingHourFindUniqueOrThrowArgs>(args: SelectSubset<T, OperatingHourFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OperatingHourClient<$Result.GetResult<Prisma.$OperatingHourPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OperatingHour that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OperatingHourFindFirstArgs} args - Arguments to find a OperatingHour
+     * @example
+     * // Get one OperatingHour
+     * const operatingHour = await prisma.operatingHour.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OperatingHourFindFirstArgs>(args?: SelectSubset<T, OperatingHourFindFirstArgs<ExtArgs>>): Prisma__OperatingHourClient<$Result.GetResult<Prisma.$OperatingHourPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OperatingHour that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OperatingHourFindFirstOrThrowArgs} args - Arguments to find a OperatingHour
+     * @example
+     * // Get one OperatingHour
+     * const operatingHour = await prisma.operatingHour.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OperatingHourFindFirstOrThrowArgs>(args?: SelectSubset<T, OperatingHourFindFirstOrThrowArgs<ExtArgs>>): Prisma__OperatingHourClient<$Result.GetResult<Prisma.$OperatingHourPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OperatingHours that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OperatingHourFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OperatingHours
+     * const operatingHours = await prisma.operatingHour.findMany()
+     * 
+     * // Get first 10 OperatingHours
+     * const operatingHours = await prisma.operatingHour.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const operatingHourWithIdOnly = await prisma.operatingHour.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OperatingHourFindManyArgs>(args?: SelectSubset<T, OperatingHourFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OperatingHourPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OperatingHour.
+     * @param {OperatingHourCreateArgs} args - Arguments to create a OperatingHour.
+     * @example
+     * // Create one OperatingHour
+     * const OperatingHour = await prisma.operatingHour.create({
+     *   data: {
+     *     // ... data to create a OperatingHour
+     *   }
+     * })
+     * 
+     */
+    create<T extends OperatingHourCreateArgs>(args: SelectSubset<T, OperatingHourCreateArgs<ExtArgs>>): Prisma__OperatingHourClient<$Result.GetResult<Prisma.$OperatingHourPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OperatingHours.
+     * @param {OperatingHourCreateManyArgs} args - Arguments to create many OperatingHours.
+     * @example
+     * // Create many OperatingHours
+     * const operatingHour = await prisma.operatingHour.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OperatingHourCreateManyArgs>(args?: SelectSubset<T, OperatingHourCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a OperatingHour.
+     * @param {OperatingHourDeleteArgs} args - Arguments to delete one OperatingHour.
+     * @example
+     * // Delete one OperatingHour
+     * const OperatingHour = await prisma.operatingHour.delete({
+     *   where: {
+     *     // ... filter to delete one OperatingHour
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OperatingHourDeleteArgs>(args: SelectSubset<T, OperatingHourDeleteArgs<ExtArgs>>): Prisma__OperatingHourClient<$Result.GetResult<Prisma.$OperatingHourPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OperatingHour.
+     * @param {OperatingHourUpdateArgs} args - Arguments to update one OperatingHour.
+     * @example
+     * // Update one OperatingHour
+     * const operatingHour = await prisma.operatingHour.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OperatingHourUpdateArgs>(args: SelectSubset<T, OperatingHourUpdateArgs<ExtArgs>>): Prisma__OperatingHourClient<$Result.GetResult<Prisma.$OperatingHourPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OperatingHours.
+     * @param {OperatingHourDeleteManyArgs} args - Arguments to filter OperatingHours to delete.
+     * @example
+     * // Delete a few OperatingHours
+     * const { count } = await prisma.operatingHour.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OperatingHourDeleteManyArgs>(args?: SelectSubset<T, OperatingHourDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OperatingHours.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OperatingHourUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OperatingHours
+     * const operatingHour = await prisma.operatingHour.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OperatingHourUpdateManyArgs>(args: SelectSubset<T, OperatingHourUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one OperatingHour.
+     * @param {OperatingHourUpsertArgs} args - Arguments to update or create a OperatingHour.
+     * @example
+     * // Update or create a OperatingHour
+     * const operatingHour = await prisma.operatingHour.upsert({
+     *   create: {
+     *     // ... data to create a OperatingHour
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OperatingHour we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OperatingHourUpsertArgs>(args: SelectSubset<T, OperatingHourUpsertArgs<ExtArgs>>): Prisma__OperatingHourClient<$Result.GetResult<Prisma.$OperatingHourPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OperatingHours.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OperatingHourCountArgs} args - Arguments to filter OperatingHours to count.
+     * @example
+     * // Count the number of OperatingHours
+     * const count = await prisma.operatingHour.count({
+     *   where: {
+     *     // ... the filter for the OperatingHours we want to count
+     *   }
+     * })
+    **/
+    count<T extends OperatingHourCountArgs>(
+      args?: Subset<T, OperatingHourCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OperatingHourCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OperatingHour.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OperatingHourAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OperatingHourAggregateArgs>(args: Subset<T, OperatingHourAggregateArgs>): Prisma.PrismaPromise<GetOperatingHourAggregateType<T>>
+
+    /**
+     * Group by OperatingHour.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OperatingHourGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OperatingHourGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OperatingHourGroupByArgs['orderBy'] }
+        : { orderBy?: OperatingHourGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OperatingHourGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOperatingHourGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OperatingHour model
+   */
+  readonly fields: OperatingHourFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OperatingHour.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OperatingHourClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    restaurant<T extends RestaurantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RestaurantDefaultArgs<ExtArgs>>): Prisma__RestaurantClient<$Result.GetResult<Prisma.$RestaurantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OperatingHour model
+   */
+  interface OperatingHourFieldRefs {
+    readonly id: FieldRef<"OperatingHour", 'String'>
+    readonly day: FieldRef<"OperatingHour", 'DayOfWeek'>
+    readonly openTime: FieldRef<"OperatingHour", 'String'>
+    readonly closeTime: FieldRef<"OperatingHour", 'String'>
+    readonly isClosed: FieldRef<"OperatingHour", 'Boolean'>
+    readonly restaurantId: FieldRef<"OperatingHour", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OperatingHour findUnique
+   */
+  export type OperatingHourFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OperatingHour
+     */
+    select?: OperatingHourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OperatingHour
+     */
+    omit?: OperatingHourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OperatingHourInclude<ExtArgs> | null
+    /**
+     * Filter, which OperatingHour to fetch.
+     */
+    where: OperatingHourWhereUniqueInput
+  }
+
+  /**
+   * OperatingHour findUniqueOrThrow
+   */
+  export type OperatingHourFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OperatingHour
+     */
+    select?: OperatingHourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OperatingHour
+     */
+    omit?: OperatingHourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OperatingHourInclude<ExtArgs> | null
+    /**
+     * Filter, which OperatingHour to fetch.
+     */
+    where: OperatingHourWhereUniqueInput
+  }
+
+  /**
+   * OperatingHour findFirst
+   */
+  export type OperatingHourFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OperatingHour
+     */
+    select?: OperatingHourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OperatingHour
+     */
+    omit?: OperatingHourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OperatingHourInclude<ExtArgs> | null
+    /**
+     * Filter, which OperatingHour to fetch.
+     */
+    where?: OperatingHourWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OperatingHours to fetch.
+     */
+    orderBy?: OperatingHourOrderByWithRelationInput | OperatingHourOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OperatingHours.
+     */
+    cursor?: OperatingHourWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OperatingHours from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OperatingHours.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OperatingHours.
+     */
+    distinct?: OperatingHourScalarFieldEnum | OperatingHourScalarFieldEnum[]
+  }
+
+  /**
+   * OperatingHour findFirstOrThrow
+   */
+  export type OperatingHourFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OperatingHour
+     */
+    select?: OperatingHourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OperatingHour
+     */
+    omit?: OperatingHourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OperatingHourInclude<ExtArgs> | null
+    /**
+     * Filter, which OperatingHour to fetch.
+     */
+    where?: OperatingHourWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OperatingHours to fetch.
+     */
+    orderBy?: OperatingHourOrderByWithRelationInput | OperatingHourOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OperatingHours.
+     */
+    cursor?: OperatingHourWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OperatingHours from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OperatingHours.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OperatingHours.
+     */
+    distinct?: OperatingHourScalarFieldEnum | OperatingHourScalarFieldEnum[]
+  }
+
+  /**
+   * OperatingHour findMany
+   */
+  export type OperatingHourFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OperatingHour
+     */
+    select?: OperatingHourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OperatingHour
+     */
+    omit?: OperatingHourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OperatingHourInclude<ExtArgs> | null
+    /**
+     * Filter, which OperatingHours to fetch.
+     */
+    where?: OperatingHourWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OperatingHours to fetch.
+     */
+    orderBy?: OperatingHourOrderByWithRelationInput | OperatingHourOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OperatingHours.
+     */
+    cursor?: OperatingHourWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OperatingHours from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OperatingHours.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OperatingHours.
+     */
+    distinct?: OperatingHourScalarFieldEnum | OperatingHourScalarFieldEnum[]
+  }
+
+  /**
+   * OperatingHour create
+   */
+  export type OperatingHourCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OperatingHour
+     */
+    select?: OperatingHourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OperatingHour
+     */
+    omit?: OperatingHourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OperatingHourInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OperatingHour.
+     */
+    data: XOR<OperatingHourCreateInput, OperatingHourUncheckedCreateInput>
+  }
+
+  /**
+   * OperatingHour createMany
+   */
+  export type OperatingHourCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OperatingHours.
+     */
+    data: OperatingHourCreateManyInput | OperatingHourCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OperatingHour update
+   */
+  export type OperatingHourUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OperatingHour
+     */
+    select?: OperatingHourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OperatingHour
+     */
+    omit?: OperatingHourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OperatingHourInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OperatingHour.
+     */
+    data: XOR<OperatingHourUpdateInput, OperatingHourUncheckedUpdateInput>
+    /**
+     * Choose, which OperatingHour to update.
+     */
+    where: OperatingHourWhereUniqueInput
+  }
+
+  /**
+   * OperatingHour updateMany
+   */
+  export type OperatingHourUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OperatingHours.
+     */
+    data: XOR<OperatingHourUpdateManyMutationInput, OperatingHourUncheckedUpdateManyInput>
+    /**
+     * Filter which OperatingHours to update
+     */
+    where?: OperatingHourWhereInput
+    /**
+     * Limit how many OperatingHours to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OperatingHour upsert
+   */
+  export type OperatingHourUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OperatingHour
+     */
+    select?: OperatingHourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OperatingHour
+     */
+    omit?: OperatingHourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OperatingHourInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OperatingHour to update in case it exists.
+     */
+    where: OperatingHourWhereUniqueInput
+    /**
+     * In case the OperatingHour found by the `where` argument doesn't exist, create a new OperatingHour with this data.
+     */
+    create: XOR<OperatingHourCreateInput, OperatingHourUncheckedCreateInput>
+    /**
+     * In case the OperatingHour was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OperatingHourUpdateInput, OperatingHourUncheckedUpdateInput>
+  }
+
+  /**
+   * OperatingHour delete
+   */
+  export type OperatingHourDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OperatingHour
+     */
+    select?: OperatingHourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OperatingHour
+     */
+    omit?: OperatingHourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OperatingHourInclude<ExtArgs> | null
+    /**
+     * Filter which OperatingHour to delete.
+     */
+    where: OperatingHourWhereUniqueInput
+  }
+
+  /**
+   * OperatingHour deleteMany
+   */
+  export type OperatingHourDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OperatingHours to delete
+     */
+    where?: OperatingHourWhereInput
+    /**
+     * Limit how many OperatingHours to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OperatingHour without action
+   */
+  export type OperatingHourDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OperatingHour
+     */
+    select?: OperatingHourSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OperatingHour
+     */
+    omit?: OperatingHourOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OperatingHourInclude<ExtArgs> | null
   }
 
 
@@ -6054,6 +7281,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
+    orderItems?: boolean | Menu$orderItemsArgs<ExtArgs>
+    _count?: boolean | MenuCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menu"]>
 
 
@@ -6073,12 +7302,15 @@ export namespace Prisma {
   export type MenuOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "category" | "imageUrl" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["menu"]>
   export type MenuInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
+    orderItems?: boolean | Menu$orderItemsArgs<ExtArgs>
+    _count?: boolean | MenuCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $MenuPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Menu"
     objects: {
       restaurant: Prisma.$RestaurantPayload<ExtArgs>
+      orderItems: Prisma.$MemberOrderItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6431,6 +7663,7 @@ export namespace Prisma {
   export interface Prisma__MenuClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     restaurant<T extends RestaurantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RestaurantDefaultArgs<ExtArgs>>): Prisma__RestaurantClient<$Result.GetResult<Prisma.$RestaurantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    orderItems<T extends Menu$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, Menu$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6817,6 +8050,30 @@ export namespace Prisma {
   }
 
   /**
+   * Menu.orderItems
+   */
+  export type Menu$orderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    where?: MemberOrderItemWhereInput
+    orderBy?: MemberOrderItemOrderByWithRelationInput | MemberOrderItemOrderByWithRelationInput[]
+    cursor?: MemberOrderItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MemberOrderItemScalarFieldEnum | MemberOrderItemScalarFieldEnum[]
+  }
+
+  /**
    * Menu without action
    */
   export type MenuDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6849,10 +8106,14 @@ export namespace Prisma {
 
   export type PartyAvgAggregateOutputType = {
     maxParticipants: number | null
+    serviceCharge: number | null
+    vat: number | null
   }
 
   export type PartySumAggregateOutputType = {
     maxParticipants: number | null
+    serviceCharge: number | null
+    vat: number | null
   }
 
   export type PartyMinAggregateOutputType = {
@@ -6863,6 +8124,8 @@ export namespace Prisma {
     maxParticipants: number | null
     status: $Enums.PartyStatus | null
     contactInfo: string | null
+    serviceCharge: number | null
+    vat: number | null
     restaurantId: string | null
     leaderId: string | null
     createdAt: Date | null
@@ -6877,6 +8140,8 @@ export namespace Prisma {
     maxParticipants: number | null
     status: $Enums.PartyStatus | null
     contactInfo: string | null
+    serviceCharge: number | null
+    vat: number | null
     restaurantId: string | null
     leaderId: string | null
     createdAt: Date | null
@@ -6891,6 +8156,8 @@ export namespace Prisma {
     maxParticipants: number
     status: number
     contactInfo: number
+    serviceCharge: number
+    vat: number
     restaurantId: number
     leaderId: number
     createdAt: number
@@ -6901,10 +8168,14 @@ export namespace Prisma {
 
   export type PartyAvgAggregateInputType = {
     maxParticipants?: true
+    serviceCharge?: true
+    vat?: true
   }
 
   export type PartySumAggregateInputType = {
     maxParticipants?: true
+    serviceCharge?: true
+    vat?: true
   }
 
   export type PartyMinAggregateInputType = {
@@ -6915,6 +8186,8 @@ export namespace Prisma {
     maxParticipants?: true
     status?: true
     contactInfo?: true
+    serviceCharge?: true
+    vat?: true
     restaurantId?: true
     leaderId?: true
     createdAt?: true
@@ -6929,6 +8202,8 @@ export namespace Prisma {
     maxParticipants?: true
     status?: true
     contactInfo?: true
+    serviceCharge?: true
+    vat?: true
     restaurantId?: true
     leaderId?: true
     createdAt?: true
@@ -6943,6 +8218,8 @@ export namespace Prisma {
     maxParticipants?: true
     status?: true
     contactInfo?: true
+    serviceCharge?: true
+    vat?: true
     restaurantId?: true
     leaderId?: true
     createdAt?: true
@@ -7044,6 +8321,8 @@ export namespace Prisma {
     maxParticipants: number
     status: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge: number
+    vat: number
     restaurantId: string
     leaderId: string
     createdAt: Date
@@ -7077,6 +8356,8 @@ export namespace Prisma {
     maxParticipants?: boolean
     status?: boolean
     contactInfo?: boolean
+    serviceCharge?: boolean
+    vat?: boolean
     restaurantId?: boolean
     leaderId?: boolean
     createdAt?: boolean
@@ -7097,13 +8378,15 @@ export namespace Prisma {
     maxParticipants?: boolean
     status?: boolean
     contactInfo?: boolean
+    serviceCharge?: boolean
+    vat?: boolean
     restaurantId?: boolean
     leaderId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PartyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "details" | "meetupTime" | "maxParticipants" | "status" | "contactInfo" | "restaurantId" | "leaderId" | "createdAt" | "updatedAt", ExtArgs["result"]["party"]>
+  export type PartyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "details" | "meetupTime" | "maxParticipants" | "status" | "contactInfo" | "serviceCharge" | "vat" | "restaurantId" | "leaderId" | "createdAt" | "updatedAt", ExtArgs["result"]["party"]>
   export type PartyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
     leader?: boolean | UserDefaultArgs<ExtArgs>
@@ -7126,6 +8409,8 @@ export namespace Prisma {
       maxParticipants: number
       status: $Enums.PartyStatus
       contactInfo: string
+      serviceCharge: number
+      vat: number
       restaurantId: string
       leaderId: string
       createdAt: Date
@@ -7509,6 +8794,8 @@ export namespace Prisma {
     readonly maxParticipants: FieldRef<"Party", 'Int'>
     readonly status: FieldRef<"Party", 'PartyStatus'>
     readonly contactInfo: FieldRef<"Party", 'String'>
+    readonly serviceCharge: FieldRef<"Party", 'Float'>
+    readonly vat: FieldRef<"Party", 'Float'>
     readonly restaurantId: FieldRef<"Party", 'String'>
     readonly leaderId: FieldRef<"Party", 'String'>
     readonly createdAt: FieldRef<"Party", 'DateTime'>
@@ -8061,6 +9348,8 @@ export namespace Prisma {
     userId?: boolean
     party?: boolean | PartyDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    orderItems?: boolean | PartyMember$orderItemsArgs<ExtArgs>
+    _count?: boolean | PartyMemberCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["partyMember"]>
 
 
@@ -8076,6 +9365,8 @@ export namespace Prisma {
   export type PartyMemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     party?: boolean | PartyDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
+    orderItems?: boolean | PartyMember$orderItemsArgs<ExtArgs>
+    _count?: boolean | PartyMemberCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $PartyMemberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8083,6 +9374,7 @@ export namespace Prisma {
     objects: {
       party: Prisma.$PartyPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
+      orderItems: Prisma.$MemberOrderItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8431,6 +9723,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     party<T extends PartyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PartyDefaultArgs<ExtArgs>>): Prisma__PartyClient<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    orderItems<T extends PartyMember$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, PartyMember$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8812,6 +10105,30 @@ export namespace Prisma {
   }
 
   /**
+   * PartyMember.orderItems
+   */
+  export type PartyMember$orderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    where?: MemberOrderItemWhereInput
+    orderBy?: MemberOrderItemOrderByWithRelationInput | MemberOrderItemOrderByWithRelationInput[]
+    cursor?: MemberOrderItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MemberOrderItemScalarFieldEnum | MemberOrderItemScalarFieldEnum[]
+  }
+
+  /**
    * PartyMember without action
    */
   export type PartyMemberDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8827,6 +10144,933 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: PartyMemberInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MemberOrderItem
+   */
+
+  export type AggregateMemberOrderItem = {
+    _count: MemberOrderItemCountAggregateOutputType | null
+    _min: MemberOrderItemMinAggregateOutputType | null
+    _max: MemberOrderItemMaxAggregateOutputType | null
+  }
+
+  export type MemberOrderItemMinAggregateOutputType = {
+    id: string | null
+    memberId: string | null
+    menuId: string | null
+    createdAt: Date | null
+  }
+
+  export type MemberOrderItemMaxAggregateOutputType = {
+    id: string | null
+    memberId: string | null
+    menuId: string | null
+    createdAt: Date | null
+  }
+
+  export type MemberOrderItemCountAggregateOutputType = {
+    id: number
+    memberId: number
+    menuId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type MemberOrderItemMinAggregateInputType = {
+    id?: true
+    memberId?: true
+    menuId?: true
+    createdAt?: true
+  }
+
+  export type MemberOrderItemMaxAggregateInputType = {
+    id?: true
+    memberId?: true
+    menuId?: true
+    createdAt?: true
+  }
+
+  export type MemberOrderItemCountAggregateInputType = {
+    id?: true
+    memberId?: true
+    menuId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type MemberOrderItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MemberOrderItem to aggregate.
+     */
+    where?: MemberOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemberOrderItems to fetch.
+     */
+    orderBy?: MemberOrderItemOrderByWithRelationInput | MemberOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MemberOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemberOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemberOrderItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MemberOrderItems
+    **/
+    _count?: true | MemberOrderItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MemberOrderItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MemberOrderItemMaxAggregateInputType
+  }
+
+  export type GetMemberOrderItemAggregateType<T extends MemberOrderItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateMemberOrderItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMemberOrderItem[P]>
+      : GetScalarType<T[P], AggregateMemberOrderItem[P]>
+  }
+
+
+
+
+  export type MemberOrderItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemberOrderItemWhereInput
+    orderBy?: MemberOrderItemOrderByWithAggregationInput | MemberOrderItemOrderByWithAggregationInput[]
+    by: MemberOrderItemScalarFieldEnum[] | MemberOrderItemScalarFieldEnum
+    having?: MemberOrderItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MemberOrderItemCountAggregateInputType | true
+    _min?: MemberOrderItemMinAggregateInputType
+    _max?: MemberOrderItemMaxAggregateInputType
+  }
+
+  export type MemberOrderItemGroupByOutputType = {
+    id: string
+    memberId: string
+    menuId: string
+    createdAt: Date
+    _count: MemberOrderItemCountAggregateOutputType | null
+    _min: MemberOrderItemMinAggregateOutputType | null
+    _max: MemberOrderItemMaxAggregateOutputType | null
+  }
+
+  type GetMemberOrderItemGroupByPayload<T extends MemberOrderItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MemberOrderItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MemberOrderItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MemberOrderItemGroupByOutputType[P]>
+            : GetScalarType<T[P], MemberOrderItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MemberOrderItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    memberId?: boolean
+    menuId?: boolean
+    createdAt?: boolean
+    member?: boolean | PartyMemberDefaultArgs<ExtArgs>
+    menu?: boolean | MenuDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["memberOrderItem"]>
+
+
+
+  export type MemberOrderItemSelectScalar = {
+    id?: boolean
+    memberId?: boolean
+    menuId?: boolean
+    createdAt?: boolean
+  }
+
+  export type MemberOrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "memberId" | "menuId" | "createdAt", ExtArgs["result"]["memberOrderItem"]>
+  export type MemberOrderItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    member?: boolean | PartyMemberDefaultArgs<ExtArgs>
+    menu?: boolean | MenuDefaultArgs<ExtArgs>
+  }
+
+  export type $MemberOrderItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MemberOrderItem"
+    objects: {
+      member: Prisma.$PartyMemberPayload<ExtArgs>
+      menu: Prisma.$MenuPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      memberId: string
+      menuId: string
+      createdAt: Date
+    }, ExtArgs["result"]["memberOrderItem"]>
+    composites: {}
+  }
+
+  type MemberOrderItemGetPayload<S extends boolean | null | undefined | MemberOrderItemDefaultArgs> = $Result.GetResult<Prisma.$MemberOrderItemPayload, S>
+
+  type MemberOrderItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MemberOrderItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MemberOrderItemCountAggregateInputType | true
+    }
+
+  export interface MemberOrderItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MemberOrderItem'], meta: { name: 'MemberOrderItem' } }
+    /**
+     * Find zero or one MemberOrderItem that matches the filter.
+     * @param {MemberOrderItemFindUniqueArgs} args - Arguments to find a MemberOrderItem
+     * @example
+     * // Get one MemberOrderItem
+     * const memberOrderItem = await prisma.memberOrderItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MemberOrderItemFindUniqueArgs>(args: SelectSubset<T, MemberOrderItemFindUniqueArgs<ExtArgs>>): Prisma__MemberOrderItemClient<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MemberOrderItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MemberOrderItemFindUniqueOrThrowArgs} args - Arguments to find a MemberOrderItem
+     * @example
+     * // Get one MemberOrderItem
+     * const memberOrderItem = await prisma.memberOrderItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MemberOrderItemFindUniqueOrThrowArgs>(args: SelectSubset<T, MemberOrderItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MemberOrderItemClient<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MemberOrderItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberOrderItemFindFirstArgs} args - Arguments to find a MemberOrderItem
+     * @example
+     * // Get one MemberOrderItem
+     * const memberOrderItem = await prisma.memberOrderItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MemberOrderItemFindFirstArgs>(args?: SelectSubset<T, MemberOrderItemFindFirstArgs<ExtArgs>>): Prisma__MemberOrderItemClient<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MemberOrderItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberOrderItemFindFirstOrThrowArgs} args - Arguments to find a MemberOrderItem
+     * @example
+     * // Get one MemberOrderItem
+     * const memberOrderItem = await prisma.memberOrderItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MemberOrderItemFindFirstOrThrowArgs>(args?: SelectSubset<T, MemberOrderItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__MemberOrderItemClient<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MemberOrderItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberOrderItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MemberOrderItems
+     * const memberOrderItems = await prisma.memberOrderItem.findMany()
+     * 
+     * // Get first 10 MemberOrderItems
+     * const memberOrderItems = await prisma.memberOrderItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const memberOrderItemWithIdOnly = await prisma.memberOrderItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MemberOrderItemFindManyArgs>(args?: SelectSubset<T, MemberOrderItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MemberOrderItem.
+     * @param {MemberOrderItemCreateArgs} args - Arguments to create a MemberOrderItem.
+     * @example
+     * // Create one MemberOrderItem
+     * const MemberOrderItem = await prisma.memberOrderItem.create({
+     *   data: {
+     *     // ... data to create a MemberOrderItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends MemberOrderItemCreateArgs>(args: SelectSubset<T, MemberOrderItemCreateArgs<ExtArgs>>): Prisma__MemberOrderItemClient<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MemberOrderItems.
+     * @param {MemberOrderItemCreateManyArgs} args - Arguments to create many MemberOrderItems.
+     * @example
+     * // Create many MemberOrderItems
+     * const memberOrderItem = await prisma.memberOrderItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MemberOrderItemCreateManyArgs>(args?: SelectSubset<T, MemberOrderItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a MemberOrderItem.
+     * @param {MemberOrderItemDeleteArgs} args - Arguments to delete one MemberOrderItem.
+     * @example
+     * // Delete one MemberOrderItem
+     * const MemberOrderItem = await prisma.memberOrderItem.delete({
+     *   where: {
+     *     // ... filter to delete one MemberOrderItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MemberOrderItemDeleteArgs>(args: SelectSubset<T, MemberOrderItemDeleteArgs<ExtArgs>>): Prisma__MemberOrderItemClient<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MemberOrderItem.
+     * @param {MemberOrderItemUpdateArgs} args - Arguments to update one MemberOrderItem.
+     * @example
+     * // Update one MemberOrderItem
+     * const memberOrderItem = await prisma.memberOrderItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MemberOrderItemUpdateArgs>(args: SelectSubset<T, MemberOrderItemUpdateArgs<ExtArgs>>): Prisma__MemberOrderItemClient<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MemberOrderItems.
+     * @param {MemberOrderItemDeleteManyArgs} args - Arguments to filter MemberOrderItems to delete.
+     * @example
+     * // Delete a few MemberOrderItems
+     * const { count } = await prisma.memberOrderItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MemberOrderItemDeleteManyArgs>(args?: SelectSubset<T, MemberOrderItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MemberOrderItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberOrderItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MemberOrderItems
+     * const memberOrderItem = await prisma.memberOrderItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MemberOrderItemUpdateManyArgs>(args: SelectSubset<T, MemberOrderItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one MemberOrderItem.
+     * @param {MemberOrderItemUpsertArgs} args - Arguments to update or create a MemberOrderItem.
+     * @example
+     * // Update or create a MemberOrderItem
+     * const memberOrderItem = await prisma.memberOrderItem.upsert({
+     *   create: {
+     *     // ... data to create a MemberOrderItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MemberOrderItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MemberOrderItemUpsertArgs>(args: SelectSubset<T, MemberOrderItemUpsertArgs<ExtArgs>>): Prisma__MemberOrderItemClient<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MemberOrderItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberOrderItemCountArgs} args - Arguments to filter MemberOrderItems to count.
+     * @example
+     * // Count the number of MemberOrderItems
+     * const count = await prisma.memberOrderItem.count({
+     *   where: {
+     *     // ... the filter for the MemberOrderItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends MemberOrderItemCountArgs>(
+      args?: Subset<T, MemberOrderItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MemberOrderItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MemberOrderItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberOrderItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MemberOrderItemAggregateArgs>(args: Subset<T, MemberOrderItemAggregateArgs>): Prisma.PrismaPromise<GetMemberOrderItemAggregateType<T>>
+
+    /**
+     * Group by MemberOrderItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MemberOrderItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MemberOrderItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MemberOrderItemGroupByArgs['orderBy'] }
+        : { orderBy?: MemberOrderItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MemberOrderItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMemberOrderItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MemberOrderItem model
+   */
+  readonly fields: MemberOrderItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MemberOrderItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MemberOrderItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    member<T extends PartyMemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PartyMemberDefaultArgs<ExtArgs>>): Prisma__PartyMemberClient<$Result.GetResult<Prisma.$PartyMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    menu<T extends MenuDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MenuDefaultArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MemberOrderItem model
+   */
+  interface MemberOrderItemFieldRefs {
+    readonly id: FieldRef<"MemberOrderItem", 'String'>
+    readonly memberId: FieldRef<"MemberOrderItem", 'String'>
+    readonly menuId: FieldRef<"MemberOrderItem", 'String'>
+    readonly createdAt: FieldRef<"MemberOrderItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MemberOrderItem findUnique
+   */
+  export type MemberOrderItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which MemberOrderItem to fetch.
+     */
+    where: MemberOrderItemWhereUniqueInput
+  }
+
+  /**
+   * MemberOrderItem findUniqueOrThrow
+   */
+  export type MemberOrderItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which MemberOrderItem to fetch.
+     */
+    where: MemberOrderItemWhereUniqueInput
+  }
+
+  /**
+   * MemberOrderItem findFirst
+   */
+  export type MemberOrderItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which MemberOrderItem to fetch.
+     */
+    where?: MemberOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemberOrderItems to fetch.
+     */
+    orderBy?: MemberOrderItemOrderByWithRelationInput | MemberOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MemberOrderItems.
+     */
+    cursor?: MemberOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemberOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemberOrderItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MemberOrderItems.
+     */
+    distinct?: MemberOrderItemScalarFieldEnum | MemberOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * MemberOrderItem findFirstOrThrow
+   */
+  export type MemberOrderItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which MemberOrderItem to fetch.
+     */
+    where?: MemberOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemberOrderItems to fetch.
+     */
+    orderBy?: MemberOrderItemOrderByWithRelationInput | MemberOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MemberOrderItems.
+     */
+    cursor?: MemberOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemberOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemberOrderItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MemberOrderItems.
+     */
+    distinct?: MemberOrderItemScalarFieldEnum | MemberOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * MemberOrderItem findMany
+   */
+  export type MemberOrderItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which MemberOrderItems to fetch.
+     */
+    where?: MemberOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MemberOrderItems to fetch.
+     */
+    orderBy?: MemberOrderItemOrderByWithRelationInput | MemberOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MemberOrderItems.
+     */
+    cursor?: MemberOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MemberOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MemberOrderItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MemberOrderItems.
+     */
+    distinct?: MemberOrderItemScalarFieldEnum | MemberOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * MemberOrderItem create
+   */
+  export type MemberOrderItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MemberOrderItem.
+     */
+    data: XOR<MemberOrderItemCreateInput, MemberOrderItemUncheckedCreateInput>
+  }
+
+  /**
+   * MemberOrderItem createMany
+   */
+  export type MemberOrderItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MemberOrderItems.
+     */
+    data: MemberOrderItemCreateManyInput | MemberOrderItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MemberOrderItem update
+   */
+  export type MemberOrderItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MemberOrderItem.
+     */
+    data: XOR<MemberOrderItemUpdateInput, MemberOrderItemUncheckedUpdateInput>
+    /**
+     * Choose, which MemberOrderItem to update.
+     */
+    where: MemberOrderItemWhereUniqueInput
+  }
+
+  /**
+   * MemberOrderItem updateMany
+   */
+  export type MemberOrderItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MemberOrderItems.
+     */
+    data: XOR<MemberOrderItemUpdateManyMutationInput, MemberOrderItemUncheckedUpdateManyInput>
+    /**
+     * Filter which MemberOrderItems to update
+     */
+    where?: MemberOrderItemWhereInput
+    /**
+     * Limit how many MemberOrderItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MemberOrderItem upsert
+   */
+  export type MemberOrderItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MemberOrderItem to update in case it exists.
+     */
+    where: MemberOrderItemWhereUniqueInput
+    /**
+     * In case the MemberOrderItem found by the `where` argument doesn't exist, create a new MemberOrderItem with this data.
+     */
+    create: XOR<MemberOrderItemCreateInput, MemberOrderItemUncheckedCreateInput>
+    /**
+     * In case the MemberOrderItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MemberOrderItemUpdateInput, MemberOrderItemUncheckedUpdateInput>
+  }
+
+  /**
+   * MemberOrderItem delete
+   */
+  export type MemberOrderItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter which MemberOrderItem to delete.
+     */
+    where: MemberOrderItemWhereUniqueInput
+  }
+
+  /**
+   * MemberOrderItem deleteMany
+   */
+  export type MemberOrderItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MemberOrderItems to delete
+     */
+    where?: MemberOrderItemWhereInput
+    /**
+     * Limit how many MemberOrderItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MemberOrderItem without action
+   */
+  export type MemberOrderItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
   }
 
 
@@ -9870,6 +12114,18 @@ export namespace Prisma {
   export type RestaurantScalarFieldEnum = (typeof RestaurantScalarFieldEnum)[keyof typeof RestaurantScalarFieldEnum]
 
 
+  export const OperatingHourScalarFieldEnum: {
+    id: 'id',
+    day: 'day',
+    openTime: 'openTime',
+    closeTime: 'closeTime',
+    isClosed: 'isClosed',
+    restaurantId: 'restaurantId'
+  };
+
+  export type OperatingHourScalarFieldEnum = (typeof OperatingHourScalarFieldEnum)[keyof typeof OperatingHourScalarFieldEnum]
+
+
   export const RestaurantImageScalarFieldEnum: {
     id: 'id',
     url: 'url',
@@ -9914,6 +12170,8 @@ export namespace Prisma {
     maxParticipants: 'maxParticipants',
     status: 'status',
     contactInfo: 'contactInfo',
+    serviceCharge: 'serviceCharge',
+    vat: 'vat',
     restaurantId: 'restaurantId',
     leaderId: 'leaderId',
     createdAt: 'createdAt',
@@ -9931,6 +12189,16 @@ export namespace Prisma {
   };
 
   export type PartyMemberScalarFieldEnum = (typeof PartyMemberScalarFieldEnum)[keyof typeof PartyMemberScalarFieldEnum]
+
+
+  export const MemberOrderItemScalarFieldEnum: {
+    id: 'id',
+    memberId: 'memberId',
+    menuId: 'menuId',
+    createdAt: 'createdAt'
+  };
+
+  export type MemberOrderItemScalarFieldEnum = (typeof MemberOrderItemScalarFieldEnum)[keyof typeof MemberOrderItemScalarFieldEnum]
 
 
   export const ReviewScalarFieldEnum: {
@@ -9985,6 +12253,16 @@ export namespace Prisma {
   export type RestaurantOrderByRelevanceFieldEnum = (typeof RestaurantOrderByRelevanceFieldEnum)[keyof typeof RestaurantOrderByRelevanceFieldEnum]
 
 
+  export const OperatingHourOrderByRelevanceFieldEnum: {
+    id: 'id',
+    openTime: 'openTime',
+    closeTime: 'closeTime',
+    restaurantId: 'restaurantId'
+  };
+
+  export type OperatingHourOrderByRelevanceFieldEnum = (typeof OperatingHourOrderByRelevanceFieldEnum)[keyof typeof OperatingHourOrderByRelevanceFieldEnum]
+
+
   export const RestaurantImageOrderByRelevanceFieldEnum: {
     id: 'id',
     url: 'url',
@@ -10036,6 +12314,15 @@ export namespace Prisma {
   export type PartyMemberOrderByRelevanceFieldEnum = (typeof PartyMemberOrderByRelevanceFieldEnum)[keyof typeof PartyMemberOrderByRelevanceFieldEnum]
 
 
+  export const MemberOrderItemOrderByRelevanceFieldEnum: {
+    id: 'id',
+    memberId: 'memberId',
+    menuId: 'menuId'
+  };
+
+  export type MemberOrderItemOrderByRelevanceFieldEnum = (typeof MemberOrderItemOrderByRelevanceFieldEnum)[keyof typeof MemberOrderItemOrderByRelevanceFieldEnum]
+
+
   export const ReviewOrderByRelevanceFieldEnum: {
     id: 'id',
     comment: 'comment',
@@ -10083,6 +12370,13 @@ export namespace Prisma {
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'DayOfWeek'
+   */
+  export type EnumDayOfWeekFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DayOfWeek'>
     
 
 
@@ -10221,6 +12515,7 @@ export namespace Prisma {
     reviews?: ReviewListRelationFilter
     menus?: MenuListRelationFilter
     parties?: PartyListRelationFilter
+    operatingHours?: OperatingHourListRelationFilter
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     savedBy?: SavedRestaurantListRelationFilter
   }
@@ -10240,6 +12535,7 @@ export namespace Prisma {
     reviews?: ReviewOrderByRelationAggregateInput
     menus?: MenuOrderByRelationAggregateInput
     parties?: PartyOrderByRelationAggregateInput
+    operatingHours?: OperatingHourOrderByRelationAggregateInput
     owner?: UserOrderByWithRelationInput
     savedBy?: SavedRestaurantOrderByRelationAggregateInput
     _relevance?: RestaurantOrderByRelevanceInput
@@ -10263,6 +12559,7 @@ export namespace Prisma {
     reviews?: ReviewListRelationFilter
     menus?: MenuListRelationFilter
     parties?: PartyListRelationFilter
+    operatingHours?: OperatingHourListRelationFilter
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     savedBy?: SavedRestaurantListRelationFilter
   }, "id">
@@ -10299,6 +12596,67 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Restaurant"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Restaurant"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Restaurant"> | Date | string | null
+  }
+
+  export type OperatingHourWhereInput = {
+    AND?: OperatingHourWhereInput | OperatingHourWhereInput[]
+    OR?: OperatingHourWhereInput[]
+    NOT?: OperatingHourWhereInput | OperatingHourWhereInput[]
+    id?: StringFilter<"OperatingHour"> | string
+    day?: EnumDayOfWeekFilter<"OperatingHour"> | $Enums.DayOfWeek
+    openTime?: StringFilter<"OperatingHour"> | string
+    closeTime?: StringFilter<"OperatingHour"> | string
+    isClosed?: BoolFilter<"OperatingHour"> | boolean
+    restaurantId?: StringFilter<"OperatingHour"> | string
+    restaurant?: XOR<RestaurantScalarRelationFilter, RestaurantWhereInput>
+  }
+
+  export type OperatingHourOrderByWithRelationInput = {
+    id?: SortOrder
+    day?: SortOrder
+    openTime?: SortOrder
+    closeTime?: SortOrder
+    isClosed?: SortOrder
+    restaurantId?: SortOrder
+    restaurant?: RestaurantOrderByWithRelationInput
+    _relevance?: OperatingHourOrderByRelevanceInput
+  }
+
+  export type OperatingHourWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OperatingHourWhereInput | OperatingHourWhereInput[]
+    OR?: OperatingHourWhereInput[]
+    NOT?: OperatingHourWhereInput | OperatingHourWhereInput[]
+    day?: EnumDayOfWeekFilter<"OperatingHour"> | $Enums.DayOfWeek
+    openTime?: StringFilter<"OperatingHour"> | string
+    closeTime?: StringFilter<"OperatingHour"> | string
+    isClosed?: BoolFilter<"OperatingHour"> | boolean
+    restaurantId?: StringFilter<"OperatingHour"> | string
+    restaurant?: XOR<RestaurantScalarRelationFilter, RestaurantWhereInput>
+  }, "id">
+
+  export type OperatingHourOrderByWithAggregationInput = {
+    id?: SortOrder
+    day?: SortOrder
+    openTime?: SortOrder
+    closeTime?: SortOrder
+    isClosed?: SortOrder
+    restaurantId?: SortOrder
+    _count?: OperatingHourCountOrderByAggregateInput
+    _max?: OperatingHourMaxOrderByAggregateInput
+    _min?: OperatingHourMinOrderByAggregateInput
+  }
+
+  export type OperatingHourScalarWhereWithAggregatesInput = {
+    AND?: OperatingHourScalarWhereWithAggregatesInput | OperatingHourScalarWhereWithAggregatesInput[]
+    OR?: OperatingHourScalarWhereWithAggregatesInput[]
+    NOT?: OperatingHourScalarWhereWithAggregatesInput | OperatingHourScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OperatingHour"> | string
+    day?: EnumDayOfWeekWithAggregatesFilter<"OperatingHour"> | $Enums.DayOfWeek
+    openTime?: StringWithAggregatesFilter<"OperatingHour"> | string
+    closeTime?: StringWithAggregatesFilter<"OperatingHour"> | string
+    isClosed?: BoolWithAggregatesFilter<"OperatingHour"> | boolean
+    restaurantId?: StringWithAggregatesFilter<"OperatingHour"> | string
   }
 
   export type RestaurantImageWhereInput = {
@@ -10426,6 +12784,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Menu"> | Date | string
     updatedAt?: DateTimeFilter<"Menu"> | Date | string
     restaurant?: XOR<RestaurantScalarRelationFilter, RestaurantWhereInput>
+    orderItems?: MemberOrderItemListRelationFilter
   }
 
   export type MenuOrderByWithRelationInput = {
@@ -10439,6 +12798,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     restaurant?: RestaurantOrderByWithRelationInput
+    orderItems?: MemberOrderItemOrderByRelationAggregateInput
     _relevance?: MenuOrderByRelevanceInput
   }
 
@@ -10456,6 +12816,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Menu"> | Date | string
     updatedAt?: DateTimeFilter<"Menu"> | Date | string
     restaurant?: XOR<RestaurantScalarRelationFilter, RestaurantWhereInput>
+    orderItems?: MemberOrderItemListRelationFilter
   }, "id">
 
   export type MenuOrderByWithAggregationInput = {
@@ -10501,6 +12862,8 @@ export namespace Prisma {
     maxParticipants?: IntFilter<"Party"> | number
     status?: EnumPartyStatusFilter<"Party"> | $Enums.PartyStatus
     contactInfo?: StringFilter<"Party"> | string
+    serviceCharge?: FloatFilter<"Party"> | number
+    vat?: FloatFilter<"Party"> | number
     restaurantId?: StringFilter<"Party"> | string
     leaderId?: StringFilter<"Party"> | string
     createdAt?: DateTimeFilter<"Party"> | Date | string
@@ -10518,6 +12881,8 @@ export namespace Prisma {
     maxParticipants?: SortOrder
     status?: SortOrder
     contactInfo?: SortOrder
+    serviceCharge?: SortOrder
+    vat?: SortOrder
     restaurantId?: SortOrder
     leaderId?: SortOrder
     createdAt?: SortOrder
@@ -10539,6 +12904,8 @@ export namespace Prisma {
     maxParticipants?: IntFilter<"Party"> | number
     status?: EnumPartyStatusFilter<"Party"> | $Enums.PartyStatus
     contactInfo?: StringFilter<"Party"> | string
+    serviceCharge?: FloatFilter<"Party"> | number
+    vat?: FloatFilter<"Party"> | number
     restaurantId?: StringFilter<"Party"> | string
     leaderId?: StringFilter<"Party"> | string
     createdAt?: DateTimeFilter<"Party"> | Date | string
@@ -10556,6 +12923,8 @@ export namespace Prisma {
     maxParticipants?: SortOrder
     status?: SortOrder
     contactInfo?: SortOrder
+    serviceCharge?: SortOrder
+    vat?: SortOrder
     restaurantId?: SortOrder
     leaderId?: SortOrder
     createdAt?: SortOrder
@@ -10578,6 +12947,8 @@ export namespace Prisma {
     maxParticipants?: IntWithAggregatesFilter<"Party"> | number
     status?: EnumPartyStatusWithAggregatesFilter<"Party"> | $Enums.PartyStatus
     contactInfo?: StringWithAggregatesFilter<"Party"> | string
+    serviceCharge?: FloatWithAggregatesFilter<"Party"> | number
+    vat?: FloatWithAggregatesFilter<"Party"> | number
     restaurantId?: StringWithAggregatesFilter<"Party"> | string
     leaderId?: StringWithAggregatesFilter<"Party"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Party"> | Date | string
@@ -10594,6 +12965,7 @@ export namespace Prisma {
     userId?: StringFilter<"PartyMember"> | string
     party?: XOR<PartyScalarRelationFilter, PartyWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    orderItems?: MemberOrderItemListRelationFilter
   }
 
   export type PartyMemberOrderByWithRelationInput = {
@@ -10603,6 +12975,7 @@ export namespace Prisma {
     userId?: SortOrder
     party?: PartyOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
+    orderItems?: MemberOrderItemOrderByRelationAggregateInput
     _relevance?: PartyMemberOrderByRelevanceInput
   }
 
@@ -10617,6 +12990,7 @@ export namespace Prisma {
     userId?: StringFilter<"PartyMember"> | string
     party?: XOR<PartyScalarRelationFilter, PartyWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    orderItems?: MemberOrderItemListRelationFilter
   }, "id" | "partyId_userId">
 
   export type PartyMemberOrderByWithAggregationInput = {
@@ -10637,6 +13011,61 @@ export namespace Prisma {
     joinedAt?: DateTimeWithAggregatesFilter<"PartyMember"> | Date | string
     partyId?: StringWithAggregatesFilter<"PartyMember"> | string
     userId?: StringWithAggregatesFilter<"PartyMember"> | string
+  }
+
+  export type MemberOrderItemWhereInput = {
+    AND?: MemberOrderItemWhereInput | MemberOrderItemWhereInput[]
+    OR?: MemberOrderItemWhereInput[]
+    NOT?: MemberOrderItemWhereInput | MemberOrderItemWhereInput[]
+    id?: StringFilter<"MemberOrderItem"> | string
+    memberId?: StringFilter<"MemberOrderItem"> | string
+    menuId?: StringFilter<"MemberOrderItem"> | string
+    createdAt?: DateTimeFilter<"MemberOrderItem"> | Date | string
+    member?: XOR<PartyMemberScalarRelationFilter, PartyMemberWhereInput>
+    menu?: XOR<MenuScalarRelationFilter, MenuWhereInput>
+  }
+
+  export type MemberOrderItemOrderByWithRelationInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    menuId?: SortOrder
+    createdAt?: SortOrder
+    member?: PartyMemberOrderByWithRelationInput
+    menu?: MenuOrderByWithRelationInput
+    _relevance?: MemberOrderItemOrderByRelevanceInput
+  }
+
+  export type MemberOrderItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    memberId_menuId?: MemberOrderItemMemberIdMenuIdCompoundUniqueInput
+    AND?: MemberOrderItemWhereInput | MemberOrderItemWhereInput[]
+    OR?: MemberOrderItemWhereInput[]
+    NOT?: MemberOrderItemWhereInput | MemberOrderItemWhereInput[]
+    memberId?: StringFilter<"MemberOrderItem"> | string
+    menuId?: StringFilter<"MemberOrderItem"> | string
+    createdAt?: DateTimeFilter<"MemberOrderItem"> | Date | string
+    member?: XOR<PartyMemberScalarRelationFilter, PartyMemberWhereInput>
+    menu?: XOR<MenuScalarRelationFilter, MenuWhereInput>
+  }, "id" | "memberId_menuId">
+
+  export type MemberOrderItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    menuId?: SortOrder
+    createdAt?: SortOrder
+    _count?: MemberOrderItemCountOrderByAggregateInput
+    _max?: MemberOrderItemMaxOrderByAggregateInput
+    _min?: MemberOrderItemMinOrderByAggregateInput
+  }
+
+  export type MemberOrderItemScalarWhereWithAggregatesInput = {
+    AND?: MemberOrderItemScalarWhereWithAggregatesInput | MemberOrderItemScalarWhereWithAggregatesInput[]
+    OR?: MemberOrderItemScalarWhereWithAggregatesInput[]
+    NOT?: MemberOrderItemScalarWhereWithAggregatesInput | MemberOrderItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MemberOrderItem"> | string
+    memberId?: StringWithAggregatesFilter<"MemberOrderItem"> | string
+    menuId?: StringWithAggregatesFilter<"MemberOrderItem"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"MemberOrderItem"> | Date | string
   }
 
   export type ReviewWhereInput = {
@@ -10835,6 +13264,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutRestaurantInput
     menus?: MenuCreateNestedManyWithoutRestaurantInput
     parties?: PartyCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourCreateNestedManyWithoutRestaurantInput
     owner?: UserCreateNestedOneWithoutOwnedRestaurantsInput
     savedBy?: SavedRestaurantCreateNestedManyWithoutRestaurantInput
   }
@@ -10854,6 +13284,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutRestaurantInput
     menus?: MenuUncheckedCreateNestedManyWithoutRestaurantInput
     parties?: PartyUncheckedCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourUncheckedCreateNestedManyWithoutRestaurantInput
     savedBy?: SavedRestaurantUncheckedCreateNestedManyWithoutRestaurantInput
   }
 
@@ -10871,6 +13302,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUpdateManyWithoutRestaurantNestedInput
     owner?: UserUpdateOneWithoutOwnedRestaurantsNestedInput
     savedBy?: SavedRestaurantUpdateManyWithoutRestaurantNestedInput
   }
@@ -10890,6 +13322,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUncheckedUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUncheckedUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUncheckedUpdateManyWithoutRestaurantNestedInput
     savedBy?: SavedRestaurantUncheckedUpdateManyWithoutRestaurantNestedInput
   }
 
@@ -10929,6 +13362,68 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OperatingHourCreateInput = {
+    id?: string
+    day: $Enums.DayOfWeek
+    openTime: string
+    closeTime: string
+    isClosed?: boolean
+    restaurant: RestaurantCreateNestedOneWithoutOperatingHoursInput
+  }
+
+  export type OperatingHourUncheckedCreateInput = {
+    id?: string
+    day: $Enums.DayOfWeek
+    openTime: string
+    closeTime: string
+    isClosed?: boolean
+    restaurantId: string
+  }
+
+  export type OperatingHourUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    day?: EnumDayOfWeekFieldUpdateOperationsInput | $Enums.DayOfWeek
+    openTime?: StringFieldUpdateOperationsInput | string
+    closeTime?: StringFieldUpdateOperationsInput | string
+    isClosed?: BoolFieldUpdateOperationsInput | boolean
+    restaurant?: RestaurantUpdateOneRequiredWithoutOperatingHoursNestedInput
+  }
+
+  export type OperatingHourUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    day?: EnumDayOfWeekFieldUpdateOperationsInput | $Enums.DayOfWeek
+    openTime?: StringFieldUpdateOperationsInput | string
+    closeTime?: StringFieldUpdateOperationsInput | string
+    isClosed?: BoolFieldUpdateOperationsInput | boolean
+    restaurantId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type OperatingHourCreateManyInput = {
+    id?: string
+    day: $Enums.DayOfWeek
+    openTime: string
+    closeTime: string
+    isClosed?: boolean
+    restaurantId: string
+  }
+
+  export type OperatingHourUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    day?: EnumDayOfWeekFieldUpdateOperationsInput | $Enums.DayOfWeek
+    openTime?: StringFieldUpdateOperationsInput | string
+    closeTime?: StringFieldUpdateOperationsInput | string
+    isClosed?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type OperatingHourUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    day?: EnumDayOfWeekFieldUpdateOperationsInput | $Enums.DayOfWeek
+    openTime?: StringFieldUpdateOperationsInput | string
+    closeTime?: StringFieldUpdateOperationsInput | string
+    isClosed?: BoolFieldUpdateOperationsInput | boolean
+    restaurantId?: StringFieldUpdateOperationsInput | string
   }
 
   export type RestaurantImageCreateInput = {
@@ -11043,6 +13538,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     restaurant: RestaurantCreateNestedOneWithoutMenusInput
+    orderItems?: MemberOrderItemCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUncheckedCreateInput = {
@@ -11055,6 +13551,7 @@ export namespace Prisma {
     restaurantId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    orderItems?: MemberOrderItemUncheckedCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUpdateInput = {
@@ -11067,6 +13564,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restaurant?: RestaurantUpdateOneRequiredWithoutMenusNestedInput
+    orderItems?: MemberOrderItemUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuUncheckedUpdateInput = {
@@ -11079,6 +13577,7 @@ export namespace Prisma {
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: MemberOrderItemUncheckedUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuCreateManyInput = {
@@ -11124,6 +13623,8 @@ export namespace Prisma {
     maxParticipants: number
     status?: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge?: number
+    vat?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     restaurant: RestaurantCreateNestedOneWithoutPartiesInput
@@ -11139,6 +13640,8 @@ export namespace Prisma {
     maxParticipants: number
     status?: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge?: number
+    vat?: number
     restaurantId: string
     leaderId: string
     createdAt?: Date | string
@@ -11154,6 +13657,8 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restaurant?: RestaurantUpdateOneRequiredWithoutPartiesNestedInput
@@ -11169,6 +13674,8 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     restaurantId?: StringFieldUpdateOperationsInput | string
     leaderId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11184,6 +13691,8 @@ export namespace Prisma {
     maxParticipants: number
     status?: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge?: number
+    vat?: number
     restaurantId: string
     leaderId: string
     createdAt?: Date | string
@@ -11198,6 +13707,8 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -11210,6 +13721,8 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     restaurantId?: StringFieldUpdateOperationsInput | string
     leaderId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11221,6 +13734,7 @@ export namespace Prisma {
     joinedAt?: Date | string
     party: PartyCreateNestedOneWithoutMembersInput
     user: UserCreateNestedOneWithoutJoinedPartiesInput
+    orderItems?: MemberOrderItemCreateNestedManyWithoutMemberInput
   }
 
   export type PartyMemberUncheckedCreateInput = {
@@ -11228,6 +13742,7 @@ export namespace Prisma {
     joinedAt?: Date | string
     partyId: string
     userId: string
+    orderItems?: MemberOrderItemUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type PartyMemberUpdateInput = {
@@ -11235,6 +13750,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     party?: PartyUpdateOneRequiredWithoutMembersNestedInput
     user?: UserUpdateOneRequiredWithoutJoinedPartiesNestedInput
+    orderItems?: MemberOrderItemUpdateManyWithoutMemberNestedInput
   }
 
   export type PartyMemberUncheckedUpdateInput = {
@@ -11242,6 +13758,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partyId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    orderItems?: MemberOrderItemUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type PartyMemberCreateManyInput = {
@@ -11261,6 +13778,53 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partyId?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MemberOrderItemCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    member: PartyMemberCreateNestedOneWithoutOrderItemsInput
+    menu: MenuCreateNestedOneWithoutOrderItemsInput
+  }
+
+  export type MemberOrderItemUncheckedCreateInput = {
+    id?: string
+    memberId: string
+    menuId: string
+    createdAt?: Date | string
+  }
+
+  export type MemberOrderItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    member?: PartyMemberUpdateOneRequiredWithoutOrderItemsNestedInput
+    menu?: MenuUpdateOneRequiredWithoutOrderItemsNestedInput
+  }
+
+  export type MemberOrderItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    memberId?: StringFieldUpdateOperationsInput | string
+    menuId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberOrderItemCreateManyInput = {
+    id?: string
+    memberId: string
+    menuId: string
+    createdAt?: Date | string
+  }
+
+  export type MemberOrderItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberOrderItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    memberId?: StringFieldUpdateOperationsInput | string
+    menuId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewCreateInput = {
@@ -11590,6 +14154,12 @@ export namespace Prisma {
     none?: MenuWhereInput
   }
 
+  export type OperatingHourListRelationFilter = {
+    every?: OperatingHourWhereInput
+    some?: OperatingHourWhereInput
+    none?: OperatingHourWhereInput
+  }
+
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -11600,6 +14170,10 @@ export namespace Prisma {
   }
 
   export type MenuOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OperatingHourOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -11688,6 +14262,13 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type EnumDayOfWeekFilter<$PrismaModel = never> = {
+    equals?: $Enums.DayOfWeek | EnumDayOfWeekFieldRefInput<$PrismaModel>
+    in?: $Enums.DayOfWeek[]
+    notIn?: $Enums.DayOfWeek[]
+    not?: NestedEnumDayOfWeekFilter<$PrismaModel> | $Enums.DayOfWeek
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -11696,6 +14277,57 @@ export namespace Prisma {
   export type RestaurantScalarRelationFilter = {
     is?: RestaurantWhereInput
     isNot?: RestaurantWhereInput
+  }
+
+  export type OperatingHourOrderByRelevanceInput = {
+    fields: OperatingHourOrderByRelevanceFieldEnum | OperatingHourOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type OperatingHourCountOrderByAggregateInput = {
+    id?: SortOrder
+    day?: SortOrder
+    openTime?: SortOrder
+    closeTime?: SortOrder
+    isClosed?: SortOrder
+    restaurantId?: SortOrder
+  }
+
+  export type OperatingHourMaxOrderByAggregateInput = {
+    id?: SortOrder
+    day?: SortOrder
+    openTime?: SortOrder
+    closeTime?: SortOrder
+    isClosed?: SortOrder
+    restaurantId?: SortOrder
+  }
+
+  export type OperatingHourMinOrderByAggregateInput = {
+    id?: SortOrder
+    day?: SortOrder
+    openTime?: SortOrder
+    closeTime?: SortOrder
+    isClosed?: SortOrder
+    restaurantId?: SortOrder
+  }
+
+  export type EnumDayOfWeekWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DayOfWeek | EnumDayOfWeekFieldRefInput<$PrismaModel>
+    in?: $Enums.DayOfWeek[]
+    notIn?: $Enums.DayOfWeek[]
+    not?: NestedEnumDayOfWeekWithAggregatesFilter<$PrismaModel> | $Enums.DayOfWeek
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDayOfWeekFilter<$PrismaModel>
+    _max?: NestedEnumDayOfWeekFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type RestaurantImageOrderByRelevanceInput = {
@@ -11726,14 +14358,6 @@ export namespace Prisma {
     isCover?: SortOrder
     restaurantId?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
@@ -11771,6 +14395,16 @@ export namespace Prisma {
     userId?: SortOrder
     restaurantId?: SortOrder
     savedAt?: SortOrder
+  }
+
+  export type MemberOrderItemListRelationFilter = {
+    every?: MemberOrderItemWhereInput
+    some?: MemberOrderItemWhereInput
+    none?: MemberOrderItemWhereInput
+  }
+
+  export type MemberOrderItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type MenuOrderByRelevanceInput = {
@@ -11855,6 +14489,8 @@ export namespace Prisma {
     maxParticipants?: SortOrder
     status?: SortOrder
     contactInfo?: SortOrder
+    serviceCharge?: SortOrder
+    vat?: SortOrder
     restaurantId?: SortOrder
     leaderId?: SortOrder
     createdAt?: SortOrder
@@ -11863,6 +14499,8 @@ export namespace Prisma {
 
   export type PartyAvgOrderByAggregateInput = {
     maxParticipants?: SortOrder
+    serviceCharge?: SortOrder
+    vat?: SortOrder
   }
 
   export type PartyMaxOrderByAggregateInput = {
@@ -11873,6 +14511,8 @@ export namespace Prisma {
     maxParticipants?: SortOrder
     status?: SortOrder
     contactInfo?: SortOrder
+    serviceCharge?: SortOrder
+    vat?: SortOrder
     restaurantId?: SortOrder
     leaderId?: SortOrder
     createdAt?: SortOrder
@@ -11887,6 +14527,8 @@ export namespace Prisma {
     maxParticipants?: SortOrder
     status?: SortOrder
     contactInfo?: SortOrder
+    serviceCharge?: SortOrder
+    vat?: SortOrder
     restaurantId?: SortOrder
     leaderId?: SortOrder
     createdAt?: SortOrder
@@ -11895,6 +14537,8 @@ export namespace Prisma {
 
   export type PartySumOrderByAggregateInput = {
     maxParticipants?: SortOrder
+    serviceCharge?: SortOrder
+    vat?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -11958,6 +14602,48 @@ export namespace Prisma {
     joinedAt?: SortOrder
     partyId?: SortOrder
     userId?: SortOrder
+  }
+
+  export type PartyMemberScalarRelationFilter = {
+    is?: PartyMemberWhereInput
+    isNot?: PartyMemberWhereInput
+  }
+
+  export type MenuScalarRelationFilter = {
+    is?: MenuWhereInput
+    isNot?: MenuWhereInput
+  }
+
+  export type MemberOrderItemOrderByRelevanceInput = {
+    fields: MemberOrderItemOrderByRelevanceFieldEnum | MemberOrderItemOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type MemberOrderItemMemberIdMenuIdCompoundUniqueInput = {
+    memberId: string
+    menuId: string
+  }
+
+  export type MemberOrderItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    menuId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MemberOrderItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    menuId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MemberOrderItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    menuId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type ReviewOrderByRelevanceInput = {
@@ -12262,6 +14948,13 @@ export namespace Prisma {
     connect?: PartyWhereUniqueInput | PartyWhereUniqueInput[]
   }
 
+  export type OperatingHourCreateNestedManyWithoutRestaurantInput = {
+    create?: XOR<OperatingHourCreateWithoutRestaurantInput, OperatingHourUncheckedCreateWithoutRestaurantInput> | OperatingHourCreateWithoutRestaurantInput[] | OperatingHourUncheckedCreateWithoutRestaurantInput[]
+    connectOrCreate?: OperatingHourCreateOrConnectWithoutRestaurantInput | OperatingHourCreateOrConnectWithoutRestaurantInput[]
+    createMany?: OperatingHourCreateManyRestaurantInputEnvelope
+    connect?: OperatingHourWhereUniqueInput | OperatingHourWhereUniqueInput[]
+  }
+
   export type UserCreateNestedOneWithoutOwnedRestaurantsInput = {
     create?: XOR<UserCreateWithoutOwnedRestaurantsInput, UserUncheckedCreateWithoutOwnedRestaurantsInput>
     connectOrCreate?: UserCreateOrConnectWithoutOwnedRestaurantsInput
@@ -12301,6 +14994,13 @@ export namespace Prisma {
     connectOrCreate?: PartyCreateOrConnectWithoutRestaurantInput | PartyCreateOrConnectWithoutRestaurantInput[]
     createMany?: PartyCreateManyRestaurantInputEnvelope
     connect?: PartyWhereUniqueInput | PartyWhereUniqueInput[]
+  }
+
+  export type OperatingHourUncheckedCreateNestedManyWithoutRestaurantInput = {
+    create?: XOR<OperatingHourCreateWithoutRestaurantInput, OperatingHourUncheckedCreateWithoutRestaurantInput> | OperatingHourCreateWithoutRestaurantInput[] | OperatingHourUncheckedCreateWithoutRestaurantInput[]
+    connectOrCreate?: OperatingHourCreateOrConnectWithoutRestaurantInput | OperatingHourCreateOrConnectWithoutRestaurantInput[]
+    createMany?: OperatingHourCreateManyRestaurantInputEnvelope
+    connect?: OperatingHourWhereUniqueInput | OperatingHourWhereUniqueInput[]
   }
 
   export type SavedRestaurantUncheckedCreateNestedManyWithoutRestaurantInput = {
@@ -12376,6 +15076,20 @@ export namespace Prisma {
     update?: PartyUpdateWithWhereUniqueWithoutRestaurantInput | PartyUpdateWithWhereUniqueWithoutRestaurantInput[]
     updateMany?: PartyUpdateManyWithWhereWithoutRestaurantInput | PartyUpdateManyWithWhereWithoutRestaurantInput[]
     deleteMany?: PartyScalarWhereInput | PartyScalarWhereInput[]
+  }
+
+  export type OperatingHourUpdateManyWithoutRestaurantNestedInput = {
+    create?: XOR<OperatingHourCreateWithoutRestaurantInput, OperatingHourUncheckedCreateWithoutRestaurantInput> | OperatingHourCreateWithoutRestaurantInput[] | OperatingHourUncheckedCreateWithoutRestaurantInput[]
+    connectOrCreate?: OperatingHourCreateOrConnectWithoutRestaurantInput | OperatingHourCreateOrConnectWithoutRestaurantInput[]
+    upsert?: OperatingHourUpsertWithWhereUniqueWithoutRestaurantInput | OperatingHourUpsertWithWhereUniqueWithoutRestaurantInput[]
+    createMany?: OperatingHourCreateManyRestaurantInputEnvelope
+    set?: OperatingHourWhereUniqueInput | OperatingHourWhereUniqueInput[]
+    disconnect?: OperatingHourWhereUniqueInput | OperatingHourWhereUniqueInput[]
+    delete?: OperatingHourWhereUniqueInput | OperatingHourWhereUniqueInput[]
+    connect?: OperatingHourWhereUniqueInput | OperatingHourWhereUniqueInput[]
+    update?: OperatingHourUpdateWithWhereUniqueWithoutRestaurantInput | OperatingHourUpdateWithWhereUniqueWithoutRestaurantInput[]
+    updateMany?: OperatingHourUpdateManyWithWhereWithoutRestaurantInput | OperatingHourUpdateManyWithWhereWithoutRestaurantInput[]
+    deleteMany?: OperatingHourScalarWhereInput | OperatingHourScalarWhereInput[]
   }
 
   export type UserUpdateOneWithoutOwnedRestaurantsNestedInput = {
@@ -12458,6 +15172,20 @@ export namespace Prisma {
     deleteMany?: PartyScalarWhereInput | PartyScalarWhereInput[]
   }
 
+  export type OperatingHourUncheckedUpdateManyWithoutRestaurantNestedInput = {
+    create?: XOR<OperatingHourCreateWithoutRestaurantInput, OperatingHourUncheckedCreateWithoutRestaurantInput> | OperatingHourCreateWithoutRestaurantInput[] | OperatingHourUncheckedCreateWithoutRestaurantInput[]
+    connectOrCreate?: OperatingHourCreateOrConnectWithoutRestaurantInput | OperatingHourCreateOrConnectWithoutRestaurantInput[]
+    upsert?: OperatingHourUpsertWithWhereUniqueWithoutRestaurantInput | OperatingHourUpsertWithWhereUniqueWithoutRestaurantInput[]
+    createMany?: OperatingHourCreateManyRestaurantInputEnvelope
+    set?: OperatingHourWhereUniqueInput | OperatingHourWhereUniqueInput[]
+    disconnect?: OperatingHourWhereUniqueInput | OperatingHourWhereUniqueInput[]
+    delete?: OperatingHourWhereUniqueInput | OperatingHourWhereUniqueInput[]
+    connect?: OperatingHourWhereUniqueInput | OperatingHourWhereUniqueInput[]
+    update?: OperatingHourUpdateWithWhereUniqueWithoutRestaurantInput | OperatingHourUpdateWithWhereUniqueWithoutRestaurantInput[]
+    updateMany?: OperatingHourUpdateManyWithWhereWithoutRestaurantInput | OperatingHourUpdateManyWithWhereWithoutRestaurantInput[]
+    deleteMany?: OperatingHourScalarWhereInput | OperatingHourScalarWhereInput[]
+  }
+
   export type SavedRestaurantUncheckedUpdateManyWithoutRestaurantNestedInput = {
     create?: XOR<SavedRestaurantCreateWithoutRestaurantInput, SavedRestaurantUncheckedCreateWithoutRestaurantInput> | SavedRestaurantCreateWithoutRestaurantInput[] | SavedRestaurantUncheckedCreateWithoutRestaurantInput[]
     connectOrCreate?: SavedRestaurantCreateOrConnectWithoutRestaurantInput | SavedRestaurantCreateOrConnectWithoutRestaurantInput[]
@@ -12472,14 +15200,32 @@ export namespace Prisma {
     deleteMany?: SavedRestaurantScalarWhereInput | SavedRestaurantScalarWhereInput[]
   }
 
-  export type RestaurantCreateNestedOneWithoutImagesInput = {
-    create?: XOR<RestaurantCreateWithoutImagesInput, RestaurantUncheckedCreateWithoutImagesInput>
-    connectOrCreate?: RestaurantCreateOrConnectWithoutImagesInput
+  export type RestaurantCreateNestedOneWithoutOperatingHoursInput = {
+    create?: XOR<RestaurantCreateWithoutOperatingHoursInput, RestaurantUncheckedCreateWithoutOperatingHoursInput>
+    connectOrCreate?: RestaurantCreateOrConnectWithoutOperatingHoursInput
     connect?: RestaurantWhereUniqueInput
+  }
+
+  export type EnumDayOfWeekFieldUpdateOperationsInput = {
+    set?: $Enums.DayOfWeek
   }
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type RestaurantUpdateOneRequiredWithoutOperatingHoursNestedInput = {
+    create?: XOR<RestaurantCreateWithoutOperatingHoursInput, RestaurantUncheckedCreateWithoutOperatingHoursInput>
+    connectOrCreate?: RestaurantCreateOrConnectWithoutOperatingHoursInput
+    upsert?: RestaurantUpsertWithoutOperatingHoursInput
+    connect?: RestaurantWhereUniqueInput
+    update?: XOR<XOR<RestaurantUpdateToOneWithWhereWithoutOperatingHoursInput, RestaurantUpdateWithoutOperatingHoursInput>, RestaurantUncheckedUpdateWithoutOperatingHoursInput>
+  }
+
+  export type RestaurantCreateNestedOneWithoutImagesInput = {
+    create?: XOR<RestaurantCreateWithoutImagesInput, RestaurantUncheckedCreateWithoutImagesInput>
+    connectOrCreate?: RestaurantCreateOrConnectWithoutImagesInput
+    connect?: RestaurantWhereUniqueInput
   }
 
   export type RestaurantUpdateOneRequiredWithoutImagesNestedInput = {
@@ -12524,12 +15270,54 @@ export namespace Prisma {
     connect?: RestaurantWhereUniqueInput
   }
 
+  export type MemberOrderItemCreateNestedManyWithoutMenuInput = {
+    create?: XOR<MemberOrderItemCreateWithoutMenuInput, MemberOrderItemUncheckedCreateWithoutMenuInput> | MemberOrderItemCreateWithoutMenuInput[] | MemberOrderItemUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutMenuInput | MemberOrderItemCreateOrConnectWithoutMenuInput[]
+    createMany?: MemberOrderItemCreateManyMenuInputEnvelope
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+  }
+
+  export type MemberOrderItemUncheckedCreateNestedManyWithoutMenuInput = {
+    create?: XOR<MemberOrderItemCreateWithoutMenuInput, MemberOrderItemUncheckedCreateWithoutMenuInput> | MemberOrderItemCreateWithoutMenuInput[] | MemberOrderItemUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutMenuInput | MemberOrderItemCreateOrConnectWithoutMenuInput[]
+    createMany?: MemberOrderItemCreateManyMenuInputEnvelope
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+  }
+
   export type RestaurantUpdateOneRequiredWithoutMenusNestedInput = {
     create?: XOR<RestaurantCreateWithoutMenusInput, RestaurantUncheckedCreateWithoutMenusInput>
     connectOrCreate?: RestaurantCreateOrConnectWithoutMenusInput
     upsert?: RestaurantUpsertWithoutMenusInput
     connect?: RestaurantWhereUniqueInput
     update?: XOR<XOR<RestaurantUpdateToOneWithWhereWithoutMenusInput, RestaurantUpdateWithoutMenusInput>, RestaurantUncheckedUpdateWithoutMenusInput>
+  }
+
+  export type MemberOrderItemUpdateManyWithoutMenuNestedInput = {
+    create?: XOR<MemberOrderItemCreateWithoutMenuInput, MemberOrderItemUncheckedCreateWithoutMenuInput> | MemberOrderItemCreateWithoutMenuInput[] | MemberOrderItemUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutMenuInput | MemberOrderItemCreateOrConnectWithoutMenuInput[]
+    upsert?: MemberOrderItemUpsertWithWhereUniqueWithoutMenuInput | MemberOrderItemUpsertWithWhereUniqueWithoutMenuInput[]
+    createMany?: MemberOrderItemCreateManyMenuInputEnvelope
+    set?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    disconnect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    delete?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    update?: MemberOrderItemUpdateWithWhereUniqueWithoutMenuInput | MemberOrderItemUpdateWithWhereUniqueWithoutMenuInput[]
+    updateMany?: MemberOrderItemUpdateManyWithWhereWithoutMenuInput | MemberOrderItemUpdateManyWithWhereWithoutMenuInput[]
+    deleteMany?: MemberOrderItemScalarWhereInput | MemberOrderItemScalarWhereInput[]
+  }
+
+  export type MemberOrderItemUncheckedUpdateManyWithoutMenuNestedInput = {
+    create?: XOR<MemberOrderItemCreateWithoutMenuInput, MemberOrderItemUncheckedCreateWithoutMenuInput> | MemberOrderItemCreateWithoutMenuInput[] | MemberOrderItemUncheckedCreateWithoutMenuInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutMenuInput | MemberOrderItemCreateOrConnectWithoutMenuInput[]
+    upsert?: MemberOrderItemUpsertWithWhereUniqueWithoutMenuInput | MemberOrderItemUpsertWithWhereUniqueWithoutMenuInput[]
+    createMany?: MemberOrderItemCreateManyMenuInputEnvelope
+    set?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    disconnect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    delete?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    update?: MemberOrderItemUpdateWithWhereUniqueWithoutMenuInput | MemberOrderItemUpdateWithWhereUniqueWithoutMenuInput[]
+    updateMany?: MemberOrderItemUpdateManyWithWhereWithoutMenuInput | MemberOrderItemUpdateManyWithWhereWithoutMenuInput[]
+    deleteMany?: MemberOrderItemScalarWhereInput | MemberOrderItemScalarWhereInput[]
   }
 
   export type RestaurantCreateNestedOneWithoutPartiesInput = {
@@ -12626,6 +15414,20 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type MemberOrderItemCreateNestedManyWithoutMemberInput = {
+    create?: XOR<MemberOrderItemCreateWithoutMemberInput, MemberOrderItemUncheckedCreateWithoutMemberInput> | MemberOrderItemCreateWithoutMemberInput[] | MemberOrderItemUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutMemberInput | MemberOrderItemCreateOrConnectWithoutMemberInput[]
+    createMany?: MemberOrderItemCreateManyMemberInputEnvelope
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+  }
+
+  export type MemberOrderItemUncheckedCreateNestedManyWithoutMemberInput = {
+    create?: XOR<MemberOrderItemCreateWithoutMemberInput, MemberOrderItemUncheckedCreateWithoutMemberInput> | MemberOrderItemCreateWithoutMemberInput[] | MemberOrderItemUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutMemberInput | MemberOrderItemCreateOrConnectWithoutMemberInput[]
+    createMany?: MemberOrderItemCreateManyMemberInputEnvelope
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+  }
+
   export type PartyUpdateOneRequiredWithoutMembersNestedInput = {
     create?: XOR<PartyCreateWithoutMembersInput, PartyUncheckedCreateWithoutMembersInput>
     connectOrCreate?: PartyCreateOrConnectWithoutMembersInput
@@ -12640,6 +15442,62 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutJoinedPartiesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutJoinedPartiesInput, UserUpdateWithoutJoinedPartiesInput>, UserUncheckedUpdateWithoutJoinedPartiesInput>
+  }
+
+  export type MemberOrderItemUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<MemberOrderItemCreateWithoutMemberInput, MemberOrderItemUncheckedCreateWithoutMemberInput> | MemberOrderItemCreateWithoutMemberInput[] | MemberOrderItemUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutMemberInput | MemberOrderItemCreateOrConnectWithoutMemberInput[]
+    upsert?: MemberOrderItemUpsertWithWhereUniqueWithoutMemberInput | MemberOrderItemUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: MemberOrderItemCreateManyMemberInputEnvelope
+    set?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    disconnect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    delete?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    update?: MemberOrderItemUpdateWithWhereUniqueWithoutMemberInput | MemberOrderItemUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: MemberOrderItemUpdateManyWithWhereWithoutMemberInput | MemberOrderItemUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: MemberOrderItemScalarWhereInput | MemberOrderItemScalarWhereInput[]
+  }
+
+  export type MemberOrderItemUncheckedUpdateManyWithoutMemberNestedInput = {
+    create?: XOR<MemberOrderItemCreateWithoutMemberInput, MemberOrderItemUncheckedCreateWithoutMemberInput> | MemberOrderItemCreateWithoutMemberInput[] | MemberOrderItemUncheckedCreateWithoutMemberInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutMemberInput | MemberOrderItemCreateOrConnectWithoutMemberInput[]
+    upsert?: MemberOrderItemUpsertWithWhereUniqueWithoutMemberInput | MemberOrderItemUpsertWithWhereUniqueWithoutMemberInput[]
+    createMany?: MemberOrderItemCreateManyMemberInputEnvelope
+    set?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    disconnect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    delete?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    update?: MemberOrderItemUpdateWithWhereUniqueWithoutMemberInput | MemberOrderItemUpdateWithWhereUniqueWithoutMemberInput[]
+    updateMany?: MemberOrderItemUpdateManyWithWhereWithoutMemberInput | MemberOrderItemUpdateManyWithWhereWithoutMemberInput[]
+    deleteMany?: MemberOrderItemScalarWhereInput | MemberOrderItemScalarWhereInput[]
+  }
+
+  export type PartyMemberCreateNestedOneWithoutOrderItemsInput = {
+    create?: XOR<PartyMemberCreateWithoutOrderItemsInput, PartyMemberUncheckedCreateWithoutOrderItemsInput>
+    connectOrCreate?: PartyMemberCreateOrConnectWithoutOrderItemsInput
+    connect?: PartyMemberWhereUniqueInput
+  }
+
+  export type MenuCreateNestedOneWithoutOrderItemsInput = {
+    create?: XOR<MenuCreateWithoutOrderItemsInput, MenuUncheckedCreateWithoutOrderItemsInput>
+    connectOrCreate?: MenuCreateOrConnectWithoutOrderItemsInput
+    connect?: MenuWhereUniqueInput
+  }
+
+  export type PartyMemberUpdateOneRequiredWithoutOrderItemsNestedInput = {
+    create?: XOR<PartyMemberCreateWithoutOrderItemsInput, PartyMemberUncheckedCreateWithoutOrderItemsInput>
+    connectOrCreate?: PartyMemberCreateOrConnectWithoutOrderItemsInput
+    upsert?: PartyMemberUpsertWithoutOrderItemsInput
+    connect?: PartyMemberWhereUniqueInput
+    update?: XOR<XOR<PartyMemberUpdateToOneWithWhereWithoutOrderItemsInput, PartyMemberUpdateWithoutOrderItemsInput>, PartyMemberUncheckedUpdateWithoutOrderItemsInput>
+  }
+
+  export type MenuUpdateOneRequiredWithoutOrderItemsNestedInput = {
+    create?: XOR<MenuCreateWithoutOrderItemsInput, MenuUncheckedCreateWithoutOrderItemsInput>
+    connectOrCreate?: MenuCreateOrConnectWithoutOrderItemsInput
+    upsert?: MenuUpsertWithoutOrderItemsInput
+    connect?: MenuWhereUniqueInput
+    update?: XOR<XOR<MenuUpdateToOneWithWhereWithoutOrderItemsInput, MenuUpdateWithoutOrderItemsInput>, MenuUncheckedUpdateWithoutOrderItemsInput>
   }
 
   export type UserCreateNestedOneWithoutReviewsInput = {
@@ -12869,9 +15727,26 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumDayOfWeekFilter<$PrismaModel = never> = {
+    equals?: $Enums.DayOfWeek | EnumDayOfWeekFieldRefInput<$PrismaModel>
+    in?: $Enums.DayOfWeek[]
+    notIn?: $Enums.DayOfWeek[]
+    not?: NestedEnumDayOfWeekFilter<$PrismaModel> | $Enums.DayOfWeek
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedEnumDayOfWeekWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.DayOfWeek | EnumDayOfWeekFieldRefInput<$PrismaModel>
+    in?: $Enums.DayOfWeek[]
+    notIn?: $Enums.DayOfWeek[]
+    not?: NestedEnumDayOfWeekWithAggregatesFilter<$PrismaModel> | $Enums.DayOfWeek
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDayOfWeekFilter<$PrismaModel>
+    _max?: NestedEnumDayOfWeekFilter<$PrismaModel>
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -12951,6 +15826,8 @@ export namespace Prisma {
     maxParticipants: number
     status?: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge?: number
+    vat?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     restaurant: RestaurantCreateNestedOneWithoutPartiesInput
@@ -12965,6 +15842,8 @@ export namespace Prisma {
     maxParticipants: number
     status?: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge?: number
+    vat?: number
     restaurantId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12985,12 +15864,14 @@ export namespace Prisma {
     id?: string
     joinedAt?: Date | string
     party: PartyCreateNestedOneWithoutMembersInput
+    orderItems?: MemberOrderItemCreateNestedManyWithoutMemberInput
   }
 
   export type PartyMemberUncheckedCreateWithoutUserInput = {
     id?: string
     joinedAt?: Date | string
     partyId: string
+    orderItems?: MemberOrderItemUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type PartyMemberCreateOrConnectWithoutUserInput = {
@@ -13017,6 +15898,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutRestaurantInput
     menus?: MenuCreateNestedManyWithoutRestaurantInput
     parties?: PartyCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourCreateNestedManyWithoutRestaurantInput
     savedBy?: SavedRestaurantCreateNestedManyWithoutRestaurantInput
   }
 
@@ -13034,6 +15916,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutRestaurantInput
     menus?: MenuUncheckedCreateNestedManyWithoutRestaurantInput
     parties?: PartyUncheckedCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourUncheckedCreateNestedManyWithoutRestaurantInput
     savedBy?: SavedRestaurantUncheckedCreateNestedManyWithoutRestaurantInput
   }
 
@@ -13125,6 +16008,8 @@ export namespace Prisma {
     maxParticipants?: IntFilter<"Party"> | number
     status?: EnumPartyStatusFilter<"Party"> | $Enums.PartyStatus
     contactInfo?: StringFilter<"Party"> | string
+    serviceCharge?: FloatFilter<"Party"> | number
+    vat?: FloatFilter<"Party"> | number
     restaurantId?: StringFilter<"Party"> | string
     leaderId?: StringFilter<"Party"> | string
     createdAt?: DateTimeFilter<"Party"> | Date | string
@@ -13276,6 +16161,7 @@ export namespace Prisma {
     imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    orderItems?: MemberOrderItemCreateNestedManyWithoutMenuInput
   }
 
   export type MenuUncheckedCreateWithoutRestaurantInput = {
@@ -13287,6 +16173,7 @@ export namespace Prisma {
     imageUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    orderItems?: MemberOrderItemUncheckedCreateNestedManyWithoutMenuInput
   }
 
   export type MenuCreateOrConnectWithoutRestaurantInput = {
@@ -13307,6 +16194,8 @@ export namespace Prisma {
     maxParticipants: number
     status?: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge?: number
+    vat?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     leader: UserCreateNestedOneWithoutPartiesLedInput
@@ -13321,6 +16210,8 @@ export namespace Prisma {
     maxParticipants: number
     status?: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge?: number
+    vat?: number
     leaderId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -13334,6 +16225,32 @@ export namespace Prisma {
 
   export type PartyCreateManyRestaurantInputEnvelope = {
     data: PartyCreateManyRestaurantInput | PartyCreateManyRestaurantInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OperatingHourCreateWithoutRestaurantInput = {
+    id?: string
+    day: $Enums.DayOfWeek
+    openTime: string
+    closeTime: string
+    isClosed?: boolean
+  }
+
+  export type OperatingHourUncheckedCreateWithoutRestaurantInput = {
+    id?: string
+    day: $Enums.DayOfWeek
+    openTime: string
+    closeTime: string
+    isClosed?: boolean
+  }
+
+  export type OperatingHourCreateOrConnectWithoutRestaurantInput = {
+    where: OperatingHourWhereUniqueInput
+    create: XOR<OperatingHourCreateWithoutRestaurantInput, OperatingHourUncheckedCreateWithoutRestaurantInput>
+  }
+
+  export type OperatingHourCreateManyRestaurantInputEnvelope = {
+    data: OperatingHourCreateManyRestaurantInput | OperatingHourCreateManyRestaurantInput[]
     skipDuplicates?: boolean
   }
 
@@ -13488,6 +16405,34 @@ export namespace Prisma {
     data: XOR<PartyUpdateManyMutationInput, PartyUncheckedUpdateManyWithoutRestaurantInput>
   }
 
+  export type OperatingHourUpsertWithWhereUniqueWithoutRestaurantInput = {
+    where: OperatingHourWhereUniqueInput
+    update: XOR<OperatingHourUpdateWithoutRestaurantInput, OperatingHourUncheckedUpdateWithoutRestaurantInput>
+    create: XOR<OperatingHourCreateWithoutRestaurantInput, OperatingHourUncheckedCreateWithoutRestaurantInput>
+  }
+
+  export type OperatingHourUpdateWithWhereUniqueWithoutRestaurantInput = {
+    where: OperatingHourWhereUniqueInput
+    data: XOR<OperatingHourUpdateWithoutRestaurantInput, OperatingHourUncheckedUpdateWithoutRestaurantInput>
+  }
+
+  export type OperatingHourUpdateManyWithWhereWithoutRestaurantInput = {
+    where: OperatingHourScalarWhereInput
+    data: XOR<OperatingHourUpdateManyMutationInput, OperatingHourUncheckedUpdateManyWithoutRestaurantInput>
+  }
+
+  export type OperatingHourScalarWhereInput = {
+    AND?: OperatingHourScalarWhereInput | OperatingHourScalarWhereInput[]
+    OR?: OperatingHourScalarWhereInput[]
+    NOT?: OperatingHourScalarWhereInput | OperatingHourScalarWhereInput[]
+    id?: StringFilter<"OperatingHour"> | string
+    day?: EnumDayOfWeekFilter<"OperatingHour"> | $Enums.DayOfWeek
+    openTime?: StringFilter<"OperatingHour"> | string
+    closeTime?: StringFilter<"OperatingHour"> | string
+    isClosed?: BoolFilter<"OperatingHour"> | boolean
+    restaurantId?: StringFilter<"OperatingHour"> | string
+  }
+
   export type UserUpsertWithoutOwnedRestaurantsInput = {
     update: XOR<UserUpdateWithoutOwnedRestaurantsInput, UserUncheckedUpdateWithoutOwnedRestaurantsInput>
     create: XOR<UserCreateWithoutOwnedRestaurantsInput, UserUncheckedCreateWithoutOwnedRestaurantsInput>
@@ -13549,6 +16494,94 @@ export namespace Prisma {
     data: XOR<SavedRestaurantUpdateManyMutationInput, SavedRestaurantUncheckedUpdateManyWithoutRestaurantInput>
   }
 
+  export type RestaurantCreateWithoutOperatingHoursInput = {
+    id?: string
+    name: string
+    description?: string | null
+    lat: number
+    lng: number
+    category?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    images?: RestaurantImageCreateNestedManyWithoutRestaurantInput
+    reviews?: ReviewCreateNestedManyWithoutRestaurantInput
+    menus?: MenuCreateNestedManyWithoutRestaurantInput
+    parties?: PartyCreateNestedManyWithoutRestaurantInput
+    owner?: UserCreateNestedOneWithoutOwnedRestaurantsInput
+    savedBy?: SavedRestaurantCreateNestedManyWithoutRestaurantInput
+  }
+
+  export type RestaurantUncheckedCreateWithoutOperatingHoursInput = {
+    id?: string
+    name: string
+    description?: string | null
+    lat: number
+    lng: number
+    category?: string | null
+    ownerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    images?: RestaurantImageUncheckedCreateNestedManyWithoutRestaurantInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutRestaurantInput
+    menus?: MenuUncheckedCreateNestedManyWithoutRestaurantInput
+    parties?: PartyUncheckedCreateNestedManyWithoutRestaurantInput
+    savedBy?: SavedRestaurantUncheckedCreateNestedManyWithoutRestaurantInput
+  }
+
+  export type RestaurantCreateOrConnectWithoutOperatingHoursInput = {
+    where: RestaurantWhereUniqueInput
+    create: XOR<RestaurantCreateWithoutOperatingHoursInput, RestaurantUncheckedCreateWithoutOperatingHoursInput>
+  }
+
+  export type RestaurantUpsertWithoutOperatingHoursInput = {
+    update: XOR<RestaurantUpdateWithoutOperatingHoursInput, RestaurantUncheckedUpdateWithoutOperatingHoursInput>
+    create: XOR<RestaurantCreateWithoutOperatingHoursInput, RestaurantUncheckedCreateWithoutOperatingHoursInput>
+    where?: RestaurantWhereInput
+  }
+
+  export type RestaurantUpdateToOneWithWhereWithoutOperatingHoursInput = {
+    where?: RestaurantWhereInput
+    data: XOR<RestaurantUpdateWithoutOperatingHoursInput, RestaurantUncheckedUpdateWithoutOperatingHoursInput>
+  }
+
+  export type RestaurantUpdateWithoutOperatingHoursInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    images?: RestaurantImageUpdateManyWithoutRestaurantNestedInput
+    reviews?: ReviewUpdateManyWithoutRestaurantNestedInput
+    menus?: MenuUpdateManyWithoutRestaurantNestedInput
+    parties?: PartyUpdateManyWithoutRestaurantNestedInput
+    owner?: UserUpdateOneWithoutOwnedRestaurantsNestedInput
+    savedBy?: SavedRestaurantUpdateManyWithoutRestaurantNestedInput
+  }
+
+  export type RestaurantUncheckedUpdateWithoutOperatingHoursInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    lat?: FloatFieldUpdateOperationsInput | number
+    lng?: FloatFieldUpdateOperationsInput | number
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    images?: RestaurantImageUncheckedUpdateManyWithoutRestaurantNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutRestaurantNestedInput
+    menus?: MenuUncheckedUpdateManyWithoutRestaurantNestedInput
+    parties?: PartyUncheckedUpdateManyWithoutRestaurantNestedInput
+    savedBy?: SavedRestaurantUncheckedUpdateManyWithoutRestaurantNestedInput
+  }
+
   export type RestaurantCreateWithoutImagesInput = {
     id?: string
     name: string
@@ -13562,6 +16595,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutRestaurantInput
     menus?: MenuCreateNestedManyWithoutRestaurantInput
     parties?: PartyCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourCreateNestedManyWithoutRestaurantInput
     owner?: UserCreateNestedOneWithoutOwnedRestaurantsInput
     savedBy?: SavedRestaurantCreateNestedManyWithoutRestaurantInput
   }
@@ -13580,6 +16614,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutRestaurantInput
     menus?: MenuUncheckedCreateNestedManyWithoutRestaurantInput
     parties?: PartyUncheckedCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourUncheckedCreateNestedManyWithoutRestaurantInput
     savedBy?: SavedRestaurantUncheckedCreateNestedManyWithoutRestaurantInput
   }
 
@@ -13612,6 +16647,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUpdateManyWithoutRestaurantNestedInput
     owner?: UserUpdateOneWithoutOwnedRestaurantsNestedInput
     savedBy?: SavedRestaurantUpdateManyWithoutRestaurantNestedInput
   }
@@ -13630,6 +16666,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUncheckedUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUncheckedUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUncheckedUpdateManyWithoutRestaurantNestedInput
     savedBy?: SavedRestaurantUncheckedUpdateManyWithoutRestaurantNestedInput
   }
 
@@ -13686,6 +16723,7 @@ export namespace Prisma {
     reviews?: ReviewCreateNestedManyWithoutRestaurantInput
     menus?: MenuCreateNestedManyWithoutRestaurantInput
     parties?: PartyCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourCreateNestedManyWithoutRestaurantInput
     owner?: UserCreateNestedOneWithoutOwnedRestaurantsInput
   }
 
@@ -13704,6 +16742,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedCreateNestedManyWithoutRestaurantInput
     menus?: MenuUncheckedCreateNestedManyWithoutRestaurantInput
     parties?: PartyUncheckedCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourUncheckedCreateNestedManyWithoutRestaurantInput
   }
 
   export type RestaurantCreateOrConnectWithoutSavedByInput = {
@@ -13781,6 +16820,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUpdateManyWithoutRestaurantNestedInput
     owner?: UserUpdateOneWithoutOwnedRestaurantsNestedInput
   }
 
@@ -13799,6 +16839,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUncheckedUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUncheckedUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUncheckedUpdateManyWithoutRestaurantNestedInput
   }
 
   export type RestaurantCreateWithoutMenusInput = {
@@ -13814,6 +16855,7 @@ export namespace Prisma {
     images?: RestaurantImageCreateNestedManyWithoutRestaurantInput
     reviews?: ReviewCreateNestedManyWithoutRestaurantInput
     parties?: PartyCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourCreateNestedManyWithoutRestaurantInput
     owner?: UserCreateNestedOneWithoutOwnedRestaurantsInput
     savedBy?: SavedRestaurantCreateNestedManyWithoutRestaurantInput
   }
@@ -13832,12 +16874,35 @@ export namespace Prisma {
     images?: RestaurantImageUncheckedCreateNestedManyWithoutRestaurantInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutRestaurantInput
     parties?: PartyUncheckedCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourUncheckedCreateNestedManyWithoutRestaurantInput
     savedBy?: SavedRestaurantUncheckedCreateNestedManyWithoutRestaurantInput
   }
 
   export type RestaurantCreateOrConnectWithoutMenusInput = {
     where: RestaurantWhereUniqueInput
     create: XOR<RestaurantCreateWithoutMenusInput, RestaurantUncheckedCreateWithoutMenusInput>
+  }
+
+  export type MemberOrderItemCreateWithoutMenuInput = {
+    id?: string
+    createdAt?: Date | string
+    member: PartyMemberCreateNestedOneWithoutOrderItemsInput
+  }
+
+  export type MemberOrderItemUncheckedCreateWithoutMenuInput = {
+    id?: string
+    memberId: string
+    createdAt?: Date | string
+  }
+
+  export type MemberOrderItemCreateOrConnectWithoutMenuInput = {
+    where: MemberOrderItemWhereUniqueInput
+    create: XOR<MemberOrderItemCreateWithoutMenuInput, MemberOrderItemUncheckedCreateWithoutMenuInput>
+  }
+
+  export type MemberOrderItemCreateManyMenuInputEnvelope = {
+    data: MemberOrderItemCreateManyMenuInput | MemberOrderItemCreateManyMenuInput[]
+    skipDuplicates?: boolean
   }
 
   export type RestaurantUpsertWithoutMenusInput = {
@@ -13864,6 +16929,7 @@ export namespace Prisma {
     images?: RestaurantImageUpdateManyWithoutRestaurantNestedInput
     reviews?: ReviewUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUpdateManyWithoutRestaurantNestedInput
     owner?: UserUpdateOneWithoutOwnedRestaurantsNestedInput
     savedBy?: SavedRestaurantUpdateManyWithoutRestaurantNestedInput
   }
@@ -13882,7 +16948,34 @@ export namespace Prisma {
     images?: RestaurantImageUncheckedUpdateManyWithoutRestaurantNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUncheckedUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUncheckedUpdateManyWithoutRestaurantNestedInput
     savedBy?: SavedRestaurantUncheckedUpdateManyWithoutRestaurantNestedInput
+  }
+
+  export type MemberOrderItemUpsertWithWhereUniqueWithoutMenuInput = {
+    where: MemberOrderItemWhereUniqueInput
+    update: XOR<MemberOrderItemUpdateWithoutMenuInput, MemberOrderItemUncheckedUpdateWithoutMenuInput>
+    create: XOR<MemberOrderItemCreateWithoutMenuInput, MemberOrderItemUncheckedCreateWithoutMenuInput>
+  }
+
+  export type MemberOrderItemUpdateWithWhereUniqueWithoutMenuInput = {
+    where: MemberOrderItemWhereUniqueInput
+    data: XOR<MemberOrderItemUpdateWithoutMenuInput, MemberOrderItemUncheckedUpdateWithoutMenuInput>
+  }
+
+  export type MemberOrderItemUpdateManyWithWhereWithoutMenuInput = {
+    where: MemberOrderItemScalarWhereInput
+    data: XOR<MemberOrderItemUpdateManyMutationInput, MemberOrderItemUncheckedUpdateManyWithoutMenuInput>
+  }
+
+  export type MemberOrderItemScalarWhereInput = {
+    AND?: MemberOrderItemScalarWhereInput | MemberOrderItemScalarWhereInput[]
+    OR?: MemberOrderItemScalarWhereInput[]
+    NOT?: MemberOrderItemScalarWhereInput | MemberOrderItemScalarWhereInput[]
+    id?: StringFilter<"MemberOrderItem"> | string
+    memberId?: StringFilter<"MemberOrderItem"> | string
+    menuId?: StringFilter<"MemberOrderItem"> | string
+    createdAt?: DateTimeFilter<"MemberOrderItem"> | Date | string
   }
 
   export type RestaurantCreateWithoutPartiesInput = {
@@ -13898,6 +16991,7 @@ export namespace Prisma {
     images?: RestaurantImageCreateNestedManyWithoutRestaurantInput
     reviews?: ReviewCreateNestedManyWithoutRestaurantInput
     menus?: MenuCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourCreateNestedManyWithoutRestaurantInput
     owner?: UserCreateNestedOneWithoutOwnedRestaurantsInput
     savedBy?: SavedRestaurantCreateNestedManyWithoutRestaurantInput
   }
@@ -13916,6 +17010,7 @@ export namespace Prisma {
     images?: RestaurantImageUncheckedCreateNestedManyWithoutRestaurantInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutRestaurantInput
     menus?: MenuUncheckedCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourUncheckedCreateNestedManyWithoutRestaurantInput
     savedBy?: SavedRestaurantUncheckedCreateNestedManyWithoutRestaurantInput
   }
 
@@ -13967,12 +17062,14 @@ export namespace Prisma {
     id?: string
     joinedAt?: Date | string
     user: UserCreateNestedOneWithoutJoinedPartiesInput
+    orderItems?: MemberOrderItemCreateNestedManyWithoutMemberInput
   }
 
   export type PartyMemberUncheckedCreateWithoutPartyInput = {
     id?: string
     joinedAt?: Date | string
     userId: string
+    orderItems?: MemberOrderItemUncheckedCreateNestedManyWithoutMemberInput
   }
 
   export type PartyMemberCreateOrConnectWithoutPartyInput = {
@@ -14009,6 +17106,7 @@ export namespace Prisma {
     images?: RestaurantImageUpdateManyWithoutRestaurantNestedInput
     reviews?: ReviewUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUpdateManyWithoutRestaurantNestedInput
     owner?: UserUpdateOneWithoutOwnedRestaurantsNestedInput
     savedBy?: SavedRestaurantUpdateManyWithoutRestaurantNestedInput
   }
@@ -14027,6 +17125,7 @@ export namespace Prisma {
     images?: RestaurantImageUncheckedUpdateManyWithoutRestaurantNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUncheckedUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUncheckedUpdateManyWithoutRestaurantNestedInput
     savedBy?: SavedRestaurantUncheckedUpdateManyWithoutRestaurantNestedInput
   }
 
@@ -14099,6 +17198,8 @@ export namespace Prisma {
     maxParticipants: number
     status?: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge?: number
+    vat?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     restaurant: RestaurantCreateNestedOneWithoutPartiesInput
@@ -14113,6 +17214,8 @@ export namespace Prisma {
     maxParticipants: number
     status?: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge?: number
+    vat?: number
     restaurantId: string
     leaderId: string
     createdAt?: Date | string
@@ -14163,6 +17266,28 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutJoinedPartiesInput, UserUncheckedCreateWithoutJoinedPartiesInput>
   }
 
+  export type MemberOrderItemCreateWithoutMemberInput = {
+    id?: string
+    createdAt?: Date | string
+    menu: MenuCreateNestedOneWithoutOrderItemsInput
+  }
+
+  export type MemberOrderItemUncheckedCreateWithoutMemberInput = {
+    id?: string
+    menuId: string
+    createdAt?: Date | string
+  }
+
+  export type MemberOrderItemCreateOrConnectWithoutMemberInput = {
+    where: MemberOrderItemWhereUniqueInput
+    create: XOR<MemberOrderItemCreateWithoutMemberInput, MemberOrderItemUncheckedCreateWithoutMemberInput>
+  }
+
+  export type MemberOrderItemCreateManyMemberInputEnvelope = {
+    data: MemberOrderItemCreateManyMemberInput | MemberOrderItemCreateManyMemberInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PartyUpsertWithoutMembersInput = {
     update: XOR<PartyUpdateWithoutMembersInput, PartyUncheckedUpdateWithoutMembersInput>
     create: XOR<PartyCreateWithoutMembersInput, PartyUncheckedCreateWithoutMembersInput>
@@ -14182,6 +17307,8 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restaurant?: RestaurantUpdateOneRequiredWithoutPartiesNestedInput
@@ -14196,6 +17323,8 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     restaurantId?: StringFieldUpdateOperationsInput | string
     leaderId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14245,6 +17374,130 @@ export namespace Prisma {
     partiesLed?: PartyUncheckedUpdateManyWithoutLeaderNestedInput
     ownedRestaurants?: RestaurantUncheckedUpdateManyWithoutOwnerNestedInput
     savedRestaurants?: SavedRestaurantUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type MemberOrderItemUpsertWithWhereUniqueWithoutMemberInput = {
+    where: MemberOrderItemWhereUniqueInput
+    update: XOR<MemberOrderItemUpdateWithoutMemberInput, MemberOrderItemUncheckedUpdateWithoutMemberInput>
+    create: XOR<MemberOrderItemCreateWithoutMemberInput, MemberOrderItemUncheckedCreateWithoutMemberInput>
+  }
+
+  export type MemberOrderItemUpdateWithWhereUniqueWithoutMemberInput = {
+    where: MemberOrderItemWhereUniqueInput
+    data: XOR<MemberOrderItemUpdateWithoutMemberInput, MemberOrderItemUncheckedUpdateWithoutMemberInput>
+  }
+
+  export type MemberOrderItemUpdateManyWithWhereWithoutMemberInput = {
+    where: MemberOrderItemScalarWhereInput
+    data: XOR<MemberOrderItemUpdateManyMutationInput, MemberOrderItemUncheckedUpdateManyWithoutMemberInput>
+  }
+
+  export type PartyMemberCreateWithoutOrderItemsInput = {
+    id?: string
+    joinedAt?: Date | string
+    party: PartyCreateNestedOneWithoutMembersInput
+    user: UserCreateNestedOneWithoutJoinedPartiesInput
+  }
+
+  export type PartyMemberUncheckedCreateWithoutOrderItemsInput = {
+    id?: string
+    joinedAt?: Date | string
+    partyId: string
+    userId: string
+  }
+
+  export type PartyMemberCreateOrConnectWithoutOrderItemsInput = {
+    where: PartyMemberWhereUniqueInput
+    create: XOR<PartyMemberCreateWithoutOrderItemsInput, PartyMemberUncheckedCreateWithoutOrderItemsInput>
+  }
+
+  export type MenuCreateWithoutOrderItemsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price: number
+    category?: string
+    imageUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    restaurant: RestaurantCreateNestedOneWithoutMenusInput
+  }
+
+  export type MenuUncheckedCreateWithoutOrderItemsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    price: number
+    category?: string
+    imageUrl?: string | null
+    restaurantId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MenuCreateOrConnectWithoutOrderItemsInput = {
+    where: MenuWhereUniqueInput
+    create: XOR<MenuCreateWithoutOrderItemsInput, MenuUncheckedCreateWithoutOrderItemsInput>
+  }
+
+  export type PartyMemberUpsertWithoutOrderItemsInput = {
+    update: XOR<PartyMemberUpdateWithoutOrderItemsInput, PartyMemberUncheckedUpdateWithoutOrderItemsInput>
+    create: XOR<PartyMemberCreateWithoutOrderItemsInput, PartyMemberUncheckedCreateWithoutOrderItemsInput>
+    where?: PartyMemberWhereInput
+  }
+
+  export type PartyMemberUpdateToOneWithWhereWithoutOrderItemsInput = {
+    where?: PartyMemberWhereInput
+    data: XOR<PartyMemberUpdateWithoutOrderItemsInput, PartyMemberUncheckedUpdateWithoutOrderItemsInput>
+  }
+
+  export type PartyMemberUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    party?: PartyUpdateOneRequiredWithoutMembersNestedInput
+    user?: UserUpdateOneRequiredWithoutJoinedPartiesNestedInput
+  }
+
+  export type PartyMemberUncheckedUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partyId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MenuUpsertWithoutOrderItemsInput = {
+    update: XOR<MenuUpdateWithoutOrderItemsInput, MenuUncheckedUpdateWithoutOrderItemsInput>
+    create: XOR<MenuCreateWithoutOrderItemsInput, MenuUncheckedCreateWithoutOrderItemsInput>
+    where?: MenuWhereInput
+  }
+
+  export type MenuUpdateToOneWithWhereWithoutOrderItemsInput = {
+    where?: MenuWhereInput
+    data: XOR<MenuUpdateWithoutOrderItemsInput, MenuUncheckedUpdateWithoutOrderItemsInput>
+  }
+
+  export type MenuUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    category?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    restaurant?: RestaurantUpdateOneRequiredWithoutMenusNestedInput
+  }
+
+  export type MenuUncheckedUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    category?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    restaurantId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateWithoutReviewsInput = {
@@ -14299,6 +17552,7 @@ export namespace Prisma {
     images?: RestaurantImageCreateNestedManyWithoutRestaurantInput
     menus?: MenuCreateNestedManyWithoutRestaurantInput
     parties?: PartyCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourCreateNestedManyWithoutRestaurantInput
     owner?: UserCreateNestedOneWithoutOwnedRestaurantsInput
     savedBy?: SavedRestaurantCreateNestedManyWithoutRestaurantInput
   }
@@ -14317,6 +17571,7 @@ export namespace Prisma {
     images?: RestaurantImageUncheckedCreateNestedManyWithoutRestaurantInput
     menus?: MenuUncheckedCreateNestedManyWithoutRestaurantInput
     parties?: PartyUncheckedCreateNestedManyWithoutRestaurantInput
+    operatingHours?: OperatingHourUncheckedCreateNestedManyWithoutRestaurantInput
     savedBy?: SavedRestaurantUncheckedCreateNestedManyWithoutRestaurantInput
   }
 
@@ -14394,6 +17649,7 @@ export namespace Prisma {
     images?: RestaurantImageUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUpdateManyWithoutRestaurantNestedInput
     owner?: UserUpdateOneWithoutOwnedRestaurantsNestedInput
     savedBy?: SavedRestaurantUpdateManyWithoutRestaurantNestedInput
   }
@@ -14412,6 +17668,7 @@ export namespace Prisma {
     images?: RestaurantImageUncheckedUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUncheckedUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUncheckedUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUncheckedUpdateManyWithoutRestaurantNestedInput
     savedBy?: SavedRestaurantUncheckedUpdateManyWithoutRestaurantNestedInput
   }
 
@@ -14432,6 +17689,8 @@ export namespace Prisma {
     maxParticipants: number
     status?: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge?: number
+    vat?: number
     restaurantId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14496,6 +17755,8 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restaurant?: RestaurantUpdateOneRequiredWithoutPartiesNestedInput
@@ -14510,6 +17771,8 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14524,6 +17787,8 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14533,12 +17798,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     party?: PartyUpdateOneRequiredWithoutMembersNestedInput
+    orderItems?: MemberOrderItemUpdateManyWithoutMemberNestedInput
   }
 
   export type PartyMemberUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partyId?: StringFieldUpdateOperationsInput | string
+    orderItems?: MemberOrderItemUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type PartyMemberUncheckedUpdateManyWithoutUserInput = {
@@ -14561,6 +17828,7 @@ export namespace Prisma {
     reviews?: ReviewUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUpdateManyWithoutRestaurantNestedInput
     savedBy?: SavedRestaurantUpdateManyWithoutRestaurantNestedInput
   }
 
@@ -14578,6 +17846,7 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutRestaurantNestedInput
     menus?: MenuUncheckedUpdateManyWithoutRestaurantNestedInput
     parties?: PartyUncheckedUpdateManyWithoutRestaurantNestedInput
+    operatingHours?: OperatingHourUncheckedUpdateManyWithoutRestaurantNestedInput
     savedBy?: SavedRestaurantUncheckedUpdateManyWithoutRestaurantNestedInput
   }
 
@@ -14646,9 +17915,19 @@ export namespace Prisma {
     maxParticipants: number
     status?: $Enums.PartyStatus
     contactInfo: string
+    serviceCharge?: number
+    vat?: number
     leaderId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type OperatingHourCreateManyRestaurantInput = {
+    id?: string
+    day: $Enums.DayOfWeek
+    openTime: string
+    closeTime: string
+    isClosed?: boolean
   }
 
   export type SavedRestaurantCreateManyRestaurantInput = {
@@ -14714,6 +17993,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: MemberOrderItemUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuUncheckedUpdateWithoutRestaurantInput = {
@@ -14725,6 +18005,7 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: MemberOrderItemUncheckedUpdateManyWithoutMenuNestedInput
   }
 
   export type MenuUncheckedUpdateManyWithoutRestaurantInput = {
@@ -14746,6 +18027,8 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leader?: UserUpdateOneRequiredWithoutPartiesLedNestedInput
@@ -14760,6 +18043,8 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     leaderId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14774,9 +18059,35 @@ export namespace Prisma {
     maxParticipants?: IntFieldUpdateOperationsInput | number
     status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
     contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
     leaderId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OperatingHourUpdateWithoutRestaurantInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    day?: EnumDayOfWeekFieldUpdateOperationsInput | $Enums.DayOfWeek
+    openTime?: StringFieldUpdateOperationsInput | string
+    closeTime?: StringFieldUpdateOperationsInput | string
+    isClosed?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type OperatingHourUncheckedUpdateWithoutRestaurantInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    day?: EnumDayOfWeekFieldUpdateOperationsInput | $Enums.DayOfWeek
+    openTime?: StringFieldUpdateOperationsInput | string
+    closeTime?: StringFieldUpdateOperationsInput | string
+    isClosed?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type OperatingHourUncheckedUpdateManyWithoutRestaurantInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    day?: EnumDayOfWeekFieldUpdateOperationsInput | $Enums.DayOfWeek
+    openTime?: StringFieldUpdateOperationsInput | string
+    closeTime?: StringFieldUpdateOperationsInput | string
+    isClosed?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type SavedRestaurantUpdateWithoutRestaurantInput = {
@@ -14797,6 +18108,30 @@ export namespace Prisma {
     savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MemberOrderItemCreateManyMenuInput = {
+    id?: string
+    memberId: string
+    createdAt?: Date | string
+  }
+
+  export type MemberOrderItemUpdateWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    member?: PartyMemberUpdateOneRequiredWithoutOrderItemsNestedInput
+  }
+
+  export type MemberOrderItemUncheckedUpdateWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberOrderItemUncheckedUpdateManyWithoutMenuInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PartyMemberCreateManyPartyInput = {
     id?: string
     joinedAt?: Date | string
@@ -14807,18 +18142,44 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutJoinedPartiesNestedInput
+    orderItems?: MemberOrderItemUpdateManyWithoutMemberNestedInput
   }
 
   export type PartyMemberUncheckedUpdateWithoutPartyInput = {
     id?: StringFieldUpdateOperationsInput | string
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
+    orderItems?: MemberOrderItemUncheckedUpdateManyWithoutMemberNestedInput
   }
 
   export type PartyMemberUncheckedUpdateManyWithoutPartyInput = {
     id?: StringFieldUpdateOperationsInput | string
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MemberOrderItemCreateManyMemberInput = {
+    id?: string
+    menuId: string
+    createdAt?: Date | string
+  }
+
+  export type MemberOrderItemUpdateWithoutMemberInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    menu?: MenuUpdateOneRequiredWithoutOrderItemsNestedInput
+  }
+
+  export type MemberOrderItemUncheckedUpdateWithoutMemberInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    menuId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberOrderItemUncheckedUpdateManyWithoutMemberInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    menuId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

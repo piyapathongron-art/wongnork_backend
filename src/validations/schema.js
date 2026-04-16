@@ -60,10 +60,88 @@ const restaurantSchema = z.object({
   lng: z.number({ required_error: "กรุณากรอกลองจิจูด", invalid_type_error: "ลองจิจูดต้องเป็นตัวเลข" })
     .min(-180, "ลองจิจูดต้องไม่ต่ำกว่า -180")
     .max(180, "ลองจิจูดต้องไม่เกิน 180"),
+  
+  operatingHours: z.array(z.object({
+    day: z.enum(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']),
+    openTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "รูปแบบเวลาไม่ถูกต้อง (HH:mm)"),
+    closeTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "รูปแบบเวลาไม่ถูกต้อง (HH:mm)"),
+    isClosed: z.boolean().default(false)
+  })).optional()
 });
 
 // สำหรับ Create สามารถดึง Schema ตัวหลักไปใช้ได้เลย
 export const createRestaurantSchema = restaurantSchema;
-  
+
 // สำหรับ Update ใช้ .partial() เพื่อให้สามารถส่งมาแค่อย่างใดอย่างหนึ่งได้
 export const updateRestaurantSchema = restaurantSchema.partial();
+
+// --- Menu Validation Schema ---
+const menuSchema = z.object({
+  name: z.string()
+    .min(1, "กรุณากรอกชื่อเมนู")
+    .max(255, "ชื่อเมนูต้องไม่เกิน 255 ตัวอักษร"),
+
+  description: z.string()
+    .max(500, "รายละเอียดเมนูต้องไม่เกิน 500 ตัวอักษร")
+    .optional()
+    .nullable(),
+
+  price: z.number({ 
+    required_error: "กรุณากรอกราคา", 
+    invalid_type_error: "ราคาต้องเป็นตัวเลข" 
+  }).min(0, "ราคาต้องไม่ต่ำกว่า 0"),
+
+  category: z.string()
+    .default("others"),
+
+  imageUrl: z.string()
+    .url("รูปแบบ URL ของรูปภาพไม่ถูกต้อง")
+    .optional()
+    .nullable(),
+});
+
+export const createMenuSchema = menuSchema;
+export const updateMenuSchema = menuSchema.partial();
+
+// --- Party Validation Schema ---
+export const createPartySchema = z.object({
+  name: z.string()
+    .min(1, "กรุณากรอกชื่อปาร์ตี้")
+    .max(255, "ชื่อปาร์ตี้ต้องไม่เกิน 255 ตัวอักษร")
+    .optional()
+    .nullable(),
+
+  details: z.string()
+    .max(1000, "รายละเอียดปาร์ตี้ต้องไม่เกิน 1000 ตัวอักษร")
+    .optional()
+    .nullable(),
+
+  meetupTime: z.string()
+    .refine((val) => !isNaN(Date.parse(val)), "รูปแบบวันที่และเวลาไม่ถูกต้อง")
+    .transform((val) => new Date(val)),
+
+  maxParticipants: z.number({ 
+    required_error: "กรุณากรอกจำนวนคนรับ", 
+    invalid_type_error: "จำนวนคนต้องเป็นตัวเลข" 
+  }).min(2, "จำนวนคนต้องมีอย่างน้อย 2 คน"),
+
+  contactInfo: z.string()
+    .min(1, "กรุณากรอกช่องทางติดต่อ")
+    .max(255, "ช่องทางติดต่อต้องไม่เกิน 255 ตัวอักษร"),
+
+  serviceCharge: z.number().min(0).optional().default(0),
+  vat: z.number().min(0).optional().default(0),
+  });
+
+  // --- Review Validation Schema ---
+  export const createReviewSchema = z.object({
+  rating: z.number({ 
+    required_error: "กรุณาให้คะแนน", 
+    invalid_type_error: "คะแนนต้องเป็นตัวเลข" 
+  }).min(1, "คะแนนต่ำสุดคือ 1").max(5, "คะแนนสูงสุดคือ 5"),
+
+  comment: z.string()
+    .max(1000, "คอมเมนต์ต้องไม่เกิน 1000 ตัวอักษร")
+    .optional()
+    .nullable(),
+  });

@@ -1,0 +1,46 @@
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+import "dotenv/config"
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Wongnork API Documentation",
+      version: "1.0.0",
+      description: "API documentation for Wongnork - Community & Party Edition",
+      contact: {
+        name: "Arty (PO/Tech Lead)",
+      },
+    },
+    servers: [
+      {
+        url: `http://localhost:${process.env.PORT}`,
+        description: "Development server",
+      }
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+  },
+  apis: ["./src/routes/*.js", "./src/controllers/*.js"], // Path to the API docs
+};
+
+const specs = swaggerJsdoc(options);
+
+export const swaggerDocs = (app) => {
+  app.set("trust proxy", true);
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+  console.log(`Swagger Docs available at http://localhost:${process.env.PORT}/api-docs`);
+};

@@ -1,5 +1,5 @@
-export default function notFoundMiddleware(req,res,next){
+export default function notFoundMiddleware(req, res, next) {
     res.status(404).json({
         message: "Path not found"
     })
-}   
+}

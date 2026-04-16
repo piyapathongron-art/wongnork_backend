@@ -30,6 +30,16 @@ enum PartyStatus {
   CANCELLED
 }
 
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
 // ---------------------------------------------------------
 // Models
 // ---------------------------------------------------------
@@ -64,17 +74,29 @@ model Restaurant {
   category    String?
 
   // Relations
-  images  RestaurantImage[]
-  reviews Review[]
-  menus   Menu[]
-  parties Party[]
-  ownerId String?
-  owner   User?             @relation("RestaurantOwner", fields: [ownerId], references: [id])
-  savedBy SavedRestaurant[]
+  images         RestaurantImage[]
+  reviews        Review[]
+  menus          Menu[]
+  parties        Party[]
+  operatingHours OperatingHour[]
+  ownerId        String?
+  owner          User?             @relation("RestaurantOwner", fields: [ownerId], references: [id])
+  savedBy        SavedRestaurant[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+}
+
+model OperatingHour {
+  id        String    @id @default(uuid())
+  day       DayOfWeek
+  openTime  String // Format: "HH:mm"
+  closeTime String // Format: "HH:mm"
+  isClosed  Boolean   @default(false)
+
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 }
 
 model RestaurantImage {
@@ -114,6 +136,8 @@ model Menu {
   restaurantId String // 🌟 เปลี่ยน Foreign Key เป็น String
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
+  orderItems MemberOrderItem[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -126,6 +150,8 @@ model Party {
   maxParticipants Int
   status          PartyStatus @default(OPEN)
   contactInfo     String
+  serviceCharge   Float       @default(0) // 🌟 เพิ่มสำหรับ Split Bill
+  vat             Float       @default(0) // 🌟 เพิ่มสำหรับ Split Bill
 
   // Relations
   restaurantId String // 🌟 เปลี่ยน Foreign Key เป็น String
@@ -151,8 +177,24 @@ model PartyMember {
   userId String // 🌟 เปลี่ยน Foreign Key เป็น String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  orderItems MemberOrderItem[]
+
   // Constraint: ป้องกัน User คนเดิมกดเข้าร่วมตี้เดิมซ้ำ
   @@unique([partyId, userId])
+}
+
+model MemberOrderItem {
+  id       String @id @default(uuid())
+  memberId String
+  menuId   String
+
+  member PartyMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  menu   Menu        @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  // ป้องกันสมาชิกคนเดิมเลือกเมนูเดิมซ้ำในตี้ (ใช้ Quantity แทนถ้าต้องการ)
+  @@unique([memberId, menuId])
 }
 
 model Review {
