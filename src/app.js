@@ -8,6 +8,7 @@ import restaurantsRoute from "./routes/restaurants.route.js";
 import cloudinaryRoute from "./routes/cloudinary.route.js";
 import partyRoute from "./routes/party.route.js";
 import reviewRoute from "./routes/review.route.js";
+import featuresRoute from "./routes/features.route.js";
 import { swaggerDocs } from "./config/swagger.js";
 
 const app = express();
@@ -35,13 +36,7 @@ app.use("/api/parties", partyRoute);
 
 app.use("/api/reviews", reviewRoute);
 
-app.use("/api/menu", (req, res) => {
-  res.json("menu service");
-});
-
-app.use("/api/feature", (req, res) => {
-  res.json("feature service");
-});
+app.use("/api/features", featuresRoute);
 
 app.use("/api/cloudinary", cloudinaryRoute);
 
