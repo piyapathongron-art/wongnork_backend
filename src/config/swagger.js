@@ -1,5 +1,6 @@
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import "dotenv/config"
 
 const options = {
   definition: {
@@ -14,11 +15,7 @@ const options = {
     },
     servers: [
       {
-        url: "https://joint-rocky-shorter-average.trycloudflare.com",
-        description: "Production server",
-      },
-      {
-        url: "http://localhost:3000",
+        url: `http://localhost:${process.env.PORT}`,
         description: "Development server",
       }
     ],
@@ -45,5 +42,5 @@ const specs = swaggerJsdoc(options);
 export const swaggerDocs = (app) => {
   app.set("trust proxy", true);
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
-  console.log("Swagger Docs available at http://localhost:3000/api-docs");
+  console.log(`Swagger Docs available at http://localhost:${process.env.PORT}/api-docs`);
 };
