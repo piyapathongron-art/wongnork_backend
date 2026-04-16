@@ -52,6 +52,7 @@ const menuRoute = express.Router({ mergeParams: true });
  *             required:
  *               - name
  *               - price
+ *               - category
  *             properties:
  *               name:
  *                 type: string
@@ -59,7 +60,9 @@ const menuRoute = express.Router({ mergeParams: true });
  *                 type: number
  *               description:
  *                 type: string
- *               image:
+ *               category:
+ *                 type: string
+ *               imageUrl:
  *                 type: string
  *     responses:
  *       201:
@@ -98,9 +101,11 @@ menuRoute.post("/", authUserCheck, createMenuController);
  *                 type: string
  *               price:
  *                 type: number
+ *               category:
+ *                 type: string
  *               description:
  *                 type: string
- *               image:
+ *               imageUrl:
  *                 type: string
  *     responses:
  *       200:

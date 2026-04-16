@@ -46,14 +46,23 @@ restaurantsRoute.use("/:restaurantId/reviews", reviewRoute);
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - name
+ *               - maxMembers
+ *               - appointmentTime
+ *               - contactInfo
  *             properties:
  *               name:
  *                 type: string
- *               maxMembers:
- *                 type: integer
- *               appointmentTime:
+ *               details:
+ *                 type: string
+ *               meetupTime:
  *                 type: string
  *                 format: date-time
+ *               maxParticipants:
+ *                 type: integer
+ *               contactInfo:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Party created successfully
