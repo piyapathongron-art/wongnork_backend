@@ -90,7 +90,14 @@ export const getAiRecommendationService = async (userPrompt, userId, userLocatio
             "restaurantId": "UUID",
             "name": "ชื่อร้าน",
             "reason": "อธิบายสั้นๆ (เช่น ห่างจากคุณเพียง 2 กม. หรือ มีเมนูเนื้อย่างที่คุณชอบ)",
-            "highlightMenu": ["เมนูแนะนำ 1", "เมนูแนะนำ 2"]
+            "highlightMenu": ["เมนูแนะนำ 1", "เมนูแนะนำ 2"],
+            "recommendedMenus": [
+              {
+                "name": "ชื่อเมนู",
+                "price": 150.00,
+                "imageUrl": "URL รูปภาพเมนู"
+              }
+            ]
           }
         ],
         "aiMessage": "ข้อความทักทายภาษาไทยที่เป็นกันเอง"
