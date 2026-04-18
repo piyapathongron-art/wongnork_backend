@@ -31,3 +31,11 @@ export const findUserBy = async (col, val) => {
   });
   return user;
 };
+
+export const updateUserService = async (id, data) => {
+  const user = await prisma.user.update({
+    where: { id },
+    data,
+  });
+  return user;
+};

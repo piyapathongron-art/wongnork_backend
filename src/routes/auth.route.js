@@ -1,5 +1,5 @@
 import express from "express"
-import { authGetmeController, authLoginController, authRegisterController } from "../controllers/auth.controller.js"
+import { authGetmeController, authLoginController, authRegisterController, authUpdateProfileController } from "../controllers/auth.controller.js"
 import authUserCheck from "../middlewares/userAuthen.middleware.js"
 const authRoute = express.Router()
 
@@ -87,5 +87,34 @@ authRoute.post('/login', authLoginController)
  *         description: Unauthorized
  */
 authRoute.get('/me', authUserCheck, authGetmeController)
+
+/**
+ * @swagger
+ * /api/auth/profile:
+ *   put:
+ *     summary: Update current user profile (name, avatarUrl)
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               avatarUrl:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ */
+authRoute.put('/profile', authUserCheck, authUpdateProfileController)
 
 export default authRoute
