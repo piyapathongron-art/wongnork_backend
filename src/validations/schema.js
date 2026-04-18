@@ -145,3 +145,9 @@ export const createPartySchema = z.object({
     .optional()
     .nullable(),
   });
+
+  // --- Profile Validation Schema ---
+  export const updateProfileSchema = z.object({
+    name: z.string().min(2, "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร").transform((val) => val.trim()).optional(),
+    avatarUrl: z.string().url("รูปแบบ URL ของรูปภาพไม่ถูกต้อง").optional().nullable(),
+  });

@@ -1,6 +1,6 @@
 import createHttpError from "http-errors";
-import { loginSchema, registerSchema } from "../validations/schema.js";
-import { createNewUser, findUseerByEmail, findUserBy } from "../services/auth.service.js";
+import { loginSchema, registerSchema, updateProfileSchema } from "../validations/schema.js";
+import { createNewUser, findUseerByEmail, findUserBy, updateUserService } from "../services/auth.service.js";
 import { comparePassword } from "../utils/bcryptUtils.js";
 import { createToken } from "../utils/jwt.js";
 
@@ -65,4 +65,30 @@ export async function authGetmeController(req, res) {
   res.json({
     data: user,
   });
+}
+
+export async function authUpdateProfileController(req, res, next) {
+  try {
+    const id = req.user.id;
+    const data = await updateProfileSchema.parseAsync(req.body);
+    
+    // ตรวจสอบว่าไม่มีข้อมูลอะไรส่งมาเลยหรือไม่
+    if (Object.keys(data).length === 0) {
+       throw createHttpError(400, "No data provided to update");
+    }
+
+    const updatedUser = await updateUserService(id, data);
+    res.json({
+      message: "Profile updated successfully",
+      user: {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        avatarUrl: updatedUser.avatarUrl,
+        role: updatedUser.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 }
