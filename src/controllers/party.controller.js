@@ -6,6 +6,7 @@ import {
   getPartyByIdService,
   joinPartyService,
   leavePartyService,
+  kickMemberService,
   addOrderItemService,
   removeOrderItemService,
   calculateSplitBillService
@@ -64,7 +65,7 @@ export const joinPartyController = async (req, res, next) => {
     if (error.status === 400 && error.message) {
       return next(error);
     }
-    
+
     // สำหรับ error อื่นๆ ที่อาจจะไม่ได้มาจาก http-errors โดยตรง แต่ต้องการส่ง message เดิม
     if (error.message === "Party is already full" || error.message === "Party is not open for joining") {
       return next(createHttpError(400, error.message));
@@ -82,6 +83,22 @@ export const leavePartyController = async (req, res, next) => {
     await leavePartyService(partyId, userId);
     res.json({ message: "Left party successfully" });
   } catch (error) {
+    next(error);
+  }
+};
+
+// เตะออกจากปาร์ตี้ (เฉพาะ Leader)
+export const kickMemberController = async (req, res, next) => {
+  try {
+    const { id: partyId, userId: memberUserId } = req.params;
+    const leaderId = req.user.id;
+
+    await kickMemberService(partyId, leaderId, memberUserId);
+    res.json({ message: "Kicked member successfully" });
+  } catch (error) {
+    if (error.code === 'P2025') {
+      return next(createHttpError(404, "ไม่พบสมาชิกในปาร์ตี้นี้"));
+    }
     next(error);
   }
 };
@@ -138,11 +155,11 @@ export const removeOrderItemController = async (req, res, next) => {
 export const getSplitBillController = async (req, res, next) => {
   try {
     const { id: partyId } = req.params;
-    
+
     // ตรวจสอบสิทธิ์ว่าอยู่ในตี้จริงๆ ไหม (Optional: แต่ควรมี)
     const party = await getPartyByIdService(partyId);
     if (!party) throw createHttpError(404, "Party not found");
-    
+
     const isMember = party.members.some(m => m.user.id === req.user.id);
     if (!isMember && req.user.role !== "ADMIN") {
       throw createHttpError(403, "คุณไม่มีสิทธิ์ดูบิลของปาร์ตี้นี้");

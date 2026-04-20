@@ -33,6 +33,11 @@ export const findUserBy = async (col, val) => {
         include: {
           restaurant: {
             include: { images: true }
+          },
+          members: {
+            include: {
+              user: true
+            }
           }
         }
       },
@@ -42,6 +47,11 @@ export const findUserBy = async (col, val) => {
             include: {
               restaurant: {
                 include: { images: true }
+              },
+              members: {
+                include: {
+                  user: true
+                }
               }
             }
           }
