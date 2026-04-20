@@ -1,6 +1,36 @@
 import { prisma } from "../lib/prisma.js";
+import createHttpError from "http-errors";
 
+// Helper function to check if a user can join or create a party
+const checkPartyConstraints = async (tx, userId, targetRestaurantId, targetMeetupTime) => {
+  const activeParties = await tx.partyMember.findMany({
+    where: {
+      userId: userId,
+      party: {
+        status: { in: ["OPEN", "FULL"] }
+      }
+    },
+    include: { party: true }
+  });
 
+  const targetTime = new Date(targetMeetupTime).getTime();
+  const overlapWindowMs = 60 * 60 * 1000; // 1 ชั่วโมง (1 hour in milliseconds)
+
+  for (const member of activeParties) {
+    const existingParty = member.party;
+
+    // กฎข้อที่ 1: ห้าม Join/Create ร้านอาหารซ้ำที่ยังมีปาร์ตี้ค้างอยู่ (OPEN/FULL)
+    if (existingParty.restaurantId === targetRestaurantId) {
+      throw createHttpError(400, "คุณกำลังอยู่ในปาร์ตี้ของร้านนี้ที่ยังไม่จบ");
+    }
+
+    // กฎข้อที่ 2: ห้ามเวลาทับซ้อนกันในระยะ 1 ชั่วโมง
+    const existingTime = new Date(existingParty.meetupTime).getTime();
+    if (Math.abs(targetTime - existingTime) <= overlapWindowMs) {
+      throw createHttpError(400, "คุณมี party ที่มีระยะเวลาใกล้กันอยู่");
+    }
+  }
+};
 
 // ดึงรายการปาร์ตี้ทั้งหมด (ที่ยังเปิดอยู่)
 export const getAllPartiesService = async () => {
@@ -51,7 +81,10 @@ export const getPartyByIdService = async (id) => {
 // สร้างปาร์ตี้ใหม่
 export const createPartyService = async (restaurantId, leaderId, data) => {
   return await prisma.$transaction(async (tx) => {
-    // 1. สร้าง Party
+    // 1. ตรวจสอบเงื่อนไขการสร้างปาร์ตี้ของ Leader (ทับซ้อนเวลา / ร้านเดียวกัน)
+    await checkPartyConstraints(tx, leaderId, restaurantId, data.meetupTime);
+
+    // 2. สร้าง Party
     const newParty = await tx.party.create({
       data: {
         ...data,
@@ -60,7 +93,7 @@ export const createPartyService = async (restaurantId, leaderId, data) => {
       }
     });
 
-    // 2. เพิ่ม Leader เข้าเป็น Member คนแรกอัตโนมัติ
+    // 3. เพิ่ม Leader เข้าเป็น Member คนแรกอัตโนมัติ
     await tx.partyMember.create({
       data: {
         partyId: newParty.id,
@@ -87,7 +120,10 @@ export const joinPartyService = async (partyId, userId) => {
       throw createHttpError(400, "Party is already full");
     }
 
-    // 2. เพิ่มสมาชิกใหม่
+    // 2. ตรวจสอบเงื่อนไขการเข้าร่วมปาร์ตี้ของ Member (ทับซ้อนเวลา / ร้านเดียวกัน)
+    await checkPartyConstraints(tx, userId, party.restaurantId, party.meetupTime);
+
+    // 3. เพิ่มสมาชิกใหม่
     const newMember = await tx.partyMember.create({
       data: {
         partyId,
@@ -95,7 +131,7 @@ export const joinPartyService = async (partyId, userId) => {
       }
     });
 
-    // 3. ถ้าคนครบแล้ว ให้เปลี่ยนสถานะเป็น FULL อัตโนมัติ
+    // 4. ถ้าคนครบแล้ว ให้เปลี่ยนสถานะเป็น FULL อัตโนมัติ
     if (party._count.members + 1 === party.maxParticipants) {
       await tx.party.update({
         where: { id: partyId },

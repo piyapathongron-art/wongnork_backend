@@ -40,6 +40,10 @@ export const createPartyController = async (req, res, next) => {
     const newParty = await createPartyService(restaurantId, leaderId, data);
     res.status(201).json({ message: "Party created successfully", data: newParty });
   } catch (error) {
+    // If it's a known constraint error, pass it directly
+    if (error.status === 400 && error.message) {
+      return next(error);
+    }
     next(error);
   }
 };
@@ -53,7 +57,12 @@ export const joinPartyController = async (req, res, next) => {
     const newMember = await joinPartyService(partyId, userId);
     res.json({ message: "Joined party successfully", data: newMember });
   } catch (error) {
-    // ถ้า error มาจาก Service ให้ส่ง message ไปที่ Frontend ตรงๆ
+    // ส่งผ่าน error message แบบ Custom (เช่น constraint หรือ validation errors) ให้ Frontend ตรงๆ
+    if (error.status === 400 && error.message) {
+      return next(error);
+    }
+    
+    // สำหรับ error อื่นๆ ที่อาจจะไม่ได้มาจาก http-errors โดยตรง แต่ต้องการส่ง message เดิม
     if (error.message === "Party is already full" || error.message === "Party is not open for joining") {
       return next(createHttpError(400, error.message));
     }
