@@ -8,10 +8,20 @@ export const getAllPartiesService = async () => {
     where: { status: "OPEN" },
     include: {
       restaurant: {
-        select: { id: true, name: true, category: true }
+        select: { id: true, name: true, category: true, images: true }
       },
       _count: {
         select: { members: true }
+      },
+      leader: {
+        select: { id: true, name: true, avatarUrl: true }
+      },
+      members: {
+        include: {
+          user: {
+            select: { id: true, name: true, avatarUrl: true }
+          }
+        }
       }
     },
     orderBy: { meetupTime: "asc" }
