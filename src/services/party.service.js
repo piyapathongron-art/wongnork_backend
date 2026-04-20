@@ -338,10 +338,11 @@ export const calculateSplitBillService = async (partyId) => {
       };
     });
 
-    // 4. คำนวณ Service Charge และ VAT ให้แต่ละคน
+    // 4. คำนวณ Service Charge และ VAT ให้แต่ละคน (แบบทบต้นตามมาตรฐานร้านอาหารไทย)
     const serviceChargeAmount = subtotal * (party.serviceCharge / 100);
-    const vatAmount = subtotal * (party.vat / 100);
-    const netTotal = subtotal + serviceChargeAmount + vatAmount;
+    const subtotalWithSc = subtotal + serviceChargeAmount;
+    const vatAmount = subtotalWithSc * (party.vat / 100);
+    const netTotal = subtotalWithSc + vatAmount;
 
     grandTotal += netTotal; // สะสมยอดรวมทั้งโต๊ะ
 
