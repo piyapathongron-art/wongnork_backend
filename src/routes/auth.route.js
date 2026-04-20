@@ -1,5 +1,5 @@
 import express from "express"
-import { authGetmeController, authLoginController, authRegisterController, authUpdateProfileController, authGetSavedRestaurantsController } from "../controllers/auth.controller.js"
+import { authGetmeController, authLoginController, authRegisterController, authUpdateProfileController } from "../controllers/auth.controller.js"
 import authUserCheck from "../middlewares/userAuthen.middleware.js"
 const authRoute = express.Router()
 
@@ -117,20 +117,5 @@ authRoute.get('/me', authUserCheck, authGetmeController)
  */
 authRoute.put('/profile', authUserCheck, authUpdateProfileController)
 
-/**
- * @swagger
- * /api/auth/saved-restaurants:
- *   get:
- *     summary: Get user's saved restaurants
- *     tags: [Auth]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: List of saved restaurants
- *       401:
- *         description: Unauthorized
- */
-authRoute.get('/saved-restaurants', authUserCheck, authGetSavedRestaurantsController)
 
 export default authRoute

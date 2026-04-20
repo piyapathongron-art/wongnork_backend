@@ -1,6 +1,6 @@
 import createHttpError from "http-errors";
 import { loginSchema, registerSchema, updateProfileSchema } from "../validations/schema.js";
-import { createNewUser, findUseerByEmail, findUserBy, updateUserService, getSavedRestaurantsService } from "../services/auth.service.js";
+import { createNewUser, findUseerByEmail, findUserBy, updateUserService } from "../services/auth.service.js";
 import { comparePassword } from "../utils/bcryptUtils.js";
 import { createToken } from "../utils/jwt.js";
 
