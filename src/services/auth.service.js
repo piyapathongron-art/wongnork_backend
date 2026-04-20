@@ -32,8 +32,12 @@ export const findUserBy = async (col, val) => {
       },
       joinedParties: {
         include: {
-          restaurant: {
-            include: { images: true }
+          party: {
+            include: {
+              restaurant: {
+                include: { images: true }
+              }
+            }
           }
         }
       },
