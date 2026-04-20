@@ -82,6 +82,9 @@ export const leavePartyController = async (req, res, next) => {
     await leavePartyService(partyId, userId);
     res.json({ message: "Left party successfully" });
   } catch (error) {
+    if (error.code === 'P2025') {
+      return next(createHttpError(400, "คุณไม่ได้อยู่ในปาร์ตี้นี้"));
+    }
     next(error);
   }
 };
