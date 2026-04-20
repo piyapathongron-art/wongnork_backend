@@ -41,3 +41,23 @@ export const updateUserService = async (id, data) => {
   });
   return user;
 };
+
+export const upsertGoogleUser = async (email, name, googleId, avatarUrl) => {
+  const user = await prisma.user.upsert({
+    where: { email },
+    update: {
+      googleId,
+      avatarUrl, // อัปเดตรูปโปรไฟล์ล่าสุดจาก Google เสมอ
+      provider: 'GOOGLE', 
+    },
+    create: {
+      email,
+      name,
+      googleId,
+      avatarUrl,
+      provider: 'GOOGLE',
+      // password ไม่จำเป็นต้องใส่เพราะ Schema กำหนดเป็น String? ไว้แล้ว
+    },
+  });
+  return user;
+};
