@@ -23,11 +23,26 @@ export const findUserBy = async (col, val) => {
     },
     include: {
       reviews: true,
-      partiesLed: true,
-      joinedParties: true,
+      partiesLed: {
+        include: {
+          restaurant: {
+            include: { images: true }
+          }
+        }
+      },
+      joinedParties: {
+        include: {
+          restaurant: {
+            include: { images: true }
+          }
+        }
+      },
       ownedRestaurants: true,
       savedRestaurants: {
-        include: { restaurant: true }
+        include: {
+          restaurant:
+            { include: { images: true } }
+        }
       },
     }
   });
@@ -48,7 +63,7 @@ export const upsertGoogleUser = async (email, name, googleId, avatarUrl) => {
     update: {
       googleId,
       avatarUrl, // อัปเดตรูปโปรไฟล์ล่าสุดจาก Google เสมอ
-      provider: 'GOOGLE', 
+      provider: 'GOOGLE',
     },
     create: {
       email,
