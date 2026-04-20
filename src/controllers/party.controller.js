@@ -1,11 +1,14 @@
 import createHttpError from "http-errors";
-import { createPartySchema } from "../validations/schema.js";
+import { createPartySchema, createOrderItemSchema } from "../validations/schema.js";
 import {
   createPartyService,
   getAllPartiesService,
   getPartyByIdService,
   joinPartyService,
   leavePartyService,
+  addOrderItemService,
+  removeOrderItemService,
+  calculateSplitBillService
 } from "../services/party.service.js";
 
 // ดึงรายการปาร์ตี้ทั้งหมด
@@ -40,6 +43,10 @@ export const createPartyController = async (req, res, next) => {
     const newParty = await createPartyService(restaurantId, leaderId, data);
     res.status(201).json({ message: "Party created successfully", data: newParty });
   } catch (error) {
+    // If it's a known constraint error, pass it directly
+    if (error.status === 400 && error.message) {
+      return next(error);
+    }
     next(error);
   }
 };
@@ -53,7 +60,12 @@ export const joinPartyController = async (req, res, next) => {
     const newMember = await joinPartyService(partyId, userId);
     res.json({ message: "Joined party successfully", data: newMember });
   } catch (error) {
-    // ถ้า error มาจาก Service ให้ส่ง message ไปที่ Frontend ตรงๆ
+    // ส่งผ่าน error message แบบ Custom (เช่น constraint หรือ validation errors) ให้ Frontend ตรงๆ
+    if (error.status === 400 && error.message) {
+      return next(error);
+    }
+    
+    // สำหรับ error อื่นๆ ที่อาจจะไม่ได้มาจาก http-errors โดยตรง แต่ต้องการส่ง message เดิม
     if (error.message === "Party is already full" || error.message === "Party is not open for joining") {
       return next(createHttpError(400, error.message));
     }
@@ -69,6 +81,75 @@ export const leavePartyController = async (req, res, next) => {
 
     await leavePartyService(partyId, userId);
     res.json({ message: "Left party successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ------------------------------------------------------------------
+// Split Bill Controllers
+// ------------------------------------------------------------------
+
+/**
+ * @desc เพิ่มรายการเมนูที่สมาชิกเลือก (ติ๊กกิน)
+ * @route POST /api/parties/:id/items
+ */
+export const addOrderItemController = async (req, res, next) => {
+  try {
+    const { id: partyId } = req.params;
+    const userId = req.user.id;
+    const { menuId } = createOrderItemSchema.parse(req.body);
+
+    const orderItem = await addOrderItemService(partyId, userId, menuId);
+    res.status(201).json({ message: "Order item added successfully", data: orderItem });
+  } catch (error) {
+    // ถ้ามีการ add ซ้ำ P2002 Unique Constraint
+    if (error.code === 'P2002') {
+      return next(createHttpError(400, "คุณได้เลือกเมนูนี้ไปแล้ว"));
+    }
+    next(error);
+  }
+};
+
+/**
+ * @desc ลบรายการเมนูที่สมาชิกเลือก (ติ๊กออก)
+ * @route DELETE /api/parties/:id/items/:menuId
+ */
+export const removeOrderItemController = async (req, res, next) => {
+  try {
+    const { id: partyId, menuId } = req.params;
+    const userId = req.user.id;
+
+    await removeOrderItemService(partyId, userId, menuId);
+    res.json({ message: "Order item removed successfully" });
+  } catch (error) {
+    // ถ้าพยายามลบตัวที่ไม่มีอยู่แล้ว (P2025: Record to delete does not exist)
+    if (error.code === 'P2025') {
+      return next(createHttpError(404, "ไม่พบรายการเมนูที่ต้องการลบ"));
+    }
+    next(error);
+  }
+};
+
+/**
+ * @desc ดึงข้อมูลสรุปการหารเงิน (Split Bill) ของปาร์ตี้
+ * @route GET /api/parties/:id/split-bill
+ */
+export const getSplitBillController = async (req, res, next) => {
+  try {
+    const { id: partyId } = req.params;
+    
+    // ตรวจสอบสิทธิ์ว่าอยู่ในตี้จริงๆ ไหม (Optional: แต่ควรมี)
+    const party = await getPartyByIdService(partyId);
+    if (!party) throw createHttpError(404, "Party not found");
+    
+    const isMember = party.members.some(m => m.user.id === req.user.id);
+    if (!isMember && req.user.role !== "ADMIN") {
+      throw createHttpError(403, "คุณไม่มีสิทธิ์ดูบิลของปาร์ตี้นี้");
+    }
+
+    const billSummary = await calculateSplitBillService(partyId);
+    res.json({ message: "Success", data: billSummary });
   } catch (error) {
     next(error);
   }

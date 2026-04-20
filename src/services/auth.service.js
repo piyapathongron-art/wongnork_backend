@@ -26,7 +26,9 @@ export const findUserBy = async (col, val) => {
       partiesLed: true,
       joinedParties: true,
       ownedRestaurants: true,
-      savedRestaurants: true,
+      savedRestaurants: {
+        include: { restaurant: true }
+      },
     }
   });
   return user;

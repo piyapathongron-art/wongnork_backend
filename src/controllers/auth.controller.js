@@ -74,10 +74,10 @@ export async function authUpdateProfileController(req, res, next) {
   try {
     const id = req.user.id;
     const data = await updateProfileSchema.parseAsync(req.body);
-    
+
     // ตรวจสอบว่าไม่มีข้อมูลอะไรส่งมาเลยหรือไม่
     if (Object.keys(data).length === 0) {
-       throw createHttpError(400, "No data provided to update");
+      throw createHttpError(400, "No data provided to update");
     }
 
     const updatedUser = await updateUserService(id, data);

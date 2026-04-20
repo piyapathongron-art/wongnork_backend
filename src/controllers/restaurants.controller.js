@@ -1,4 +1,4 @@
-import { createRestaurantService, deleteRestaurantService, findRestaurantBy, getAllRestaurantService, updateRestaurantService } from "../services/restaurants.service.js";
+import { createRestaurantService, deleteRestaurantService, findRestaurantBy, getAllRestaurantService, updateRestaurantService, toggleSaveRestaurantService } from "../services/restaurants.service.js";
 import { createRestaurantSchema, updateRestaurantSchema } from "../validations/schema.js";
 import createHttpError from "http-errors";
 
@@ -60,5 +60,20 @@ export async function deleteRestaurantController(req, res, next) {
             name: result.name,
         }
     })
+}
+
+export async function toggleSaveRestaurantController(req, res, next) {
+    try {
+        const restaurantId = req.params.id;
+        const userId = req.user.id;
+
+        const result = await toggleSaveRestaurantService(userId, restaurantId);
+        res.json({
+            message: result.message,
+            isSaved: result.isSaved
+        });
+    } catch (error) {
+        next(error);
+    }
 }
 

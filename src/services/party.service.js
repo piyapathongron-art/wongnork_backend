@@ -1,6 +1,36 @@
 import { prisma } from "../lib/prisma.js";
+import createHttpError from "http-errors";
 
+// Helper function to check if a user can join or create a party
+const checkPartyConstraints = async (tx, userId, targetRestaurantId, targetMeetupTime) => {
+  const activeParties = await tx.partyMember.findMany({
+    where: {
+      userId: userId,
+      party: {
+        status: { in: ["OPEN", "FULL"] }
+      }
+    },
+    include: { party: true }
+  });
 
+  const targetTime = new Date(targetMeetupTime).getTime();
+  const overlapWindowMs = 60 * 60 * 1000; // 1 ชั่วโมง (1 hour in milliseconds)
+
+  for (const member of activeParties) {
+    const existingParty = member.party;
+
+    // กฎข้อที่ 1: ห้าม Join/Create ร้านอาหารซ้ำที่ยังมีปาร์ตี้ค้างอยู่ (OPEN/FULL)
+    if (existingParty.restaurantId === targetRestaurantId) {
+      throw createHttpError(400, "คุณกำลังอยู่ในปาร์ตี้ของร้านนี้ที่ยังไม่จบ");
+    }
+
+    // กฎข้อที่ 2: ห้ามเวลาทับซ้อนกันในระยะ 1 ชั่วโมง
+    const existingTime = new Date(existingParty.meetupTime).getTime();
+    if (Math.abs(targetTime - existingTime) <= overlapWindowMs) {
+      throw createHttpError(400, "คุณมี party ที่มีระยะเวลาใกล้กันอยู่");
+    }
+  }
+};
 
 // ดึงรายการปาร์ตี้ทั้งหมด (ที่ยังเปิดอยู่)
 export const getAllPartiesService = async () => {
@@ -51,7 +81,10 @@ export const getPartyByIdService = async (id) => {
 // สร้างปาร์ตี้ใหม่
 export const createPartyService = async (restaurantId, leaderId, data) => {
   return await prisma.$transaction(async (tx) => {
-    // 1. สร้าง Party
+    // 1. ตรวจสอบเงื่อนไขการสร้างปาร์ตี้ของ Leader (ทับซ้อนเวลา / ร้านเดียวกัน)
+    await checkPartyConstraints(tx, leaderId, restaurantId, data.meetupTime);
+
+    // 2. สร้าง Party
     const newParty = await tx.party.create({
       data: {
         ...data,
@@ -60,7 +93,7 @@ export const createPartyService = async (restaurantId, leaderId, data) => {
       }
     });
 
-    // 2. เพิ่ม Leader เข้าเป็น Member คนแรกอัตโนมัติ
+    // 3. เพิ่ม Leader เข้าเป็น Member คนแรกอัตโนมัติ
     await tx.partyMember.create({
       data: {
         partyId: newParty.id,
@@ -87,7 +120,10 @@ export const joinPartyService = async (partyId, userId) => {
       throw createHttpError(400, "Party is already full");
     }
 
-    // 2. เพิ่มสมาชิกใหม่
+    // 2. ตรวจสอบเงื่อนไขการเข้าร่วมปาร์ตี้ของ Member (ทับซ้อนเวลา / ร้านเดียวกัน)
+    await checkPartyConstraints(tx, userId, party.restaurantId, party.meetupTime);
+
+    // 3. เพิ่มสมาชิกใหม่
     const newMember = await tx.partyMember.create({
       data: {
         partyId,
@@ -95,7 +131,7 @@ export const joinPartyService = async (partyId, userId) => {
       }
     });
 
-    // 3. ถ้าคนครบแล้ว ให้เปลี่ยนสถานะเป็น FULL อัตโนมัติ
+    // 4. ถ้าคนครบแล้ว ให้เปลี่ยนสถานะเป็น FULL อัตโนมัติ
     if (party._count.members + 1 === party.maxParticipants) {
       await tx.party.update({
         where: { id: partyId },
@@ -133,4 +169,141 @@ export const leavePartyService = async (partyId, userId) => {
       });
     }
   });
+};
+
+// ------------------------------------------------------------------
+// Split Bill / Order Items Logic
+// ------------------------------------------------------------------
+
+// เพิ่มเมนูที่เลือกกิน (Order Item)
+export const addOrderItemService = async (partyId, userId, menuId) => {
+  // 1. หา PartyMember ID ของ User คนนี้ในปาร์ตี้
+  const member = await prisma.partyMember.findUnique({
+    where: {
+      partyId_userId: { partyId, userId }
+    }
+  });
+
+  if (!member) throw createHttpError(403, "คุณไม่ใช่สมาชิกในปาร์ตี้นี้");
+
+  // 2. เช็คว่าตี้ปิดหรือยัง
+  const party = await prisma.party.findUnique({ where: { id: partyId } });
+  if (party.status === "COMPLETED" || party.status === "CANCELLED") {
+    throw createHttpError(400, "ไม่สามารถแก้ไขรายการอาหารในปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
+  }
+
+  // 3. เพิ่มลงตาราง
+  return await prisma.memberOrderItem.create({
+    data: {
+      memberId: member.id,
+      menuId
+    },
+    include: { menu: true }
+  });
+};
+
+// ลบเมนูที่เลือกกิน
+export const removeOrderItemService = async (partyId, userId, menuId) => {
+  const member = await prisma.partyMember.findUnique({
+    where: {
+      partyId_userId: { partyId, userId }
+    }
+  });
+
+  if (!member) throw createHttpError(403, "คุณไม่ใช่สมาชิกในปาร์ตี้นี้");
+
+  const party = await prisma.party.findUnique({ where: { id: partyId } });
+  if (party.status === "COMPLETED" || party.status === "CANCELLED") {
+    throw createHttpError(400, "ไม่สามารถแก้ไขรายการอาหารในปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
+  }
+
+  return await prisma.memberOrderItem.delete({
+    where: {
+      memberId_menuId: {
+        memberId: member.id,
+        menuId: menuId
+      }
+    }
+  });
+};
+
+// คำนวณหารค่าอาหาร (Split Bill Aggregation)
+export const calculateSplitBillService = async (partyId) => {
+  // 1. ดึงข้อมูลปาร์ตี้ทั้งหมดพร้อมข้อมูลลูกตี้และเมนูที่เลือก
+  const party = await prisma.party.findUnique({
+    where: { id: partyId },
+    include: {
+      members: {
+        include: {
+          user: { select: { id: true, name: true, avatarUrl: true } },
+          orderItems: {
+            include: { menu: true }
+          }
+        }
+      }
+    }
+  });
+
+  if (!party) throw createHttpError(404, "Party not found");
+
+  // 2. คำนวณว่าแต่ละเมนูมีคนหารกี่คน
+  const menuSharerCount = {}; // { menuId: count }
+  party.members.forEach(member => {
+    member.orderItems.forEach(item => {
+      const mId = item.menuId;
+      menuSharerCount[mId] = (menuSharerCount[mId] || 0) + 1;
+    });
+  });
+
+  // 3. คำนวณยอดของแต่ละคน
+  let grandTotal = 0;
+  
+  const membersSummary = party.members.map(member => {
+    let subtotal = 0;
+    
+    // หาค่าอาหารรวมของคนนี้
+    const itemsDetail = member.orderItems.map(item => {
+      const menu = item.menu;
+      const sharers = menuSharerCount[menu.id];
+      const costPerPerson = menu.price / sharers;
+      
+      subtotal += costPerPerson;
+      
+      return {
+        menuId: menu.id,
+        name: menu.name,
+        price: menu.price,
+        sharedBy: sharers,
+        costPerPerson: costPerPerson
+      };
+    });
+
+    // 4. คำนวณ Service Charge และ VAT ให้แต่ละคน
+    const serviceChargeAmount = subtotal * (party.serviceCharge / 100);
+    const vatAmount = subtotal * (party.vat / 100);
+    const netTotal = subtotal + serviceChargeAmount + vatAmount;
+
+    grandTotal += netTotal; // สะสมยอดรวมทั้งโต๊ะ
+
+    return {
+      memberId: member.id,
+      user: member.user,
+      items: itemsDetail,
+      summary: {
+        subtotal: subtotal,
+        serviceCharge: serviceChargeAmount,
+        vat: vatAmount,
+        netTotal: netTotal
+      }
+    };
+  });
+
+  // 5. ส่งกลับผลลัพธ์
+  return {
+    partyId: party.id,
+    serviceChargePercent: party.serviceCharge,
+    vatPercent: party.vat,
+    grandTotal: grandTotal,
+    members: membersSummary
+  };
 };
