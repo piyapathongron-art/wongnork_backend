@@ -170,3 +170,140 @@ export const leavePartyService = async (partyId, userId) => {
     }
   });
 };
+
+// ------------------------------------------------------------------
+// Split Bill / Order Items Logic
+// ------------------------------------------------------------------
+
+// เพิ่มเมนูที่เลือกกิน (Order Item)
+export const addOrderItemService = async (partyId, userId, menuId) => {
+  // 1. หา PartyMember ID ของ User คนนี้ในปาร์ตี้
+  const member = await prisma.partyMember.findUnique({
+    where: {
+      partyId_userId: { partyId, userId }
+    }
+  });
+
+  if (!member) throw createHttpError(403, "คุณไม่ใช่สมาชิกในปาร์ตี้นี้");
+
+  // 2. เช็คว่าตี้ปิดหรือยัง
+  const party = await prisma.party.findUnique({ where: { id: partyId } });
+  if (party.status === "COMPLETED" || party.status === "CANCELLED") {
+    throw createHttpError(400, "ไม่สามารถแก้ไขรายการอาหารในปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
+  }
+
+  // 3. เพิ่มลงตาราง
+  return await prisma.memberOrderItem.create({
+    data: {
+      memberId: member.id,
+      menuId
+    },
+    include: { menu: true }
+  });
+};
+
+// ลบเมนูที่เลือกกิน
+export const removeOrderItemService = async (partyId, userId, menuId) => {
+  const member = await prisma.partyMember.findUnique({
+    where: {
+      partyId_userId: { partyId, userId }
+    }
+  });
+
+  if (!member) throw createHttpError(403, "คุณไม่ใช่สมาชิกในปาร์ตี้นี้");
+
+  const party = await prisma.party.findUnique({ where: { id: partyId } });
+  if (party.status === "COMPLETED" || party.status === "CANCELLED") {
+    throw createHttpError(400, "ไม่สามารถแก้ไขรายการอาหารในปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
+  }
+
+  return await prisma.memberOrderItem.delete({
+    where: {
+      memberId_menuId: {
+        memberId: member.id,
+        menuId: menuId
+      }
+    }
+  });
+};
+
+// คำนวณหารค่าอาหาร (Split Bill Aggregation)
+export const calculateSplitBillService = async (partyId) => {
+  // 1. ดึงข้อมูลปาร์ตี้ทั้งหมดพร้อมข้อมูลลูกตี้และเมนูที่เลือก
+  const party = await prisma.party.findUnique({
+    where: { id: partyId },
+    include: {
+      members: {
+        include: {
+          user: { select: { id: true, name: true, avatarUrl: true } },
+          orderItems: {
+            include: { menu: true }
+          }
+        }
+      }
+    }
+  });
+
+  if (!party) throw createHttpError(404, "Party not found");
+
+  // 2. คำนวณว่าแต่ละเมนูมีคนหารกี่คน
+  const menuSharerCount = {}; // { menuId: count }
+  party.members.forEach(member => {
+    member.orderItems.forEach(item => {
+      const mId = item.menuId;
+      menuSharerCount[mId] = (menuSharerCount[mId] || 0) + 1;
+    });
+  });
+
+  // 3. คำนวณยอดของแต่ละคน
+  let grandTotal = 0;
+  
+  const membersSummary = party.members.map(member => {
+    let subtotal = 0;
+    
+    // หาค่าอาหารรวมของคนนี้
+    const itemsDetail = member.orderItems.map(item => {
+      const menu = item.menu;
+      const sharers = menuSharerCount[menu.id];
+      const costPerPerson = menu.price / sharers;
+      
+      subtotal += costPerPerson;
+      
+      return {
+        menuId: menu.id,
+        name: menu.name,
+        price: menu.price,
+        sharedBy: sharers,
+        costPerPerson: costPerPerson
+      };
+    });
+
+    // 4. คำนวณ Service Charge และ VAT ให้แต่ละคน
+    const serviceChargeAmount = subtotal * (party.serviceCharge / 100);
+    const vatAmount = subtotal * (party.vat / 100);
+    const netTotal = subtotal + serviceChargeAmount + vatAmount;
+
+    grandTotal += netTotal; // สะสมยอดรวมทั้งโต๊ะ
+
+    return {
+      memberId: member.id,
+      user: member.user,
+      items: itemsDetail,
+      summary: {
+        subtotal: subtotal,
+        serviceCharge: serviceChargeAmount,
+        vat: vatAmount,
+        netTotal: netTotal
+      }
+    };
+  });
+
+  // 5. ส่งกลับผลลัพธ์
+  return {
+    partyId: party.id,
+    serviceChargePercent: party.serviceCharge,
+    vatPercent: party.vat,
+    grandTotal: grandTotal,
+    members: membersSummary
+  };
+};

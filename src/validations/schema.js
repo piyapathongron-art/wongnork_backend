@@ -151,3 +151,8 @@ export const createPartySchema = z.object({
     name: z.string().min(2, "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร").transform((val) => val.trim()).optional(),
     avatarUrl: z.string().url("รูปแบบ URL ของรูปภาพไม่ถูกต้อง").optional().nullable(),
   });
+
+  // --- Split Bill / Order Item Schema ---
+  export const createOrderItemSchema = z.object({
+    menuId: z.string({ required_error: "กรุณาระบุ Menu ID" }).uuid("รูปแบบ Menu ID ไม่ถูกต้อง"),
+  });

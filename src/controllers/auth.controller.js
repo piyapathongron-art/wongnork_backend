@@ -1,6 +1,6 @@
 import createHttpError from "http-errors";
 import { loginSchema, registerSchema, updateProfileSchema } from "../validations/schema.js";
-import { createNewUser, findUseerByEmail, findUserBy, updateUserService } from "../services/auth.service.js";
+import { createNewUser, findUseerByEmail, findUserBy, updateUserService, getSavedRestaurantsService } from "../services/auth.service.js";
 import { comparePassword } from "../utils/bcryptUtils.js";
 import { createToken } from "../utils/jwt.js";
 
@@ -71,10 +71,10 @@ export async function authUpdateProfileController(req, res, next) {
   try {
     const id = req.user.id;
     const data = await updateProfileSchema.parseAsync(req.body);
-    
+
     // ตรวจสอบว่าไม่มีข้อมูลอะไรส่งมาเลยหรือไม่
     if (Object.keys(data).length === 0) {
-       throw createHttpError(400, "No data provided to update");
+      throw createHttpError(400, "No data provided to update");
     }
 
     const updatedUser = await updateUserService(id, data);
