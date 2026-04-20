@@ -22,7 +22,13 @@ export const findUserBy = async (col, val) => {
       [col]: val,
     },
     include: {
-      reviews: true,
+      reviews: {
+        include: {
+          restaurant: {
+            include: { images: true }
+          }
+        }
+      },
       partiesLed: {
         include: {
           restaurant: {
