@@ -27,7 +27,7 @@ export const findUserBy = async (col, val) => {
       joinedParties: true,
       ownedRestaurants: true,
       savedRestaurants: {
-        include: { restaurants: true }
+        include: { restaurant: true }
       },
     }
   });
