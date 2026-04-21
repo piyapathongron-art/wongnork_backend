@@ -45,14 +45,15 @@ enum DayOfWeek {
 // ---------------------------------------------------------
 
 model User {
-  id        String   @id @default(uuid()) // 🌟 เปลี่ยนเป็น UUID
-  email     String   @unique
-  password  String?
-  name      String
-  avatarUrl String?
-  role      Role     @default(USER) // 🌟 ปรับให้ใช้ Enum Role
-  provider  Provider @default(LOCAL) // 🌟 ปรับให้ใช้ Enum Provider
-  googleId  String?  @unique
+  id         String   @id @default(uuid()) // 🌟 เปลี่ยนเป็น UUID
+  email      String   @unique
+  password   String?
+  name       String
+  avatarUrl  String?
+  role       Role     @default(USER) // 🌟 ปรับให้ใช้ Enum Role
+  provider   Provider @default(LOCAL) // 🌟 ปรับให้ใช้ Enum Provider
+  googleId   String?  @unique
+  isVerified Boolean  @default(false)
 
   // Relations
   reviews          Review[]

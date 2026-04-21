@@ -2043,6 +2043,7 @@ export namespace Prisma {
     role: $Enums.Role | null
     provider: $Enums.Provider | null
     googleId: string | null
+    isVerified: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2056,6 +2057,7 @@ export namespace Prisma {
     role: $Enums.Role | null
     provider: $Enums.Provider | null
     googleId: string | null
+    isVerified: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2069,6 +2071,7 @@ export namespace Prisma {
     role: number
     provider: number
     googleId: number
+    isVerified: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2084,6 +2087,7 @@ export namespace Prisma {
     role?: true
     provider?: true
     googleId?: true
+    isVerified?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2097,6 +2101,7 @@ export namespace Prisma {
     role?: true
     provider?: true
     googleId?: true
+    isVerified?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2110,6 +2115,7 @@ export namespace Prisma {
     role?: true
     provider?: true
     googleId?: true
+    isVerified?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2196,6 +2202,7 @@ export namespace Prisma {
     role: $Enums.Role
     provider: $Enums.Provider
     googleId: string | null
+    isVerified: boolean
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -2226,6 +2233,7 @@ export namespace Prisma {
     role?: boolean
     provider?: boolean
     googleId?: boolean
+    isVerified?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     reviews?: boolean | User$reviewsArgs<ExtArgs>
@@ -2247,11 +2255,12 @@ export namespace Prisma {
     role?: boolean
     provider?: boolean
     googleId?: boolean
+    isVerified?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "avatarUrl" | "role" | "provider" | "googleId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "avatarUrl" | "role" | "provider" | "googleId" | "isVerified" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     reviews?: boolean | User$reviewsArgs<ExtArgs>
     partiesLed?: boolean | User$partiesLedArgs<ExtArgs>
@@ -2279,6 +2288,7 @@ export namespace Prisma {
       role: $Enums.Role
       provider: $Enums.Provider
       googleId: string | null
+      isVerified: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -2663,6 +2673,7 @@ export namespace Prisma {
     readonly role: FieldRef<"User", 'Role'>
     readonly provider: FieldRef<"User", 'Provider'>
     readonly googleId: FieldRef<"User", 'String'>
+    readonly isVerified: FieldRef<"User", 'Boolean'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -13293,6 +13304,7 @@ export namespace Prisma {
     role: 'role',
     provider: 'provider',
     googleId: 'googleId',
+    isVerified: 'isVerified',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -13584,6 +13596,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -13601,13 +13620,6 @@ export namespace Prisma {
    * Reference to a field of type 'DayOfWeek'
    */
   export type EnumDayOfWeekFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DayOfWeek'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -13640,6 +13652,7 @@ export namespace Prisma {
     role?: EnumRoleFilter<"User"> | $Enums.Role
     provider?: EnumProviderFilter<"User"> | $Enums.Provider
     googleId?: StringNullableFilter<"User"> | string | null
+    isVerified?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     reviews?: ReviewListRelationFilter
@@ -13658,6 +13671,7 @@ export namespace Prisma {
     role?: SortOrder
     provider?: SortOrder
     googleId?: SortOrderInput | SortOrder
+    isVerified?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     reviews?: ReviewOrderByRelationAggregateInput
@@ -13680,6 +13694,7 @@ export namespace Prisma {
     avatarUrl?: StringNullableFilter<"User"> | string | null
     role?: EnumRoleFilter<"User"> | $Enums.Role
     provider?: EnumProviderFilter<"User"> | $Enums.Provider
+    isVerified?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     reviews?: ReviewListRelationFilter
@@ -13698,6 +13713,7 @@ export namespace Prisma {
     role?: SortOrder
     provider?: SortOrder
     googleId?: SortOrderInput | SortOrder
+    isVerified?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -13717,6 +13733,7 @@ export namespace Prisma {
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     provider?: EnumProviderWithAggregatesFilter<"User"> | $Enums.Provider
     googleId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    isVerified?: BoolWithAggregatesFilter<"User"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -14445,6 +14462,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -14463,6 +14481,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -14481,6 +14500,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -14499,6 +14519,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -14517,6 +14538,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14530,6 +14552,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -14543,6 +14566,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15305,6 +15329,11 @@ export namespace Prisma {
     not?: NestedEnumProviderFilter<$PrismaModel> | $Enums.Provider
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -15386,6 +15415,7 @@ export namespace Prisma {
     role?: SortOrder
     provider?: SortOrder
     googleId?: SortOrder
+    isVerified?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15399,6 +15429,7 @@ export namespace Prisma {
     role?: SortOrder
     provider?: SortOrder
     googleId?: SortOrder
+    isVerified?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15412,6 +15443,7 @@ export namespace Prisma {
     role?: SortOrder
     provider?: SortOrder
     googleId?: SortOrder
+    isVerified?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15470,6 +15502,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumProviderFilter<$PrismaModel>
     _max?: NestedEnumProviderFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -15635,11 +15675,6 @@ export namespace Prisma {
     not?: NestedEnumDayOfWeekFilter<$PrismaModel> | $Enums.DayOfWeek
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type RestaurantScalarRelationFilter = {
     is?: RestaurantWhereInput
     isNot?: RestaurantWhereInput
@@ -15686,14 +15721,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDayOfWeekFilter<$PrismaModel>
     _max?: NestedEnumDayOfWeekFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type RestaurantImageOrderByRelevanceInput = {
@@ -16203,6 +16230,10 @@ export namespace Prisma {
     set?: $Enums.Provider
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -16635,10 +16666,6 @@ export namespace Prisma {
 
   export type EnumDayOfWeekFieldUpdateOperationsInput = {
     set?: $Enums.DayOfWeek
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type RestaurantUpdateOneRequiredWithoutOperatingHoursNestedInput = {
@@ -17115,6 +17142,11 @@ export namespace Prisma {
     not?: NestedEnumProviderFilter<$PrismaModel> | $Enums.Provider
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -17204,6 +17236,14 @@ export namespace Prisma {
     _max?: NestedEnumProviderFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -17277,11 +17317,6 @@ export namespace Prisma {
     not?: NestedEnumDayOfWeekFilter<$PrismaModel> | $Enums.DayOfWeek
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedEnumDayOfWeekWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.DayOfWeek | EnumDayOfWeekFieldRefInput<$PrismaModel>
     in?: $Enums.DayOfWeek[]
@@ -17290,14 +17325,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumDayOfWeekFilter<$PrismaModel>
     _max?: NestedEnumDayOfWeekFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumPartyStatusFilter<$PrismaModel = never> = {
@@ -17810,6 +17837,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -17827,6 +17855,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -18000,6 +18029,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -18017,6 +18047,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -18226,6 +18257,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -18243,6 +18275,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -18317,6 +18350,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -18334,6 +18368,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -18578,6 +18613,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -18595,6 +18631,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -18725,6 +18762,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -18742,6 +18780,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -18965,6 +19004,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -18982,6 +19022,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -19084,6 +19125,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -19101,6 +19143,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -19290,6 +19333,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     partiesLed?: PartyCreateNestedManyWithoutLeaderInput
@@ -19307,6 +19351,7 @@ export namespace Prisma {
     role?: $Enums.Role
     provider?: $Enums.Provider
     googleId?: string | null
+    isVerified?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     partiesLed?: PartyUncheckedCreateNestedManyWithoutLeaderInput
@@ -19381,6 +19426,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partiesLed?: PartyUpdateManyWithoutLeaderNestedInput
@@ -19398,6 +19444,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     provider?: EnumProviderFieldUpdateOperationsInput | $Enums.Provider
     googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     partiesLed?: PartyUncheckedUpdateManyWithoutLeaderNestedInput
