@@ -37,9 +37,7 @@ export const getAllPartiesService = async () => {
   return await prisma.party.findMany({
     where: { status: "OPEN" },
     include: {
-      restaurant: {
-        select: { id: true, name: true, category: true, images: true }
-      },
+      restaurant: true,
       _count: {
         select: { members: true }
       },
@@ -146,20 +144,80 @@ export const joinPartyService = async (partyId, userId) => {
 // ออกจากปาร์ตี้
 export const leavePartyService = async (partyId, userId) => {
   return await prisma.$transaction(async (tx) => {
+    // ดึงข้อมูลปาร์ตี้เพื่อตรวจสอบว่า user เป็น leader หรือไม่
+    const party = await tx.party.findUnique({
+      where: { id: partyId },
+      include: {
+        members: {
+          orderBy: { joinedAt: "asc" },
+        },
+      },
+    });
+
+    if (!party) throw createHttpError(404, "Party not found");
+
+    const isLeader = party.leaderId === userId;
+    const remainingMembers = party.members.filter((m) => m.userId !== userId);
+
+    // 1. ลบออกจากตาราง Member (ใช้ deleteMany เพื่อป้องกัน P2025 ในกรณีที่ไม่มี Record จาก Seed Data)
+    await tx.partyMember.deleteMany({
+      where: {
+        partyId: partyId,
+        userId: userId
+      }
+    });
+
+    // 2. ถ้าผู้ใช้เป็น Leader ให้โอนตำแหน่งหรือยุบตี้
+    if (isLeader) {
+      if (remainingMembers.length > 0) {
+        // โอนตำแหน่งให้คนที่เข้ามาเป็นลำดับถัดไป
+        const newLeader = remainingMembers[0];
+        await tx.party.update({
+          where: { id: partyId },
+          data: { leaderId: newLeader.userId },
+        });
+      } else {
+        // ถ้าไม่มีสมาชิกเหลือเลย ให้เปลี่ยนสถานะเป็น CANCELLED
+        await tx.party.update({
+          where: { id: partyId },
+          data: { status: "CANCELLED" },
+        });
+      }
+    }
+
+    // 3. ถ้าคนออกแล้วสถานะเคย FULL (และตี้ยังไม่ถูก CANCELLED) ให้กลับมาเป็น OPEN
+    if (party.status === "FULL" && remainingMembers.length > 0) {
+      await tx.party.update({
+        where: { id: partyId },
+        data: { status: "OPEN" }
+      });
+    }
+  });
+};
+
+// เตะสมาชิกออกจากปาร์ตี้ (เฉพาะ Leader)
+export const kickMemberService = async (partyId, leaderId, memberUserId) => {
+  return await prisma.$transaction(async (tx) => {
+    const party = await tx.party.findUnique({
+      where: { id: partyId },
+    });
+
+    if (!party) throw createHttpError(404, "Party not found");
+    if (party.leaderId !== leaderId) {
+      throw createHttpError(403, "คุณไม่ใช่หัวหน้าปาร์ตี้นี้");
+    }
+    if (memberUserId === leaderId) {
+      throw createHttpError(400, "หัวหน้าปาร์ตี้ไม่สามารถเตะตัวเองได้ (กรุณากดออกเอง)");
+    }
+
     // ลบออกจากตาราง Member
     await tx.partyMember.delete({
       where: {
         partyId_userId: {
           partyId,
-          userId
+          userId: memberUserId
         }
       }
-    });
-
-    // ถ้าคนออกแล้วสถานะเคย FULL ให้กลับมาเป็น OPEN
-    const party = await tx.party.findUnique({
-      where: { id: partyId },
-      select: { status: true }
     });
 
     if (party.status === "FULL") {
@@ -257,18 +315,18 @@ export const calculateSplitBillService = async (partyId) => {
 
   // 3. คำนวณยอดของแต่ละคน
   let grandTotal = 0;
-  
+
   const membersSummary = party.members.map(member => {
     let subtotal = 0;
-    
+
     // หาค่าอาหารรวมของคนนี้
     const itemsDetail = member.orderItems.map(item => {
       const menu = item.menu;
       const sharers = menuSharerCount[menu.id];
       const costPerPerson = menu.price / sharers;
-      
+
       subtotal += costPerPerson;
-      
+
       return {
         menuId: menu.id,
         name: menu.name,
@@ -278,10 +336,11 @@ export const calculateSplitBillService = async (partyId) => {
       };
     });
 
-    // 4. คำนวณ Service Charge และ VAT ให้แต่ละคน
+    // 4. คำนวณ Service Charge และ VAT ให้แต่ละคน (แบบทบต้นตามมาตรฐานร้านอาหารไทย)
     const serviceChargeAmount = subtotal * (party.serviceCharge / 100);
-    const vatAmount = subtotal * (party.vat / 100);
-    const netTotal = subtotal + serviceChargeAmount + vatAmount;
+    const subtotalWithSc = subtotal + serviceChargeAmount;
+    const vatAmount = subtotalWithSc * (party.vat / 100);
+    const netTotal = subtotalWithSc + vatAmount;
 
     grandTotal += netTotal; // สะสมยอดรวมทั้งโต๊ะ
 

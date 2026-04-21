@@ -5,6 +5,7 @@ import {
   getPartyByIdController,
   joinPartyController,
   leavePartyController,
+  kickMemberController,
   addOrderItemController,
   removeOrderItemController,
   getSplitBillController
@@ -92,6 +93,33 @@ partyRoute.post("/:id/join", authUserCheck, joinPartyController);
  *         description: Successfully left the party
  */
 partyRoute.delete("/:id/leave", authUserCheck, leavePartyController);
+
+/**
+ * @swagger
+ * /api/parties/{id}/members/{userId}:
+ *   delete:
+ *     summary: Kick a member from party (Leader only)
+ *     tags: [Parties]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully kicked the member
+ *       403:
+ *         description: Not authorized
+ */
+partyRoute.delete("/:id/members/:userId", authUserCheck, kickMemberController);
 
 // ---------------------------------------------------------
 // Split Bill Routes
