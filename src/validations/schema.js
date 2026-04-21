@@ -160,7 +160,8 @@ export const createCustomItemSchema = z.object({
 
 export const createOrderItemSchema = z.object({
   customItemId: z.string().uuid("รูปแบบ Custom Item ID ไม่ถูกต้อง").optional().nullable(),
-}).refine(data => data.customItemId, {
-  message: "ต้องระบุ customItemId อย่างใดอย่างหนึ่ง",
-  path: ["customItemId"]
+  menuId: z.string().uuid("รูปแบบ Menu ID ไม่ถูกต้อง").optional().nullable(),
+}).refine(data => data.customItemId || data.menuId, {
+  message: "ต้องระบุ customItemId หรือ menuId อย่างใดอย่างหนึ่ง",
+  path: ["customItemId", "menuId"]
 });
