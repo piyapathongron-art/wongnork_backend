@@ -8,7 +8,7 @@ export const getAllPartiesService = async () => {
     where: { status: "OPEN" },
     include: {
       restaurant: {
-        select: { id: true, name: true, category: true, images: true }
+        select: { id: true, name: true, category: true, images: true, lat:true, lng: true }
       },
       _count: {
         select: { members: true }
