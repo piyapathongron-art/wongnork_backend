@@ -30,6 +30,8 @@ swaggerDocs(app);
 
 app.use("/api/auth", authRoute);
 
+
+
 app.use("/api/restaurants", restaurantsRoute);
 
 app.use("/api/parties", partyRoute);

@@ -5,6 +5,7 @@ import {
   getAllRestaurantController,
   getRestaurantByIdController,
   updateRestaurantController,
+  toggleSaveRestaurantController
 } from "../controllers/restaurants.controller.js";
 import authUserCheck from "../middlewares/userAuthen.middleware.js";
 import menuRoute from "./menu.route.js";
@@ -68,6 +69,28 @@ restaurantsRoute.use("/:restaurantId/reviews", reviewRoute);
  *         description: Party created successfully
  */
 restaurantsRoute.post("/:restaurantId/parties", authUserCheck, createPartyController);
+
+/**
+ * @swagger
+ * /api/restaurants/{id}/save:
+ *   post:
+ *     summary: Toggle save/unsave a restaurant
+ *     tags: [Restaurants]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successfully saved or unsaved the restaurant
+ *       404:
+ *         description: Restaurant not found
+ */
+restaurantsRoute.post("/:id/save", authUserCheck, toggleSaveRestaurantController);
 
 /**
  * @swagger
