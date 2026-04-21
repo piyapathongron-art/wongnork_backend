@@ -9,7 +9,8 @@ export const getAllRestaurantService = async () => {
         include: {
             images: true,
             reviews: true,
-            operatingHours: true
+            operatingHours: true,
+            menus: true,
         }
     });
 
@@ -125,7 +126,7 @@ export const toggleSaveRestaurantService = async (userId, restaurantId) => {
     const restaurant = await prisma.restaurant.findUnique({
         where: { id: restaurantId, deletedAt: null }
     });
-    
+
     if (!restaurant) {
         throw createHttpError(404, "Restaurant not found");
     }
