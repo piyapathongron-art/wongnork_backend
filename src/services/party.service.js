@@ -62,6 +62,7 @@ export const getPartyByIdService = async (id) => {
     where: { id },
     include: {
       restaurant: true,
+      customItems: true, // 🌟 เพิ่มข้อมูลเมนูพิเศษของตี้
       leader: {
         select: { id: true, name: true, avatarUrl: true }
       },
@@ -233,8 +234,27 @@ export const kickMemberService = async (partyId, leaderId, memberUserId) => {
 // Split Bill / Order Items Logic
 // ------------------------------------------------------------------
 
-// เพิ่มเมนูที่เลือกกิน (Order Item)
-export const addOrderItemService = async (partyId, userId, menuId) => {
+// เพิ่มเมนูพิเศษสำหรับปาร์ตี้นี้ (เฉพาะสมาชิกในตี้)
+export const addCustomItemService = async (partyId, userId, data) => {
+  // เช็คว่าเป็นสมาชิกในตี้ไหม
+  const member = await prisma.partyMember.findUnique({
+    where: { partyId_userId: { partyId, userId } }
+  });
+  if (!member) throw createHttpError(403, "คุณไม่ใช่สมาชิกในปาร์ตี้นี้");
+
+  return await prisma.partyCustomItem.create({
+    data: {
+      name: data.name,
+      price: data.price,
+      partyId: partyId
+    }
+  });
+};
+
+// เพิ่มเมนูที่เลือกกิน (Order Item) - รองรับทั้งเมนูร้าน และ เมนูพิเศษ
+export const addOrderItemService = async (partyId, userId, orderData) => {
+  const { menuId, customItemId } = orderData;
+
   // 1. หา PartyMember ID ของ User คนนี้ในปาร์ตี้
   const member = await prisma.partyMember.findUnique({
     where: {
@@ -250,18 +270,20 @@ export const addOrderItemService = async (partyId, userId, menuId) => {
     throw createHttpError(400, "ไม่สามารถแก้ไขรายการอาหารในปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
   }
 
-  // 3. เพิ่มลงตาราง
+  // 3. เพิ่มลงตาราง (รองรับทั้งคู่)
   return await prisma.memberOrderItem.create({
     data: {
       memberId: member.id,
-      menuId
-    },
-    include: { menu: true }
+      menuId: menuId || null,
+      customItemId: customItemId || null
+    }
   });
 };
 
 // ลบเมนูที่เลือกกิน
-export const removeOrderItemService = async (partyId, userId, menuId) => {
+export const removeOrderItemService = async (partyId, userId, orderData) => {
+  const { menuId, customItemId } = orderData;
+
   const member = await prisma.partyMember.findUnique({
     where: {
       partyId_userId: { partyId, userId }
@@ -275,19 +297,30 @@ export const removeOrderItemService = async (partyId, userId, menuId) => {
     throw createHttpError(400, "ไม่สามารถแก้ไขรายการอาหารในปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
   }
 
-  return await prisma.memberOrderItem.delete({
-    where: {
-      memberId_menuId: {
-        memberId: member.id,
-        menuId: menuId
+  if (menuId) {
+    return await prisma.memberOrderItem.delete({
+      where: {
+        memberId_menuId: {
+          memberId: member.id,
+          menuId: menuId
+        }
       }
-    }
-  });
+    });
+  } else if (customItemId) {
+    return await prisma.memberOrderItem.delete({
+      where: {
+        memberId_customItemId: {
+          memberId: member.id,
+          customItemId: customItemId
+        }
+      }
+    });
+  }
 };
 
 // คำนวณหารค่าอาหาร (Split Bill Aggregation)
 export const calculateSplitBillService = async (partyId) => {
-  // 1. ดึงข้อมูลปาร์ตี้ทั้งหมดพร้อมข้อมูลลูกตี้และเมนูที่เลือก
+  // 1. ดึงข้อมูลปาร์ตี้ทั้งหมดพร้อมข้อมูลลูกตี้และเมนูที่เลือก (ทั้งแบบร้าน และ แบบพิเศษ)
   const party = await prisma.party.findUnique({
     where: { id: partyId },
     include: {
@@ -295,7 +328,10 @@ export const calculateSplitBillService = async (partyId) => {
         include: {
           user: { select: { id: true, name: true, avatarUrl: true } },
           orderItems: {
-            include: { menu: true }
+            include: {
+              menu: true,
+              customItem: true
+            }
           }
         }
       }
@@ -304,12 +340,17 @@ export const calculateSplitBillService = async (partyId) => {
 
   if (!party) throw createHttpError(404, "Party not found");
 
-  // 2. คำนวณว่าแต่ละเมนูมีคนหารกี่คน
+  // 2. คำนวณว่าแต่ละเมนู (ทั้ง 2 ประเภท) มีคนหารกี่คน
   const menuSharerCount = {}; // { menuId: count }
+  const customSharerCount = {}; // { customItemId: count }
+
   party.members.forEach(member => {
     member.orderItems.forEach(item => {
-      const mId = item.menuId;
-      menuSharerCount[mId] = (menuSharerCount[mId] || 0) + 1;
+      if (item.menuId) {
+        menuSharerCount[item.menuId] = (menuSharerCount[item.menuId] || 0) + 1;
+      } else if (item.customItemId) {
+        customSharerCount[item.customItemId] = (customSharerCount[item.customItemId] || 0) + 1;
+      }
     });
   });
 
@@ -321,18 +362,36 @@ export const calculateSplitBillService = async (partyId) => {
 
     // หาค่าอาหารรวมของคนนี้
     const itemsDetail = member.orderItems.map(item => {
-      const menu = item.menu;
-      const sharers = menuSharerCount[menu.id];
-      const costPerPerson = menu.price / sharers;
+      let price = 0;
+      let name = "";
+      let sharers = 0;
+      let id = "";
+      let type = "";
 
+      if (item.menu) {
+        id = item.menu.id;
+        name = item.menu.name;
+        price = item.menu.price;
+        sharers = menuSharerCount[id];
+        type = "OFFICIAL";
+      } else if (item.customItem) {
+        id = item.customItem.id;
+        name = item.customItem.name;
+        price = item.customItem.price;
+        sharers = customSharerCount[id];
+        type = "CUSTOM";
+      }
+
+      const costPerPerson = price / sharers;
       subtotal += costPerPerson;
 
       return {
-        menuId: menu.id,
-        name: menu.name,
-        price: menu.price,
+        itemId: id,
+        name: name,
+        price: price,
         sharedBy: sharers,
-        costPerPerson: costPerPerson
+        costPerPerson: costPerPerson,
+        type: type
       };
     });
 

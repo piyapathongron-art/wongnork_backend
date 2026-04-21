@@ -49,6 +49,11 @@ export type Menu = $Result.DefaultSelection<Prisma.$MenuPayload>
  */
 export type Party = $Result.DefaultSelection<Prisma.$PartyPayload>
 /**
+ * Model PartyCustomItem
+ * 
+ */
+export type PartyCustomItem = $Result.DefaultSelection<Prisma.$PartyCustomItemPayload>
+/**
  * Model PartyMember
  * 
  */
@@ -315,6 +320,16 @@ export class PrismaClient<
     * ```
     */
   get party(): Prisma.PartyDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.partyCustomItem`: Exposes CRUD operations for the **PartyCustomItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PartyCustomItems
+    * const partyCustomItems = await prisma.partyCustomItem.findMany()
+    * ```
+    */
+  get partyCustomItem(): Prisma.PartyCustomItemDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.partyMember`: Exposes CRUD operations for the **PartyMember** model.
@@ -786,6 +801,7 @@ export namespace Prisma {
     SavedRestaurant: 'SavedRestaurant',
     Menu: 'Menu',
     Party: 'Party',
+    PartyCustomItem: 'PartyCustomItem',
     PartyMember: 'PartyMember',
     MemberOrderItem: 'MemberOrderItem',
     Review: 'Review'
@@ -804,7 +820,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "restaurant" | "operatingHour" | "restaurantImage" | "savedRestaurant" | "menu" | "party" | "partyMember" | "memberOrderItem" | "review"
+      modelProps: "user" | "restaurant" | "operatingHour" | "restaurantImage" | "savedRestaurant" | "menu" | "party" | "partyCustomItem" | "partyMember" | "memberOrderItem" | "review"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1270,6 +1286,72 @@ export namespace Prisma {
           }
         }
       }
+      PartyCustomItem: {
+        payload: Prisma.$PartyCustomItemPayload<ExtArgs>
+        fields: Prisma.PartyCustomItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PartyCustomItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartyCustomItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PartyCustomItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartyCustomItemPayload>
+          }
+          findFirst: {
+            args: Prisma.PartyCustomItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartyCustomItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PartyCustomItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartyCustomItemPayload>
+          }
+          findMany: {
+            args: Prisma.PartyCustomItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartyCustomItemPayload>[]
+          }
+          create: {
+            args: Prisma.PartyCustomItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartyCustomItemPayload>
+          }
+          createMany: {
+            args: Prisma.PartyCustomItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PartyCustomItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartyCustomItemPayload>
+          }
+          update: {
+            args: Prisma.PartyCustomItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartyCustomItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.PartyCustomItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PartyCustomItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PartyCustomItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PartyCustomItemPayload>
+          }
+          aggregate: {
+            args: Prisma.PartyCustomItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePartyCustomItem>
+          }
+          groupBy: {
+            args: Prisma.PartyCustomItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PartyCustomItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PartyCustomItemCountArgs<ExtArgs>
+            result: $Utils.Optional<PartyCustomItemCountAggregateOutputType> | number
+          }
+        }
+      }
       PartyMember: {
         payload: Prisma.$PartyMemberPayload<ExtArgs>
         fields: Prisma.PartyMemberFieldRefs
@@ -1583,6 +1665,7 @@ export namespace Prisma {
     savedRestaurant?: SavedRestaurantOmit
     menu?: MenuOmit
     party?: PartyOmit
+    partyCustomItem?: PartyCustomItemOmit
     partyMember?: PartyMemberOmit
     memberOrderItem?: MemberOrderItemOmit
     review?: ReviewOmit
@@ -1841,10 +1924,12 @@ export namespace Prisma {
 
   export type PartyCountOutputType = {
     members: number
+    customItems: number
   }
 
   export type PartyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | PartyCountOutputTypeCountMembersArgs
+    customItems?: boolean | PartyCountOutputTypeCountCustomItemsArgs
   }
 
   // Custom InputTypes
@@ -1863,6 +1948,44 @@ export namespace Prisma {
    */
   export type PartyCountOutputTypeCountMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PartyMemberWhereInput
+  }
+
+  /**
+   * PartyCountOutputType without action
+   */
+  export type PartyCountOutputTypeCountCustomItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PartyCustomItemWhereInput
+  }
+
+
+  /**
+   * Count Type PartyCustomItemCountOutputType
+   */
+
+  export type PartyCustomItemCountOutputType = {
+    orderItems: number
+  }
+
+  export type PartyCustomItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    orderItems?: boolean | PartyCustomItemCountOutputTypeCountOrderItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PartyCustomItemCountOutputType without action
+   */
+  export type PartyCustomItemCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItemCountOutputType
+     */
+    select?: PartyCustomItemCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PartyCustomItemCountOutputType without action
+   */
+  export type PartyCustomItemCountOutputTypeCountOrderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MemberOrderItemWhereInput
   }
 
 
@@ -8365,6 +8488,7 @@ export namespace Prisma {
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
     leader?: boolean | UserDefaultArgs<ExtArgs>
     members?: boolean | Party$membersArgs<ExtArgs>
+    customItems?: boolean | Party$customItemsArgs<ExtArgs>
     _count?: boolean | PartyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["party"]>
 
@@ -8391,6 +8515,7 @@ export namespace Prisma {
     restaurant?: boolean | RestaurantDefaultArgs<ExtArgs>
     leader?: boolean | UserDefaultArgs<ExtArgs>
     members?: boolean | Party$membersArgs<ExtArgs>
+    customItems?: boolean | Party$customItemsArgs<ExtArgs>
     _count?: boolean | PartyCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -8400,6 +8525,7 @@ export namespace Prisma {
       restaurant: Prisma.$RestaurantPayload<ExtArgs>
       leader: Prisma.$UserPayload<ExtArgs>
       members: Prisma.$PartyMemberPayload<ExtArgs>[]
+      customItems: Prisma.$PartyCustomItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8758,6 +8884,7 @@ export namespace Prisma {
     restaurant<T extends RestaurantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RestaurantDefaultArgs<ExtArgs>>): Prisma__RestaurantClient<$Result.GetResult<Prisma.$RestaurantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     leader<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     members<T extends Party$membersArgs<ExtArgs> = {}>(args?: Subset<T, Party$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    customItems<T extends Party$customItemsArgs<ExtArgs> = {}>(args?: Subset<T, Party$customItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyCustomItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9172,6 +9299,30 @@ export namespace Prisma {
   }
 
   /**
+   * Party.customItems
+   */
+  export type Party$customItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
+    where?: PartyCustomItemWhereInput
+    orderBy?: PartyCustomItemOrderByWithRelationInput | PartyCustomItemOrderByWithRelationInput[]
+    cursor?: PartyCustomItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PartyCustomItemScalarFieldEnum | PartyCustomItemScalarFieldEnum[]
+  }
+
+  /**
    * Party without action
    */
   export type PartyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9187,6 +9338,1004 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: PartyInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PartyCustomItem
+   */
+
+  export type AggregatePartyCustomItem = {
+    _count: PartyCustomItemCountAggregateOutputType | null
+    _avg: PartyCustomItemAvgAggregateOutputType | null
+    _sum: PartyCustomItemSumAggregateOutputType | null
+    _min: PartyCustomItemMinAggregateOutputType | null
+    _max: PartyCustomItemMaxAggregateOutputType | null
+  }
+
+  export type PartyCustomItemAvgAggregateOutputType = {
+    price: number | null
+  }
+
+  export type PartyCustomItemSumAggregateOutputType = {
+    price: number | null
+  }
+
+  export type PartyCustomItemMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    price: number | null
+    partyId: string | null
+    createdAt: Date | null
+  }
+
+  export type PartyCustomItemMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    price: number | null
+    partyId: string | null
+    createdAt: Date | null
+  }
+
+  export type PartyCustomItemCountAggregateOutputType = {
+    id: number
+    name: number
+    price: number
+    partyId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PartyCustomItemAvgAggregateInputType = {
+    price?: true
+  }
+
+  export type PartyCustomItemSumAggregateInputType = {
+    price?: true
+  }
+
+  export type PartyCustomItemMinAggregateInputType = {
+    id?: true
+    name?: true
+    price?: true
+    partyId?: true
+    createdAt?: true
+  }
+
+  export type PartyCustomItemMaxAggregateInputType = {
+    id?: true
+    name?: true
+    price?: true
+    partyId?: true
+    createdAt?: true
+  }
+
+  export type PartyCustomItemCountAggregateInputType = {
+    id?: true
+    name?: true
+    price?: true
+    partyId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PartyCustomItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PartyCustomItem to aggregate.
+     */
+    where?: PartyCustomItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PartyCustomItems to fetch.
+     */
+    orderBy?: PartyCustomItemOrderByWithRelationInput | PartyCustomItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PartyCustomItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PartyCustomItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PartyCustomItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PartyCustomItems
+    **/
+    _count?: true | PartyCustomItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PartyCustomItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PartyCustomItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PartyCustomItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PartyCustomItemMaxAggregateInputType
+  }
+
+  export type GetPartyCustomItemAggregateType<T extends PartyCustomItemAggregateArgs> = {
+        [P in keyof T & keyof AggregatePartyCustomItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePartyCustomItem[P]>
+      : GetScalarType<T[P], AggregatePartyCustomItem[P]>
+  }
+
+
+
+
+  export type PartyCustomItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PartyCustomItemWhereInput
+    orderBy?: PartyCustomItemOrderByWithAggregationInput | PartyCustomItemOrderByWithAggregationInput[]
+    by: PartyCustomItemScalarFieldEnum[] | PartyCustomItemScalarFieldEnum
+    having?: PartyCustomItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PartyCustomItemCountAggregateInputType | true
+    _avg?: PartyCustomItemAvgAggregateInputType
+    _sum?: PartyCustomItemSumAggregateInputType
+    _min?: PartyCustomItemMinAggregateInputType
+    _max?: PartyCustomItemMaxAggregateInputType
+  }
+
+  export type PartyCustomItemGroupByOutputType = {
+    id: string
+    name: string
+    price: number
+    partyId: string
+    createdAt: Date
+    _count: PartyCustomItemCountAggregateOutputType | null
+    _avg: PartyCustomItemAvgAggregateOutputType | null
+    _sum: PartyCustomItemSumAggregateOutputType | null
+    _min: PartyCustomItemMinAggregateOutputType | null
+    _max: PartyCustomItemMaxAggregateOutputType | null
+  }
+
+  type GetPartyCustomItemGroupByPayload<T extends PartyCustomItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PartyCustomItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PartyCustomItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PartyCustomItemGroupByOutputType[P]>
+            : GetScalarType<T[P], PartyCustomItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PartyCustomItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    price?: boolean
+    partyId?: boolean
+    createdAt?: boolean
+    party?: boolean | PartyDefaultArgs<ExtArgs>
+    orderItems?: boolean | PartyCustomItem$orderItemsArgs<ExtArgs>
+    _count?: boolean | PartyCustomItemCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["partyCustomItem"]>
+
+
+
+  export type PartyCustomItemSelectScalar = {
+    id?: boolean
+    name?: boolean
+    price?: boolean
+    partyId?: boolean
+    createdAt?: boolean
+  }
+
+  export type PartyCustomItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "partyId" | "createdAt", ExtArgs["result"]["partyCustomItem"]>
+  export type PartyCustomItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    party?: boolean | PartyDefaultArgs<ExtArgs>
+    orderItems?: boolean | PartyCustomItem$orderItemsArgs<ExtArgs>
+    _count?: boolean | PartyCustomItemCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $PartyCustomItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PartyCustomItem"
+    objects: {
+      party: Prisma.$PartyPayload<ExtArgs>
+      orderItems: Prisma.$MemberOrderItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      price: number
+      partyId: string
+      createdAt: Date
+    }, ExtArgs["result"]["partyCustomItem"]>
+    composites: {}
+  }
+
+  type PartyCustomItemGetPayload<S extends boolean | null | undefined | PartyCustomItemDefaultArgs> = $Result.GetResult<Prisma.$PartyCustomItemPayload, S>
+
+  type PartyCustomItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PartyCustomItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PartyCustomItemCountAggregateInputType | true
+    }
+
+  export interface PartyCustomItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PartyCustomItem'], meta: { name: 'PartyCustomItem' } }
+    /**
+     * Find zero or one PartyCustomItem that matches the filter.
+     * @param {PartyCustomItemFindUniqueArgs} args - Arguments to find a PartyCustomItem
+     * @example
+     * // Get one PartyCustomItem
+     * const partyCustomItem = await prisma.partyCustomItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PartyCustomItemFindUniqueArgs>(args: SelectSubset<T, PartyCustomItemFindUniqueArgs<ExtArgs>>): Prisma__PartyCustomItemClient<$Result.GetResult<Prisma.$PartyCustomItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PartyCustomItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PartyCustomItemFindUniqueOrThrowArgs} args - Arguments to find a PartyCustomItem
+     * @example
+     * // Get one PartyCustomItem
+     * const partyCustomItem = await prisma.partyCustomItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PartyCustomItemFindUniqueOrThrowArgs>(args: SelectSubset<T, PartyCustomItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PartyCustomItemClient<$Result.GetResult<Prisma.$PartyCustomItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PartyCustomItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartyCustomItemFindFirstArgs} args - Arguments to find a PartyCustomItem
+     * @example
+     * // Get one PartyCustomItem
+     * const partyCustomItem = await prisma.partyCustomItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PartyCustomItemFindFirstArgs>(args?: SelectSubset<T, PartyCustomItemFindFirstArgs<ExtArgs>>): Prisma__PartyCustomItemClient<$Result.GetResult<Prisma.$PartyCustomItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PartyCustomItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartyCustomItemFindFirstOrThrowArgs} args - Arguments to find a PartyCustomItem
+     * @example
+     * // Get one PartyCustomItem
+     * const partyCustomItem = await prisma.partyCustomItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PartyCustomItemFindFirstOrThrowArgs>(args?: SelectSubset<T, PartyCustomItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__PartyCustomItemClient<$Result.GetResult<Prisma.$PartyCustomItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PartyCustomItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartyCustomItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PartyCustomItems
+     * const partyCustomItems = await prisma.partyCustomItem.findMany()
+     * 
+     * // Get first 10 PartyCustomItems
+     * const partyCustomItems = await prisma.partyCustomItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const partyCustomItemWithIdOnly = await prisma.partyCustomItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PartyCustomItemFindManyArgs>(args?: SelectSubset<T, PartyCustomItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PartyCustomItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PartyCustomItem.
+     * @param {PartyCustomItemCreateArgs} args - Arguments to create a PartyCustomItem.
+     * @example
+     * // Create one PartyCustomItem
+     * const PartyCustomItem = await prisma.partyCustomItem.create({
+     *   data: {
+     *     // ... data to create a PartyCustomItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends PartyCustomItemCreateArgs>(args: SelectSubset<T, PartyCustomItemCreateArgs<ExtArgs>>): Prisma__PartyCustomItemClient<$Result.GetResult<Prisma.$PartyCustomItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PartyCustomItems.
+     * @param {PartyCustomItemCreateManyArgs} args - Arguments to create many PartyCustomItems.
+     * @example
+     * // Create many PartyCustomItems
+     * const partyCustomItem = await prisma.partyCustomItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PartyCustomItemCreateManyArgs>(args?: SelectSubset<T, PartyCustomItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PartyCustomItem.
+     * @param {PartyCustomItemDeleteArgs} args - Arguments to delete one PartyCustomItem.
+     * @example
+     * // Delete one PartyCustomItem
+     * const PartyCustomItem = await prisma.partyCustomItem.delete({
+     *   where: {
+     *     // ... filter to delete one PartyCustomItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PartyCustomItemDeleteArgs>(args: SelectSubset<T, PartyCustomItemDeleteArgs<ExtArgs>>): Prisma__PartyCustomItemClient<$Result.GetResult<Prisma.$PartyCustomItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PartyCustomItem.
+     * @param {PartyCustomItemUpdateArgs} args - Arguments to update one PartyCustomItem.
+     * @example
+     * // Update one PartyCustomItem
+     * const partyCustomItem = await prisma.partyCustomItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PartyCustomItemUpdateArgs>(args: SelectSubset<T, PartyCustomItemUpdateArgs<ExtArgs>>): Prisma__PartyCustomItemClient<$Result.GetResult<Prisma.$PartyCustomItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PartyCustomItems.
+     * @param {PartyCustomItemDeleteManyArgs} args - Arguments to filter PartyCustomItems to delete.
+     * @example
+     * // Delete a few PartyCustomItems
+     * const { count } = await prisma.partyCustomItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PartyCustomItemDeleteManyArgs>(args?: SelectSubset<T, PartyCustomItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PartyCustomItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartyCustomItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PartyCustomItems
+     * const partyCustomItem = await prisma.partyCustomItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PartyCustomItemUpdateManyArgs>(args: SelectSubset<T, PartyCustomItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PartyCustomItem.
+     * @param {PartyCustomItemUpsertArgs} args - Arguments to update or create a PartyCustomItem.
+     * @example
+     * // Update or create a PartyCustomItem
+     * const partyCustomItem = await prisma.partyCustomItem.upsert({
+     *   create: {
+     *     // ... data to create a PartyCustomItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PartyCustomItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PartyCustomItemUpsertArgs>(args: SelectSubset<T, PartyCustomItemUpsertArgs<ExtArgs>>): Prisma__PartyCustomItemClient<$Result.GetResult<Prisma.$PartyCustomItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PartyCustomItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartyCustomItemCountArgs} args - Arguments to filter PartyCustomItems to count.
+     * @example
+     * // Count the number of PartyCustomItems
+     * const count = await prisma.partyCustomItem.count({
+     *   where: {
+     *     // ... the filter for the PartyCustomItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends PartyCustomItemCountArgs>(
+      args?: Subset<T, PartyCustomItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PartyCustomItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PartyCustomItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartyCustomItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PartyCustomItemAggregateArgs>(args: Subset<T, PartyCustomItemAggregateArgs>): Prisma.PrismaPromise<GetPartyCustomItemAggregateType<T>>
+
+    /**
+     * Group by PartyCustomItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PartyCustomItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PartyCustomItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PartyCustomItemGroupByArgs['orderBy'] }
+        : { orderBy?: PartyCustomItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PartyCustomItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPartyCustomItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PartyCustomItem model
+   */
+  readonly fields: PartyCustomItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PartyCustomItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PartyCustomItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    party<T extends PartyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PartyDefaultArgs<ExtArgs>>): Prisma__PartyClient<$Result.GetResult<Prisma.$PartyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    orderItems<T extends PartyCustomItem$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, PartyCustomItem$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PartyCustomItem model
+   */
+  interface PartyCustomItemFieldRefs {
+    readonly id: FieldRef<"PartyCustomItem", 'String'>
+    readonly name: FieldRef<"PartyCustomItem", 'String'>
+    readonly price: FieldRef<"PartyCustomItem", 'Float'>
+    readonly partyId: FieldRef<"PartyCustomItem", 'String'>
+    readonly createdAt: FieldRef<"PartyCustomItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PartyCustomItem findUnique
+   */
+  export type PartyCustomItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
+    /**
+     * Filter, which PartyCustomItem to fetch.
+     */
+    where: PartyCustomItemWhereUniqueInput
+  }
+
+  /**
+   * PartyCustomItem findUniqueOrThrow
+   */
+  export type PartyCustomItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
+    /**
+     * Filter, which PartyCustomItem to fetch.
+     */
+    where: PartyCustomItemWhereUniqueInput
+  }
+
+  /**
+   * PartyCustomItem findFirst
+   */
+  export type PartyCustomItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
+    /**
+     * Filter, which PartyCustomItem to fetch.
+     */
+    where?: PartyCustomItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PartyCustomItems to fetch.
+     */
+    orderBy?: PartyCustomItemOrderByWithRelationInput | PartyCustomItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PartyCustomItems.
+     */
+    cursor?: PartyCustomItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PartyCustomItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PartyCustomItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PartyCustomItems.
+     */
+    distinct?: PartyCustomItemScalarFieldEnum | PartyCustomItemScalarFieldEnum[]
+  }
+
+  /**
+   * PartyCustomItem findFirstOrThrow
+   */
+  export type PartyCustomItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
+    /**
+     * Filter, which PartyCustomItem to fetch.
+     */
+    where?: PartyCustomItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PartyCustomItems to fetch.
+     */
+    orderBy?: PartyCustomItemOrderByWithRelationInput | PartyCustomItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PartyCustomItems.
+     */
+    cursor?: PartyCustomItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PartyCustomItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PartyCustomItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PartyCustomItems.
+     */
+    distinct?: PartyCustomItemScalarFieldEnum | PartyCustomItemScalarFieldEnum[]
+  }
+
+  /**
+   * PartyCustomItem findMany
+   */
+  export type PartyCustomItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
+    /**
+     * Filter, which PartyCustomItems to fetch.
+     */
+    where?: PartyCustomItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PartyCustomItems to fetch.
+     */
+    orderBy?: PartyCustomItemOrderByWithRelationInput | PartyCustomItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PartyCustomItems.
+     */
+    cursor?: PartyCustomItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PartyCustomItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PartyCustomItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PartyCustomItems.
+     */
+    distinct?: PartyCustomItemScalarFieldEnum | PartyCustomItemScalarFieldEnum[]
+  }
+
+  /**
+   * PartyCustomItem create
+   */
+  export type PartyCustomItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PartyCustomItem.
+     */
+    data: XOR<PartyCustomItemCreateInput, PartyCustomItemUncheckedCreateInput>
+  }
+
+  /**
+   * PartyCustomItem createMany
+   */
+  export type PartyCustomItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PartyCustomItems.
+     */
+    data: PartyCustomItemCreateManyInput | PartyCustomItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PartyCustomItem update
+   */
+  export type PartyCustomItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PartyCustomItem.
+     */
+    data: XOR<PartyCustomItemUpdateInput, PartyCustomItemUncheckedUpdateInput>
+    /**
+     * Choose, which PartyCustomItem to update.
+     */
+    where: PartyCustomItemWhereUniqueInput
+  }
+
+  /**
+   * PartyCustomItem updateMany
+   */
+  export type PartyCustomItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PartyCustomItems.
+     */
+    data: XOR<PartyCustomItemUpdateManyMutationInput, PartyCustomItemUncheckedUpdateManyInput>
+    /**
+     * Filter which PartyCustomItems to update
+     */
+    where?: PartyCustomItemWhereInput
+    /**
+     * Limit how many PartyCustomItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PartyCustomItem upsert
+   */
+  export type PartyCustomItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PartyCustomItem to update in case it exists.
+     */
+    where: PartyCustomItemWhereUniqueInput
+    /**
+     * In case the PartyCustomItem found by the `where` argument doesn't exist, create a new PartyCustomItem with this data.
+     */
+    create: XOR<PartyCustomItemCreateInput, PartyCustomItemUncheckedCreateInput>
+    /**
+     * In case the PartyCustomItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PartyCustomItemUpdateInput, PartyCustomItemUncheckedUpdateInput>
+  }
+
+  /**
+   * PartyCustomItem delete
+   */
+  export type PartyCustomItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
+    /**
+     * Filter which PartyCustomItem to delete.
+     */
+    where: PartyCustomItemWhereUniqueInput
+  }
+
+  /**
+   * PartyCustomItem deleteMany
+   */
+  export type PartyCustomItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PartyCustomItems to delete
+     */
+    where?: PartyCustomItemWhereInput
+    /**
+     * Limit how many PartyCustomItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PartyCustomItem.orderItems
+   */
+  export type PartyCustomItem$orderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MemberOrderItem
+     */
+    select?: MemberOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MemberOrderItem
+     */
+    omit?: MemberOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MemberOrderItemInclude<ExtArgs> | null
+    where?: MemberOrderItemWhereInput
+    orderBy?: MemberOrderItemOrderByWithRelationInput | MemberOrderItemOrderByWithRelationInput[]
+    cursor?: MemberOrderItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MemberOrderItemScalarFieldEnum | MemberOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * PartyCustomItem without action
+   */
+  export type PartyCustomItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
   }
 
 
@@ -10161,6 +11310,7 @@ export namespace Prisma {
     id: string | null
     memberId: string | null
     menuId: string | null
+    customItemId: string | null
     createdAt: Date | null
   }
 
@@ -10168,6 +11318,7 @@ export namespace Prisma {
     id: string | null
     memberId: string | null
     menuId: string | null
+    customItemId: string | null
     createdAt: Date | null
   }
 
@@ -10175,6 +11326,7 @@ export namespace Prisma {
     id: number
     memberId: number
     menuId: number
+    customItemId: number
     createdAt: number
     _all: number
   }
@@ -10184,6 +11336,7 @@ export namespace Prisma {
     id?: true
     memberId?: true
     menuId?: true
+    customItemId?: true
     createdAt?: true
   }
 
@@ -10191,6 +11344,7 @@ export namespace Prisma {
     id?: true
     memberId?: true
     menuId?: true
+    customItemId?: true
     createdAt?: true
   }
 
@@ -10198,6 +11352,7 @@ export namespace Prisma {
     id?: true
     memberId?: true
     menuId?: true
+    customItemId?: true
     createdAt?: true
     _all?: true
   }
@@ -10277,7 +11432,8 @@ export namespace Prisma {
   export type MemberOrderItemGroupByOutputType = {
     id: string
     memberId: string
-    menuId: string
+    menuId: string | null
+    customItemId: string | null
     createdAt: Date
     _count: MemberOrderItemCountAggregateOutputType | null
     _min: MemberOrderItemMinAggregateOutputType | null
@@ -10302,9 +11458,11 @@ export namespace Prisma {
     id?: boolean
     memberId?: boolean
     menuId?: boolean
+    customItemId?: boolean
     createdAt?: boolean
+    menu?: boolean | MemberOrderItem$menuArgs<ExtArgs>
+    customItem?: boolean | MemberOrderItem$customItemArgs<ExtArgs>
     member?: boolean | PartyMemberDefaultArgs<ExtArgs>
-    menu?: boolean | MenuDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["memberOrderItem"]>
 
 
@@ -10313,25 +11471,29 @@ export namespace Prisma {
     id?: boolean
     memberId?: boolean
     menuId?: boolean
+    customItemId?: boolean
     createdAt?: boolean
   }
 
-  export type MemberOrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "memberId" | "menuId" | "createdAt", ExtArgs["result"]["memberOrderItem"]>
+  export type MemberOrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "memberId" | "menuId" | "customItemId" | "createdAt", ExtArgs["result"]["memberOrderItem"]>
   export type MemberOrderItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    menu?: boolean | MemberOrderItem$menuArgs<ExtArgs>
+    customItem?: boolean | MemberOrderItem$customItemArgs<ExtArgs>
     member?: boolean | PartyMemberDefaultArgs<ExtArgs>
-    menu?: boolean | MenuDefaultArgs<ExtArgs>
   }
 
   export type $MemberOrderItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "MemberOrderItem"
     objects: {
+      menu: Prisma.$MenuPayload<ExtArgs> | null
+      customItem: Prisma.$PartyCustomItemPayload<ExtArgs> | null
       member: Prisma.$PartyMemberPayload<ExtArgs>
-      menu: Prisma.$MenuPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       memberId: string
-      menuId: string
+      menuId: string | null
+      customItemId: string | null
       createdAt: Date
     }, ExtArgs["result"]["memberOrderItem"]>
     composites: {}
@@ -10673,8 +11835,9 @@ export namespace Prisma {
    */
   export interface Prisma__MemberOrderItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    menu<T extends MemberOrderItem$menuArgs<ExtArgs> = {}>(args?: Subset<T, MemberOrderItem$menuArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    customItem<T extends MemberOrderItem$customItemArgs<ExtArgs> = {}>(args?: Subset<T, MemberOrderItem$customItemArgs<ExtArgs>>): Prisma__PartyCustomItemClient<$Result.GetResult<Prisma.$PartyCustomItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     member<T extends PartyMemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PartyMemberDefaultArgs<ExtArgs>>): Prisma__PartyMemberClient<$Result.GetResult<Prisma.$PartyMemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    menu<T extends MenuDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MenuDefaultArgs<ExtArgs>>): Prisma__MenuClient<$Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10707,6 +11870,7 @@ export namespace Prisma {
     readonly id: FieldRef<"MemberOrderItem", 'String'>
     readonly memberId: FieldRef<"MemberOrderItem", 'String'>
     readonly menuId: FieldRef<"MemberOrderItem", 'String'>
+    readonly customItemId: FieldRef<"MemberOrderItem", 'String'>
     readonly createdAt: FieldRef<"MemberOrderItem", 'DateTime'>
   }
     
@@ -11053,6 +12217,44 @@ export namespace Prisma {
      * Limit how many MemberOrderItems to delete.
      */
     limit?: number
+  }
+
+  /**
+   * MemberOrderItem.menu
+   */
+  export type MemberOrderItem$menuArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Menu
+     */
+    select?: MenuSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Menu
+     */
+    omit?: MenuOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuInclude<ExtArgs> | null
+    where?: MenuWhereInput
+  }
+
+  /**
+   * MemberOrderItem.customItem
+   */
+  export type MemberOrderItem$customItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PartyCustomItem
+     */
+    select?: PartyCustomItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PartyCustomItem
+     */
+    omit?: PartyCustomItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PartyCustomItemInclude<ExtArgs> | null
+    where?: PartyCustomItemWhereInput
   }
 
   /**
@@ -12181,6 +13383,17 @@ export namespace Prisma {
   export type PartyScalarFieldEnum = (typeof PartyScalarFieldEnum)[keyof typeof PartyScalarFieldEnum]
 
 
+  export const PartyCustomItemScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    price: 'price',
+    partyId: 'partyId',
+    createdAt: 'createdAt'
+  };
+
+  export type PartyCustomItemScalarFieldEnum = (typeof PartyCustomItemScalarFieldEnum)[keyof typeof PartyCustomItemScalarFieldEnum]
+
+
   export const PartyMemberScalarFieldEnum: {
     id: 'id',
     joinedAt: 'joinedAt',
@@ -12195,6 +13408,7 @@ export namespace Prisma {
     id: 'id',
     memberId: 'memberId',
     menuId: 'menuId',
+    customItemId: 'customItemId',
     createdAt: 'createdAt'
   };
 
@@ -12305,6 +13519,15 @@ export namespace Prisma {
   export type PartyOrderByRelevanceFieldEnum = (typeof PartyOrderByRelevanceFieldEnum)[keyof typeof PartyOrderByRelevanceFieldEnum]
 
 
+  export const PartyCustomItemOrderByRelevanceFieldEnum: {
+    id: 'id',
+    name: 'name',
+    partyId: 'partyId'
+  };
+
+  export type PartyCustomItemOrderByRelevanceFieldEnum = (typeof PartyCustomItemOrderByRelevanceFieldEnum)[keyof typeof PartyCustomItemOrderByRelevanceFieldEnum]
+
+
   export const PartyMemberOrderByRelevanceFieldEnum: {
     id: 'id',
     partyId: 'partyId',
@@ -12317,7 +13540,8 @@ export namespace Prisma {
   export const MemberOrderItemOrderByRelevanceFieldEnum: {
     id: 'id',
     memberId: 'memberId',
-    menuId: 'menuId'
+    menuId: 'menuId',
+    customItemId: 'customItemId'
   };
 
   export type MemberOrderItemOrderByRelevanceFieldEnum = (typeof MemberOrderItemOrderByRelevanceFieldEnum)[keyof typeof MemberOrderItemOrderByRelevanceFieldEnum]
@@ -12871,6 +14095,7 @@ export namespace Prisma {
     restaurant?: XOR<RestaurantScalarRelationFilter, RestaurantWhereInput>
     leader?: XOR<UserScalarRelationFilter, UserWhereInput>
     members?: PartyMemberListRelationFilter
+    customItems?: PartyCustomItemListRelationFilter
   }
 
   export type PartyOrderByWithRelationInput = {
@@ -12890,6 +14115,7 @@ export namespace Prisma {
     restaurant?: RestaurantOrderByWithRelationInput
     leader?: UserOrderByWithRelationInput
     members?: PartyMemberOrderByRelationAggregateInput
+    customItems?: PartyCustomItemOrderByRelationAggregateInput
     _relevance?: PartyOrderByRelevanceInput
   }
 
@@ -12913,6 +14139,7 @@ export namespace Prisma {
     restaurant?: XOR<RestaurantScalarRelationFilter, RestaurantWhereInput>
     leader?: XOR<UserScalarRelationFilter, UserWhereInput>
     members?: PartyMemberListRelationFilter
+    customItems?: PartyCustomItemListRelationFilter
   }, "id">
 
   export type PartyOrderByWithAggregationInput = {
@@ -12953,6 +14180,67 @@ export namespace Prisma {
     leaderId?: StringWithAggregatesFilter<"Party"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Party"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Party"> | Date | string
+  }
+
+  export type PartyCustomItemWhereInput = {
+    AND?: PartyCustomItemWhereInput | PartyCustomItemWhereInput[]
+    OR?: PartyCustomItemWhereInput[]
+    NOT?: PartyCustomItemWhereInput | PartyCustomItemWhereInput[]
+    id?: StringFilter<"PartyCustomItem"> | string
+    name?: StringFilter<"PartyCustomItem"> | string
+    price?: FloatFilter<"PartyCustomItem"> | number
+    partyId?: StringFilter<"PartyCustomItem"> | string
+    createdAt?: DateTimeFilter<"PartyCustomItem"> | Date | string
+    party?: XOR<PartyScalarRelationFilter, PartyWhereInput>
+    orderItems?: MemberOrderItemListRelationFilter
+  }
+
+  export type PartyCustomItemOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    price?: SortOrder
+    partyId?: SortOrder
+    createdAt?: SortOrder
+    party?: PartyOrderByWithRelationInput
+    orderItems?: MemberOrderItemOrderByRelationAggregateInput
+    _relevance?: PartyCustomItemOrderByRelevanceInput
+  }
+
+  export type PartyCustomItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PartyCustomItemWhereInput | PartyCustomItemWhereInput[]
+    OR?: PartyCustomItemWhereInput[]
+    NOT?: PartyCustomItemWhereInput | PartyCustomItemWhereInput[]
+    name?: StringFilter<"PartyCustomItem"> | string
+    price?: FloatFilter<"PartyCustomItem"> | number
+    partyId?: StringFilter<"PartyCustomItem"> | string
+    createdAt?: DateTimeFilter<"PartyCustomItem"> | Date | string
+    party?: XOR<PartyScalarRelationFilter, PartyWhereInput>
+    orderItems?: MemberOrderItemListRelationFilter
+  }, "id">
+
+  export type PartyCustomItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    price?: SortOrder
+    partyId?: SortOrder
+    createdAt?: SortOrder
+    _count?: PartyCustomItemCountOrderByAggregateInput
+    _avg?: PartyCustomItemAvgOrderByAggregateInput
+    _max?: PartyCustomItemMaxOrderByAggregateInput
+    _min?: PartyCustomItemMinOrderByAggregateInput
+    _sum?: PartyCustomItemSumOrderByAggregateInput
+  }
+
+  export type PartyCustomItemScalarWhereWithAggregatesInput = {
+    AND?: PartyCustomItemScalarWhereWithAggregatesInput | PartyCustomItemScalarWhereWithAggregatesInput[]
+    OR?: PartyCustomItemScalarWhereWithAggregatesInput[]
+    NOT?: PartyCustomItemScalarWhereWithAggregatesInput | PartyCustomItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PartyCustomItem"> | string
+    name?: StringWithAggregatesFilter<"PartyCustomItem"> | string
+    price?: FloatWithAggregatesFilter<"PartyCustomItem"> | number
+    partyId?: StringWithAggregatesFilter<"PartyCustomItem"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PartyCustomItem"> | Date | string
   }
 
   export type PartyMemberWhereInput = {
@@ -13019,39 +14307,47 @@ export namespace Prisma {
     NOT?: MemberOrderItemWhereInput | MemberOrderItemWhereInput[]
     id?: StringFilter<"MemberOrderItem"> | string
     memberId?: StringFilter<"MemberOrderItem"> | string
-    menuId?: StringFilter<"MemberOrderItem"> | string
+    menuId?: StringNullableFilter<"MemberOrderItem"> | string | null
+    customItemId?: StringNullableFilter<"MemberOrderItem"> | string | null
     createdAt?: DateTimeFilter<"MemberOrderItem"> | Date | string
+    menu?: XOR<MenuNullableScalarRelationFilter, MenuWhereInput> | null
+    customItem?: XOR<PartyCustomItemNullableScalarRelationFilter, PartyCustomItemWhereInput> | null
     member?: XOR<PartyMemberScalarRelationFilter, PartyMemberWhereInput>
-    menu?: XOR<MenuScalarRelationFilter, MenuWhereInput>
   }
 
   export type MemberOrderItemOrderByWithRelationInput = {
     id?: SortOrder
     memberId?: SortOrder
-    menuId?: SortOrder
+    menuId?: SortOrderInput | SortOrder
+    customItemId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
-    member?: PartyMemberOrderByWithRelationInput
     menu?: MenuOrderByWithRelationInput
+    customItem?: PartyCustomItemOrderByWithRelationInput
+    member?: PartyMemberOrderByWithRelationInput
     _relevance?: MemberOrderItemOrderByRelevanceInput
   }
 
   export type MemberOrderItemWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     memberId_menuId?: MemberOrderItemMemberIdMenuIdCompoundUniqueInput
+    memberId_customItemId?: MemberOrderItemMemberIdCustomItemIdCompoundUniqueInput
     AND?: MemberOrderItemWhereInput | MemberOrderItemWhereInput[]
     OR?: MemberOrderItemWhereInput[]
     NOT?: MemberOrderItemWhereInput | MemberOrderItemWhereInput[]
     memberId?: StringFilter<"MemberOrderItem"> | string
-    menuId?: StringFilter<"MemberOrderItem"> | string
+    menuId?: StringNullableFilter<"MemberOrderItem"> | string | null
+    customItemId?: StringNullableFilter<"MemberOrderItem"> | string | null
     createdAt?: DateTimeFilter<"MemberOrderItem"> | Date | string
+    menu?: XOR<MenuNullableScalarRelationFilter, MenuWhereInput> | null
+    customItem?: XOR<PartyCustomItemNullableScalarRelationFilter, PartyCustomItemWhereInput> | null
     member?: XOR<PartyMemberScalarRelationFilter, PartyMemberWhereInput>
-    menu?: XOR<MenuScalarRelationFilter, MenuWhereInput>
-  }, "id" | "memberId_menuId">
+  }, "id" | "memberId_menuId" | "memberId_customItemId">
 
   export type MemberOrderItemOrderByWithAggregationInput = {
     id?: SortOrder
     memberId?: SortOrder
-    menuId?: SortOrder
+    menuId?: SortOrderInput | SortOrder
+    customItemId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: MemberOrderItemCountOrderByAggregateInput
     _max?: MemberOrderItemMaxOrderByAggregateInput
@@ -13064,7 +14360,8 @@ export namespace Prisma {
     NOT?: MemberOrderItemScalarWhereWithAggregatesInput | MemberOrderItemScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"MemberOrderItem"> | string
     memberId?: StringWithAggregatesFilter<"MemberOrderItem"> | string
-    menuId?: StringWithAggregatesFilter<"MemberOrderItem"> | string
+    menuId?: StringNullableWithAggregatesFilter<"MemberOrderItem"> | string | null
+    customItemId?: StringNullableWithAggregatesFilter<"MemberOrderItem"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"MemberOrderItem"> | Date | string
   }
 
@@ -13630,6 +14927,7 @@ export namespace Prisma {
     restaurant: RestaurantCreateNestedOneWithoutPartiesInput
     leader: UserCreateNestedOneWithoutPartiesLedInput
     members?: PartyMemberCreateNestedManyWithoutPartyInput
+    customItems?: PartyCustomItemCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateInput = {
@@ -13647,6 +14945,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: PartyMemberUncheckedCreateNestedManyWithoutPartyInput
+    customItems?: PartyCustomItemUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUpdateInput = {
@@ -13664,6 +14963,7 @@ export namespace Prisma {
     restaurant?: RestaurantUpdateOneRequiredWithoutPartiesNestedInput
     leader?: UserUpdateOneRequiredWithoutPartiesLedNestedInput
     members?: PartyMemberUpdateManyWithoutPartyNestedInput
+    customItems?: PartyCustomItemUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateInput = {
@@ -13681,6 +14981,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: PartyMemberUncheckedUpdateManyWithoutPartyNestedInput
+    customItems?: PartyCustomItemUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyCreateManyInput = {
@@ -13727,6 +15028,65 @@ export namespace Prisma {
     leaderId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PartyCustomItemCreateInput = {
+    id?: string
+    name: string
+    price: number
+    createdAt?: Date | string
+    party: PartyCreateNestedOneWithoutCustomItemsInput
+    orderItems?: MemberOrderItemCreateNestedManyWithoutCustomItemInput
+  }
+
+  export type PartyCustomItemUncheckedCreateInput = {
+    id?: string
+    name: string
+    price: number
+    partyId: string
+    createdAt?: Date | string
+    orderItems?: MemberOrderItemUncheckedCreateNestedManyWithoutCustomItemInput
+  }
+
+  export type PartyCustomItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    party?: PartyUpdateOneRequiredWithoutCustomItemsNestedInput
+    orderItems?: MemberOrderItemUpdateManyWithoutCustomItemNestedInput
+  }
+
+  export type PartyCustomItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    partyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: MemberOrderItemUncheckedUpdateManyWithoutCustomItemNestedInput
+  }
+
+  export type PartyCustomItemCreateManyInput = {
+    id?: string
+    name: string
+    price: number
+    partyId: string
+    createdAt?: Date | string
+  }
+
+  export type PartyCustomItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PartyCustomItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    partyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PartyMemberCreateInput = {
@@ -13783,35 +15143,40 @@ export namespace Prisma {
   export type MemberOrderItemCreateInput = {
     id?: string
     createdAt?: Date | string
+    menu?: MenuCreateNestedOneWithoutOrderItemsInput
+    customItem?: PartyCustomItemCreateNestedOneWithoutOrderItemsInput
     member: PartyMemberCreateNestedOneWithoutOrderItemsInput
-    menu: MenuCreateNestedOneWithoutOrderItemsInput
   }
 
   export type MemberOrderItemUncheckedCreateInput = {
     id?: string
     memberId: string
-    menuId: string
+    menuId?: string | null
+    customItemId?: string | null
     createdAt?: Date | string
   }
 
   export type MemberOrderItemUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    menu?: MenuUpdateOneWithoutOrderItemsNestedInput
+    customItem?: PartyCustomItemUpdateOneWithoutOrderItemsNestedInput
     member?: PartyMemberUpdateOneRequiredWithoutOrderItemsNestedInput
-    menu?: MenuUpdateOneRequiredWithoutOrderItemsNestedInput
   }
 
   export type MemberOrderItemUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     memberId?: StringFieldUpdateOperationsInput | string
-    menuId?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    customItemId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MemberOrderItemCreateManyInput = {
     id?: string
     memberId: string
-    menuId: string
+    menuId?: string | null
+    customItemId?: string | null
     createdAt?: Date | string
   }
 
@@ -13823,7 +15188,8 @@ export namespace Prisma {
   export type MemberOrderItemUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     memberId?: StringFieldUpdateOperationsInput | string
-    menuId?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    customItemId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -14475,6 +15841,16 @@ export namespace Prisma {
     not?: NestedEnumPartyStatusFilter<$PrismaModel> | $Enums.PartyStatus
   }
 
+  export type PartyCustomItemListRelationFilter = {
+    every?: PartyCustomItemWhereInput
+    some?: PartyCustomItemWhereInput
+    none?: PartyCustomItemWhereInput
+  }
+
+  export type PartyCustomItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type PartyOrderByRelevanceInput = {
     fields: PartyOrderByRelevanceFieldEnum | PartyOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -14572,6 +15948,44 @@ export namespace Prisma {
     isNot?: PartyWhereInput
   }
 
+  export type PartyCustomItemOrderByRelevanceInput = {
+    fields: PartyCustomItemOrderByRelevanceFieldEnum | PartyCustomItemOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type PartyCustomItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    price?: SortOrder
+    partyId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PartyCustomItemAvgOrderByAggregateInput = {
+    price?: SortOrder
+  }
+
+  export type PartyCustomItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    price?: SortOrder
+    partyId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PartyCustomItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    price?: SortOrder
+    partyId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PartyCustomItemSumOrderByAggregateInput = {
+    price?: SortOrder
+  }
+
   export type PartyMemberOrderByRelevanceInput = {
     fields: PartyMemberOrderByRelevanceFieldEnum | PartyMemberOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -14604,14 +16018,19 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
+  export type MenuNullableScalarRelationFilter = {
+    is?: MenuWhereInput | null
+    isNot?: MenuWhereInput | null
+  }
+
+  export type PartyCustomItemNullableScalarRelationFilter = {
+    is?: PartyCustomItemWhereInput | null
+    isNot?: PartyCustomItemWhereInput | null
+  }
+
   export type PartyMemberScalarRelationFilter = {
     is?: PartyMemberWhereInput
     isNot?: PartyMemberWhereInput
-  }
-
-  export type MenuScalarRelationFilter = {
-    is?: MenuWhereInput
-    isNot?: MenuWhereInput
   }
 
   export type MemberOrderItemOrderByRelevanceInput = {
@@ -14625,10 +16044,16 @@ export namespace Prisma {
     menuId: string
   }
 
+  export type MemberOrderItemMemberIdCustomItemIdCompoundUniqueInput = {
+    memberId: string
+    customItemId: string
+  }
+
   export type MemberOrderItemCountOrderByAggregateInput = {
     id?: SortOrder
     memberId?: SortOrder
     menuId?: SortOrder
+    customItemId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -14636,6 +16061,7 @@ export namespace Prisma {
     id?: SortOrder
     memberId?: SortOrder
     menuId?: SortOrder
+    customItemId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -14643,6 +16069,7 @@ export namespace Prisma {
     id?: SortOrder
     memberId?: SortOrder
     menuId?: SortOrder
+    customItemId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -15339,11 +16766,25 @@ export namespace Prisma {
     connect?: PartyMemberWhereUniqueInput | PartyMemberWhereUniqueInput[]
   }
 
+  export type PartyCustomItemCreateNestedManyWithoutPartyInput = {
+    create?: XOR<PartyCustomItemCreateWithoutPartyInput, PartyCustomItemUncheckedCreateWithoutPartyInput> | PartyCustomItemCreateWithoutPartyInput[] | PartyCustomItemUncheckedCreateWithoutPartyInput[]
+    connectOrCreate?: PartyCustomItemCreateOrConnectWithoutPartyInput | PartyCustomItemCreateOrConnectWithoutPartyInput[]
+    createMany?: PartyCustomItemCreateManyPartyInputEnvelope
+    connect?: PartyCustomItemWhereUniqueInput | PartyCustomItemWhereUniqueInput[]
+  }
+
   export type PartyMemberUncheckedCreateNestedManyWithoutPartyInput = {
     create?: XOR<PartyMemberCreateWithoutPartyInput, PartyMemberUncheckedCreateWithoutPartyInput> | PartyMemberCreateWithoutPartyInput[] | PartyMemberUncheckedCreateWithoutPartyInput[]
     connectOrCreate?: PartyMemberCreateOrConnectWithoutPartyInput | PartyMemberCreateOrConnectWithoutPartyInput[]
     createMany?: PartyMemberCreateManyPartyInputEnvelope
     connect?: PartyMemberWhereUniqueInput | PartyMemberWhereUniqueInput[]
+  }
+
+  export type PartyCustomItemUncheckedCreateNestedManyWithoutPartyInput = {
+    create?: XOR<PartyCustomItemCreateWithoutPartyInput, PartyCustomItemUncheckedCreateWithoutPartyInput> | PartyCustomItemCreateWithoutPartyInput[] | PartyCustomItemUncheckedCreateWithoutPartyInput[]
+    connectOrCreate?: PartyCustomItemCreateOrConnectWithoutPartyInput | PartyCustomItemCreateOrConnectWithoutPartyInput[]
+    createMany?: PartyCustomItemCreateManyPartyInputEnvelope
+    connect?: PartyCustomItemWhereUniqueInput | PartyCustomItemWhereUniqueInput[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -15388,6 +16829,20 @@ export namespace Prisma {
     deleteMany?: PartyMemberScalarWhereInput | PartyMemberScalarWhereInput[]
   }
 
+  export type PartyCustomItemUpdateManyWithoutPartyNestedInput = {
+    create?: XOR<PartyCustomItemCreateWithoutPartyInput, PartyCustomItemUncheckedCreateWithoutPartyInput> | PartyCustomItemCreateWithoutPartyInput[] | PartyCustomItemUncheckedCreateWithoutPartyInput[]
+    connectOrCreate?: PartyCustomItemCreateOrConnectWithoutPartyInput | PartyCustomItemCreateOrConnectWithoutPartyInput[]
+    upsert?: PartyCustomItemUpsertWithWhereUniqueWithoutPartyInput | PartyCustomItemUpsertWithWhereUniqueWithoutPartyInput[]
+    createMany?: PartyCustomItemCreateManyPartyInputEnvelope
+    set?: PartyCustomItemWhereUniqueInput | PartyCustomItemWhereUniqueInput[]
+    disconnect?: PartyCustomItemWhereUniqueInput | PartyCustomItemWhereUniqueInput[]
+    delete?: PartyCustomItemWhereUniqueInput | PartyCustomItemWhereUniqueInput[]
+    connect?: PartyCustomItemWhereUniqueInput | PartyCustomItemWhereUniqueInput[]
+    update?: PartyCustomItemUpdateWithWhereUniqueWithoutPartyInput | PartyCustomItemUpdateWithWhereUniqueWithoutPartyInput[]
+    updateMany?: PartyCustomItemUpdateManyWithWhereWithoutPartyInput | PartyCustomItemUpdateManyWithWhereWithoutPartyInput[]
+    deleteMany?: PartyCustomItemScalarWhereInput | PartyCustomItemScalarWhereInput[]
+  }
+
   export type PartyMemberUncheckedUpdateManyWithoutPartyNestedInput = {
     create?: XOR<PartyMemberCreateWithoutPartyInput, PartyMemberUncheckedCreateWithoutPartyInput> | PartyMemberCreateWithoutPartyInput[] | PartyMemberUncheckedCreateWithoutPartyInput[]
     connectOrCreate?: PartyMemberCreateOrConnectWithoutPartyInput | PartyMemberCreateOrConnectWithoutPartyInput[]
@@ -15400,6 +16855,76 @@ export namespace Prisma {
     update?: PartyMemberUpdateWithWhereUniqueWithoutPartyInput | PartyMemberUpdateWithWhereUniqueWithoutPartyInput[]
     updateMany?: PartyMemberUpdateManyWithWhereWithoutPartyInput | PartyMemberUpdateManyWithWhereWithoutPartyInput[]
     deleteMany?: PartyMemberScalarWhereInput | PartyMemberScalarWhereInput[]
+  }
+
+  export type PartyCustomItemUncheckedUpdateManyWithoutPartyNestedInput = {
+    create?: XOR<PartyCustomItemCreateWithoutPartyInput, PartyCustomItemUncheckedCreateWithoutPartyInput> | PartyCustomItemCreateWithoutPartyInput[] | PartyCustomItemUncheckedCreateWithoutPartyInput[]
+    connectOrCreate?: PartyCustomItemCreateOrConnectWithoutPartyInput | PartyCustomItemCreateOrConnectWithoutPartyInput[]
+    upsert?: PartyCustomItemUpsertWithWhereUniqueWithoutPartyInput | PartyCustomItemUpsertWithWhereUniqueWithoutPartyInput[]
+    createMany?: PartyCustomItemCreateManyPartyInputEnvelope
+    set?: PartyCustomItemWhereUniqueInput | PartyCustomItemWhereUniqueInput[]
+    disconnect?: PartyCustomItemWhereUniqueInput | PartyCustomItemWhereUniqueInput[]
+    delete?: PartyCustomItemWhereUniqueInput | PartyCustomItemWhereUniqueInput[]
+    connect?: PartyCustomItemWhereUniqueInput | PartyCustomItemWhereUniqueInput[]
+    update?: PartyCustomItemUpdateWithWhereUniqueWithoutPartyInput | PartyCustomItemUpdateWithWhereUniqueWithoutPartyInput[]
+    updateMany?: PartyCustomItemUpdateManyWithWhereWithoutPartyInput | PartyCustomItemUpdateManyWithWhereWithoutPartyInput[]
+    deleteMany?: PartyCustomItemScalarWhereInput | PartyCustomItemScalarWhereInput[]
+  }
+
+  export type PartyCreateNestedOneWithoutCustomItemsInput = {
+    create?: XOR<PartyCreateWithoutCustomItemsInput, PartyUncheckedCreateWithoutCustomItemsInput>
+    connectOrCreate?: PartyCreateOrConnectWithoutCustomItemsInput
+    connect?: PartyWhereUniqueInput
+  }
+
+  export type MemberOrderItemCreateNestedManyWithoutCustomItemInput = {
+    create?: XOR<MemberOrderItemCreateWithoutCustomItemInput, MemberOrderItemUncheckedCreateWithoutCustomItemInput> | MemberOrderItemCreateWithoutCustomItemInput[] | MemberOrderItemUncheckedCreateWithoutCustomItemInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutCustomItemInput | MemberOrderItemCreateOrConnectWithoutCustomItemInput[]
+    createMany?: MemberOrderItemCreateManyCustomItemInputEnvelope
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+  }
+
+  export type MemberOrderItemUncheckedCreateNestedManyWithoutCustomItemInput = {
+    create?: XOR<MemberOrderItemCreateWithoutCustomItemInput, MemberOrderItemUncheckedCreateWithoutCustomItemInput> | MemberOrderItemCreateWithoutCustomItemInput[] | MemberOrderItemUncheckedCreateWithoutCustomItemInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutCustomItemInput | MemberOrderItemCreateOrConnectWithoutCustomItemInput[]
+    createMany?: MemberOrderItemCreateManyCustomItemInputEnvelope
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+  }
+
+  export type PartyUpdateOneRequiredWithoutCustomItemsNestedInput = {
+    create?: XOR<PartyCreateWithoutCustomItemsInput, PartyUncheckedCreateWithoutCustomItemsInput>
+    connectOrCreate?: PartyCreateOrConnectWithoutCustomItemsInput
+    upsert?: PartyUpsertWithoutCustomItemsInput
+    connect?: PartyWhereUniqueInput
+    update?: XOR<XOR<PartyUpdateToOneWithWhereWithoutCustomItemsInput, PartyUpdateWithoutCustomItemsInput>, PartyUncheckedUpdateWithoutCustomItemsInput>
+  }
+
+  export type MemberOrderItemUpdateManyWithoutCustomItemNestedInput = {
+    create?: XOR<MemberOrderItemCreateWithoutCustomItemInput, MemberOrderItemUncheckedCreateWithoutCustomItemInput> | MemberOrderItemCreateWithoutCustomItemInput[] | MemberOrderItemUncheckedCreateWithoutCustomItemInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutCustomItemInput | MemberOrderItemCreateOrConnectWithoutCustomItemInput[]
+    upsert?: MemberOrderItemUpsertWithWhereUniqueWithoutCustomItemInput | MemberOrderItemUpsertWithWhereUniqueWithoutCustomItemInput[]
+    createMany?: MemberOrderItemCreateManyCustomItemInputEnvelope
+    set?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    disconnect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    delete?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    update?: MemberOrderItemUpdateWithWhereUniqueWithoutCustomItemInput | MemberOrderItemUpdateWithWhereUniqueWithoutCustomItemInput[]
+    updateMany?: MemberOrderItemUpdateManyWithWhereWithoutCustomItemInput | MemberOrderItemUpdateManyWithWhereWithoutCustomItemInput[]
+    deleteMany?: MemberOrderItemScalarWhereInput | MemberOrderItemScalarWhereInput[]
+  }
+
+  export type MemberOrderItemUncheckedUpdateManyWithoutCustomItemNestedInput = {
+    create?: XOR<MemberOrderItemCreateWithoutCustomItemInput, MemberOrderItemUncheckedCreateWithoutCustomItemInput> | MemberOrderItemCreateWithoutCustomItemInput[] | MemberOrderItemUncheckedCreateWithoutCustomItemInput[]
+    connectOrCreate?: MemberOrderItemCreateOrConnectWithoutCustomItemInput | MemberOrderItemCreateOrConnectWithoutCustomItemInput[]
+    upsert?: MemberOrderItemUpsertWithWhereUniqueWithoutCustomItemInput | MemberOrderItemUpsertWithWhereUniqueWithoutCustomItemInput[]
+    createMany?: MemberOrderItemCreateManyCustomItemInputEnvelope
+    set?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    disconnect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    delete?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    connect?: MemberOrderItemWhereUniqueInput | MemberOrderItemWhereUniqueInput[]
+    update?: MemberOrderItemUpdateWithWhereUniqueWithoutCustomItemInput | MemberOrderItemUpdateWithWhereUniqueWithoutCustomItemInput[]
+    updateMany?: MemberOrderItemUpdateManyWithWhereWithoutCustomItemInput | MemberOrderItemUpdateManyWithWhereWithoutCustomItemInput[]
+    deleteMany?: MemberOrderItemScalarWhereInput | MemberOrderItemScalarWhereInput[]
   }
 
   export type PartyCreateNestedOneWithoutMembersInput = {
@@ -15472,16 +16997,42 @@ export namespace Prisma {
     deleteMany?: MemberOrderItemScalarWhereInput | MemberOrderItemScalarWhereInput[]
   }
 
+  export type MenuCreateNestedOneWithoutOrderItemsInput = {
+    create?: XOR<MenuCreateWithoutOrderItemsInput, MenuUncheckedCreateWithoutOrderItemsInput>
+    connectOrCreate?: MenuCreateOrConnectWithoutOrderItemsInput
+    connect?: MenuWhereUniqueInput
+  }
+
+  export type PartyCustomItemCreateNestedOneWithoutOrderItemsInput = {
+    create?: XOR<PartyCustomItemCreateWithoutOrderItemsInput, PartyCustomItemUncheckedCreateWithoutOrderItemsInput>
+    connectOrCreate?: PartyCustomItemCreateOrConnectWithoutOrderItemsInput
+    connect?: PartyCustomItemWhereUniqueInput
+  }
+
   export type PartyMemberCreateNestedOneWithoutOrderItemsInput = {
     create?: XOR<PartyMemberCreateWithoutOrderItemsInput, PartyMemberUncheckedCreateWithoutOrderItemsInput>
     connectOrCreate?: PartyMemberCreateOrConnectWithoutOrderItemsInput
     connect?: PartyMemberWhereUniqueInput
   }
 
-  export type MenuCreateNestedOneWithoutOrderItemsInput = {
+  export type MenuUpdateOneWithoutOrderItemsNestedInput = {
     create?: XOR<MenuCreateWithoutOrderItemsInput, MenuUncheckedCreateWithoutOrderItemsInput>
     connectOrCreate?: MenuCreateOrConnectWithoutOrderItemsInput
+    upsert?: MenuUpsertWithoutOrderItemsInput
+    disconnect?: MenuWhereInput | boolean
+    delete?: MenuWhereInput | boolean
     connect?: MenuWhereUniqueInput
+    update?: XOR<XOR<MenuUpdateToOneWithWhereWithoutOrderItemsInput, MenuUpdateWithoutOrderItemsInput>, MenuUncheckedUpdateWithoutOrderItemsInput>
+  }
+
+  export type PartyCustomItemUpdateOneWithoutOrderItemsNestedInput = {
+    create?: XOR<PartyCustomItemCreateWithoutOrderItemsInput, PartyCustomItemUncheckedCreateWithoutOrderItemsInput>
+    connectOrCreate?: PartyCustomItemCreateOrConnectWithoutOrderItemsInput
+    upsert?: PartyCustomItemUpsertWithoutOrderItemsInput
+    disconnect?: PartyCustomItemWhereInput | boolean
+    delete?: PartyCustomItemWhereInput | boolean
+    connect?: PartyCustomItemWhereUniqueInput
+    update?: XOR<XOR<PartyCustomItemUpdateToOneWithWhereWithoutOrderItemsInput, PartyCustomItemUpdateWithoutOrderItemsInput>, PartyCustomItemUncheckedUpdateWithoutOrderItemsInput>
   }
 
   export type PartyMemberUpdateOneRequiredWithoutOrderItemsNestedInput = {
@@ -15490,14 +17041,6 @@ export namespace Prisma {
     upsert?: PartyMemberUpsertWithoutOrderItemsInput
     connect?: PartyMemberWhereUniqueInput
     update?: XOR<XOR<PartyMemberUpdateToOneWithWhereWithoutOrderItemsInput, PartyMemberUpdateWithoutOrderItemsInput>, PartyMemberUncheckedUpdateWithoutOrderItemsInput>
-  }
-
-  export type MenuUpdateOneRequiredWithoutOrderItemsNestedInput = {
-    create?: XOR<MenuCreateWithoutOrderItemsInput, MenuUncheckedCreateWithoutOrderItemsInput>
-    connectOrCreate?: MenuCreateOrConnectWithoutOrderItemsInput
-    upsert?: MenuUpsertWithoutOrderItemsInput
-    connect?: MenuWhereUniqueInput
-    update?: XOR<XOR<MenuUpdateToOneWithWhereWithoutOrderItemsInput, MenuUpdateWithoutOrderItemsInput>, MenuUncheckedUpdateWithoutOrderItemsInput>
   }
 
   export type UserCreateNestedOneWithoutReviewsInput = {
@@ -15832,6 +17375,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     restaurant: RestaurantCreateNestedOneWithoutPartiesInput
     members?: PartyMemberCreateNestedManyWithoutPartyInput
+    customItems?: PartyCustomItemCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateWithoutLeaderInput = {
@@ -15848,6 +17392,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: PartyMemberUncheckedCreateNestedManyWithoutPartyInput
+    customItems?: PartyCustomItemUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyCreateOrConnectWithoutLeaderInput = {
@@ -16200,6 +17745,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     leader: UserCreateNestedOneWithoutPartiesLedInput
     members?: PartyMemberCreateNestedManyWithoutPartyInput
+    customItems?: PartyCustomItemCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateWithoutRestaurantInput = {
@@ -16216,6 +17762,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     members?: PartyMemberUncheckedCreateNestedManyWithoutPartyInput
+    customItems?: PartyCustomItemUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyCreateOrConnectWithoutRestaurantInput = {
@@ -16886,12 +18433,14 @@ export namespace Prisma {
   export type MemberOrderItemCreateWithoutMenuInput = {
     id?: string
     createdAt?: Date | string
+    customItem?: PartyCustomItemCreateNestedOneWithoutOrderItemsInput
     member: PartyMemberCreateNestedOneWithoutOrderItemsInput
   }
 
   export type MemberOrderItemUncheckedCreateWithoutMenuInput = {
     id?: string
     memberId: string
+    customItemId?: string | null
     createdAt?: Date | string
   }
 
@@ -16974,7 +18523,8 @@ export namespace Prisma {
     NOT?: MemberOrderItemScalarWhereInput | MemberOrderItemScalarWhereInput[]
     id?: StringFilter<"MemberOrderItem"> | string
     memberId?: StringFilter<"MemberOrderItem"> | string
-    menuId?: StringFilter<"MemberOrderItem"> | string
+    menuId?: StringNullableFilter<"MemberOrderItem"> | string | null
+    customItemId?: StringNullableFilter<"MemberOrderItem"> | string | null
     createdAt?: DateTimeFilter<"MemberOrderItem"> | Date | string
   }
 
@@ -17079,6 +18629,32 @@ export namespace Prisma {
 
   export type PartyMemberCreateManyPartyInputEnvelope = {
     data: PartyMemberCreateManyPartyInput | PartyMemberCreateManyPartyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PartyCustomItemCreateWithoutPartyInput = {
+    id?: string
+    name: string
+    price: number
+    createdAt?: Date | string
+    orderItems?: MemberOrderItemCreateNestedManyWithoutCustomItemInput
+  }
+
+  export type PartyCustomItemUncheckedCreateWithoutPartyInput = {
+    id?: string
+    name: string
+    price: number
+    createdAt?: Date | string
+    orderItems?: MemberOrderItemUncheckedCreateNestedManyWithoutCustomItemInput
+  }
+
+  export type PartyCustomItemCreateOrConnectWithoutPartyInput = {
+    where: PartyCustomItemWhereUniqueInput
+    create: XOR<PartyCustomItemCreateWithoutPartyInput, PartyCustomItemUncheckedCreateWithoutPartyInput>
+  }
+
+  export type PartyCustomItemCreateManyPartyInputEnvelope = {
+    data: PartyCustomItemCreateManyPartyInput | PartyCustomItemCreateManyPartyInput[]
     skipDuplicates?: boolean
   }
 
@@ -17190,6 +18766,157 @@ export namespace Prisma {
     data: XOR<PartyMemberUpdateManyMutationInput, PartyMemberUncheckedUpdateManyWithoutPartyInput>
   }
 
+  export type PartyCustomItemUpsertWithWhereUniqueWithoutPartyInput = {
+    where: PartyCustomItemWhereUniqueInput
+    update: XOR<PartyCustomItemUpdateWithoutPartyInput, PartyCustomItemUncheckedUpdateWithoutPartyInput>
+    create: XOR<PartyCustomItemCreateWithoutPartyInput, PartyCustomItemUncheckedCreateWithoutPartyInput>
+  }
+
+  export type PartyCustomItemUpdateWithWhereUniqueWithoutPartyInput = {
+    where: PartyCustomItemWhereUniqueInput
+    data: XOR<PartyCustomItemUpdateWithoutPartyInput, PartyCustomItemUncheckedUpdateWithoutPartyInput>
+  }
+
+  export type PartyCustomItemUpdateManyWithWhereWithoutPartyInput = {
+    where: PartyCustomItemScalarWhereInput
+    data: XOR<PartyCustomItemUpdateManyMutationInput, PartyCustomItemUncheckedUpdateManyWithoutPartyInput>
+  }
+
+  export type PartyCustomItemScalarWhereInput = {
+    AND?: PartyCustomItemScalarWhereInput | PartyCustomItemScalarWhereInput[]
+    OR?: PartyCustomItemScalarWhereInput[]
+    NOT?: PartyCustomItemScalarWhereInput | PartyCustomItemScalarWhereInput[]
+    id?: StringFilter<"PartyCustomItem"> | string
+    name?: StringFilter<"PartyCustomItem"> | string
+    price?: FloatFilter<"PartyCustomItem"> | number
+    partyId?: StringFilter<"PartyCustomItem"> | string
+    createdAt?: DateTimeFilter<"PartyCustomItem"> | Date | string
+  }
+
+  export type PartyCreateWithoutCustomItemsInput = {
+    id?: string
+    name?: string | null
+    details?: string | null
+    meetupTime: Date | string
+    maxParticipants: number
+    status?: $Enums.PartyStatus
+    contactInfo: string
+    serviceCharge?: number
+    vat?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    restaurant: RestaurantCreateNestedOneWithoutPartiesInput
+    leader: UserCreateNestedOneWithoutPartiesLedInput
+    members?: PartyMemberCreateNestedManyWithoutPartyInput
+  }
+
+  export type PartyUncheckedCreateWithoutCustomItemsInput = {
+    id?: string
+    name?: string | null
+    details?: string | null
+    meetupTime: Date | string
+    maxParticipants: number
+    status?: $Enums.PartyStatus
+    contactInfo: string
+    serviceCharge?: number
+    vat?: number
+    restaurantId: string
+    leaderId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: PartyMemberUncheckedCreateNestedManyWithoutPartyInput
+  }
+
+  export type PartyCreateOrConnectWithoutCustomItemsInput = {
+    where: PartyWhereUniqueInput
+    create: XOR<PartyCreateWithoutCustomItemsInput, PartyUncheckedCreateWithoutCustomItemsInput>
+  }
+
+  export type MemberOrderItemCreateWithoutCustomItemInput = {
+    id?: string
+    createdAt?: Date | string
+    menu?: MenuCreateNestedOneWithoutOrderItemsInput
+    member: PartyMemberCreateNestedOneWithoutOrderItemsInput
+  }
+
+  export type MemberOrderItemUncheckedCreateWithoutCustomItemInput = {
+    id?: string
+    memberId: string
+    menuId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type MemberOrderItemCreateOrConnectWithoutCustomItemInput = {
+    where: MemberOrderItemWhereUniqueInput
+    create: XOR<MemberOrderItemCreateWithoutCustomItemInput, MemberOrderItemUncheckedCreateWithoutCustomItemInput>
+  }
+
+  export type MemberOrderItemCreateManyCustomItemInputEnvelope = {
+    data: MemberOrderItemCreateManyCustomItemInput | MemberOrderItemCreateManyCustomItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PartyUpsertWithoutCustomItemsInput = {
+    update: XOR<PartyUpdateWithoutCustomItemsInput, PartyUncheckedUpdateWithoutCustomItemsInput>
+    create: XOR<PartyCreateWithoutCustomItemsInput, PartyUncheckedCreateWithoutCustomItemsInput>
+    where?: PartyWhereInput
+  }
+
+  export type PartyUpdateToOneWithWhereWithoutCustomItemsInput = {
+    where?: PartyWhereInput
+    data: XOR<PartyUpdateWithoutCustomItemsInput, PartyUncheckedUpdateWithoutCustomItemsInput>
+  }
+
+  export type PartyUpdateWithoutCustomItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    meetupTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    maxParticipants?: IntFieldUpdateOperationsInput | number
+    status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
+    contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    restaurant?: RestaurantUpdateOneRequiredWithoutPartiesNestedInput
+    leader?: UserUpdateOneRequiredWithoutPartiesLedNestedInput
+    members?: PartyMemberUpdateManyWithoutPartyNestedInput
+  }
+
+  export type PartyUncheckedUpdateWithoutCustomItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableStringFieldUpdateOperationsInput | string | null
+    meetupTime?: DateTimeFieldUpdateOperationsInput | Date | string
+    maxParticipants?: IntFieldUpdateOperationsInput | number
+    status?: EnumPartyStatusFieldUpdateOperationsInput | $Enums.PartyStatus
+    contactInfo?: StringFieldUpdateOperationsInput | string
+    serviceCharge?: FloatFieldUpdateOperationsInput | number
+    vat?: FloatFieldUpdateOperationsInput | number
+    restaurantId?: StringFieldUpdateOperationsInput | string
+    leaderId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: PartyMemberUncheckedUpdateManyWithoutPartyNestedInput
+  }
+
+  export type MemberOrderItemUpsertWithWhereUniqueWithoutCustomItemInput = {
+    where: MemberOrderItemWhereUniqueInput
+    update: XOR<MemberOrderItemUpdateWithoutCustomItemInput, MemberOrderItemUncheckedUpdateWithoutCustomItemInput>
+    create: XOR<MemberOrderItemCreateWithoutCustomItemInput, MemberOrderItemUncheckedCreateWithoutCustomItemInput>
+  }
+
+  export type MemberOrderItemUpdateWithWhereUniqueWithoutCustomItemInput = {
+    where: MemberOrderItemWhereUniqueInput
+    data: XOR<MemberOrderItemUpdateWithoutCustomItemInput, MemberOrderItemUncheckedUpdateWithoutCustomItemInput>
+  }
+
+  export type MemberOrderItemUpdateManyWithWhereWithoutCustomItemInput = {
+    where: MemberOrderItemScalarWhereInput
+    data: XOR<MemberOrderItemUpdateManyMutationInput, MemberOrderItemUncheckedUpdateManyWithoutCustomItemInput>
+  }
+
   export type PartyCreateWithoutMembersInput = {
     id?: string
     name?: string | null
@@ -17204,6 +18931,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     restaurant: RestaurantCreateNestedOneWithoutPartiesInput
     leader: UserCreateNestedOneWithoutPartiesLedInput
+    customItems?: PartyCustomItemCreateNestedManyWithoutPartyInput
   }
 
   export type PartyUncheckedCreateWithoutMembersInput = {
@@ -17220,6 +18948,7 @@ export namespace Prisma {
     leaderId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    customItems?: PartyCustomItemUncheckedCreateNestedManyWithoutPartyInput
   }
 
   export type PartyCreateOrConnectWithoutMembersInput = {
@@ -17269,12 +18998,14 @@ export namespace Prisma {
   export type MemberOrderItemCreateWithoutMemberInput = {
     id?: string
     createdAt?: Date | string
-    menu: MenuCreateNestedOneWithoutOrderItemsInput
+    menu?: MenuCreateNestedOneWithoutOrderItemsInput
+    customItem?: PartyCustomItemCreateNestedOneWithoutOrderItemsInput
   }
 
   export type MemberOrderItemUncheckedCreateWithoutMemberInput = {
     id?: string
-    menuId: string
+    menuId?: string | null
+    customItemId?: string | null
     createdAt?: Date | string
   }
 
@@ -17313,6 +19044,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restaurant?: RestaurantUpdateOneRequiredWithoutPartiesNestedInput
     leader?: UserUpdateOneRequiredWithoutPartiesLedNestedInput
+    customItems?: PartyCustomItemUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutMembersInput = {
@@ -17329,6 +19061,7 @@ export namespace Prisma {
     leaderId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customItems?: PartyCustomItemUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type UserUpsertWithoutJoinedPartiesInput = {
@@ -17392,25 +19125,6 @@ export namespace Prisma {
     data: XOR<MemberOrderItemUpdateManyMutationInput, MemberOrderItemUncheckedUpdateManyWithoutMemberInput>
   }
 
-  export type PartyMemberCreateWithoutOrderItemsInput = {
-    id?: string
-    joinedAt?: Date | string
-    party: PartyCreateNestedOneWithoutMembersInput
-    user: UserCreateNestedOneWithoutJoinedPartiesInput
-  }
-
-  export type PartyMemberUncheckedCreateWithoutOrderItemsInput = {
-    id?: string
-    joinedAt?: Date | string
-    partyId: string
-    userId: string
-  }
-
-  export type PartyMemberCreateOrConnectWithoutOrderItemsInput = {
-    where: PartyMemberWhereUniqueInput
-    create: XOR<PartyMemberCreateWithoutOrderItemsInput, PartyMemberUncheckedCreateWithoutOrderItemsInput>
-  }
-
   export type MenuCreateWithoutOrderItemsInput = {
     id?: string
     name: string
@@ -17440,29 +19154,44 @@ export namespace Prisma {
     create: XOR<MenuCreateWithoutOrderItemsInput, MenuUncheckedCreateWithoutOrderItemsInput>
   }
 
-  export type PartyMemberUpsertWithoutOrderItemsInput = {
-    update: XOR<PartyMemberUpdateWithoutOrderItemsInput, PartyMemberUncheckedUpdateWithoutOrderItemsInput>
+  export type PartyCustomItemCreateWithoutOrderItemsInput = {
+    id?: string
+    name: string
+    price: number
+    createdAt?: Date | string
+    party: PartyCreateNestedOneWithoutCustomItemsInput
+  }
+
+  export type PartyCustomItemUncheckedCreateWithoutOrderItemsInput = {
+    id?: string
+    name: string
+    price: number
+    partyId: string
+    createdAt?: Date | string
+  }
+
+  export type PartyCustomItemCreateOrConnectWithoutOrderItemsInput = {
+    where: PartyCustomItemWhereUniqueInput
+    create: XOR<PartyCustomItemCreateWithoutOrderItemsInput, PartyCustomItemUncheckedCreateWithoutOrderItemsInput>
+  }
+
+  export type PartyMemberCreateWithoutOrderItemsInput = {
+    id?: string
+    joinedAt?: Date | string
+    party: PartyCreateNestedOneWithoutMembersInput
+    user: UserCreateNestedOneWithoutJoinedPartiesInput
+  }
+
+  export type PartyMemberUncheckedCreateWithoutOrderItemsInput = {
+    id?: string
+    joinedAt?: Date | string
+    partyId: string
+    userId: string
+  }
+
+  export type PartyMemberCreateOrConnectWithoutOrderItemsInput = {
+    where: PartyMemberWhereUniqueInput
     create: XOR<PartyMemberCreateWithoutOrderItemsInput, PartyMemberUncheckedCreateWithoutOrderItemsInput>
-    where?: PartyMemberWhereInput
-  }
-
-  export type PartyMemberUpdateToOneWithWhereWithoutOrderItemsInput = {
-    where?: PartyMemberWhereInput
-    data: XOR<PartyMemberUpdateWithoutOrderItemsInput, PartyMemberUncheckedUpdateWithoutOrderItemsInput>
-  }
-
-  export type PartyMemberUpdateWithoutOrderItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    party?: PartyUpdateOneRequiredWithoutMembersNestedInput
-    user?: UserUpdateOneRequiredWithoutJoinedPartiesNestedInput
-  }
-
-  export type PartyMemberUncheckedUpdateWithoutOrderItemsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    partyId?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type MenuUpsertWithoutOrderItemsInput = {
@@ -17498,6 +19227,58 @@ export namespace Prisma {
     restaurantId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PartyCustomItemUpsertWithoutOrderItemsInput = {
+    update: XOR<PartyCustomItemUpdateWithoutOrderItemsInput, PartyCustomItemUncheckedUpdateWithoutOrderItemsInput>
+    create: XOR<PartyCustomItemCreateWithoutOrderItemsInput, PartyCustomItemUncheckedCreateWithoutOrderItemsInput>
+    where?: PartyCustomItemWhereInput
+  }
+
+  export type PartyCustomItemUpdateToOneWithWhereWithoutOrderItemsInput = {
+    where?: PartyCustomItemWhereInput
+    data: XOR<PartyCustomItemUpdateWithoutOrderItemsInput, PartyCustomItemUncheckedUpdateWithoutOrderItemsInput>
+  }
+
+  export type PartyCustomItemUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    party?: PartyUpdateOneRequiredWithoutCustomItemsNestedInput
+  }
+
+  export type PartyCustomItemUncheckedUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    partyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PartyMemberUpsertWithoutOrderItemsInput = {
+    update: XOR<PartyMemberUpdateWithoutOrderItemsInput, PartyMemberUncheckedUpdateWithoutOrderItemsInput>
+    create: XOR<PartyMemberCreateWithoutOrderItemsInput, PartyMemberUncheckedCreateWithoutOrderItemsInput>
+    where?: PartyMemberWhereInput
+  }
+
+  export type PartyMemberUpdateToOneWithWhereWithoutOrderItemsInput = {
+    where?: PartyMemberWhereInput
+    data: XOR<PartyMemberUpdateWithoutOrderItemsInput, PartyMemberUncheckedUpdateWithoutOrderItemsInput>
+  }
+
+  export type PartyMemberUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    party?: PartyUpdateOneRequiredWithoutMembersNestedInput
+    user?: UserUpdateOneRequiredWithoutJoinedPartiesNestedInput
+  }
+
+  export type PartyMemberUncheckedUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    partyId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserCreateWithoutReviewsInput = {
@@ -17761,6 +19542,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     restaurant?: RestaurantUpdateOneRequiredWithoutPartiesNestedInput
     members?: PartyMemberUpdateManyWithoutPartyNestedInput
+    customItems?: PartyCustomItemUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutLeaderInput = {
@@ -17777,6 +19559,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: PartyMemberUncheckedUpdateManyWithoutPartyNestedInput
+    customItems?: PartyCustomItemUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateManyWithoutLeaderInput = {
@@ -18033,6 +19816,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leader?: UserUpdateOneRequiredWithoutPartiesLedNestedInput
     members?: PartyMemberUpdateManyWithoutPartyNestedInput
+    customItems?: PartyCustomItemUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateWithoutRestaurantInput = {
@@ -18049,6 +19833,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: PartyMemberUncheckedUpdateManyWithoutPartyNestedInput
+    customItems?: PartyCustomItemUncheckedUpdateManyWithoutPartyNestedInput
   }
 
   export type PartyUncheckedUpdateManyWithoutRestaurantInput = {
@@ -18111,24 +19896,28 @@ export namespace Prisma {
   export type MemberOrderItemCreateManyMenuInput = {
     id?: string
     memberId: string
+    customItemId?: string | null
     createdAt?: Date | string
   }
 
   export type MemberOrderItemUpdateWithoutMenuInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customItem?: PartyCustomItemUpdateOneWithoutOrderItemsNestedInput
     member?: PartyMemberUpdateOneRequiredWithoutOrderItemsNestedInput
   }
 
   export type MemberOrderItemUncheckedUpdateWithoutMenuInput = {
     id?: StringFieldUpdateOperationsInput | string
     memberId?: StringFieldUpdateOperationsInput | string
+    customItemId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MemberOrderItemUncheckedUpdateManyWithoutMenuInput = {
     id?: StringFieldUpdateOperationsInput | string
     memberId?: StringFieldUpdateOperationsInput | string
+    customItemId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -18136,6 +19925,13 @@ export namespace Prisma {
     id?: string
     joinedAt?: Date | string
     userId: string
+  }
+
+  export type PartyCustomItemCreateManyPartyInput = {
+    id?: string
+    name: string
+    price: number
+    createdAt?: Date | string
   }
 
   export type PartyMemberUpdateWithoutPartyInput = {
@@ -18158,27 +19954,82 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type PartyCustomItemUpdateWithoutPartyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: MemberOrderItemUpdateManyWithoutCustomItemNestedInput
+  }
+
+  export type PartyCustomItemUncheckedUpdateWithoutPartyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: MemberOrderItemUncheckedUpdateManyWithoutCustomItemNestedInput
+  }
+
+  export type PartyCustomItemUncheckedUpdateManyWithoutPartyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    price?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberOrderItemCreateManyCustomItemInput = {
+    id?: string
+    memberId: string
+    menuId?: string | null
+    createdAt?: Date | string
+  }
+
+  export type MemberOrderItemUpdateWithoutCustomItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    menu?: MenuUpdateOneWithoutOrderItemsNestedInput
+    member?: PartyMemberUpdateOneRequiredWithoutOrderItemsNestedInput
+  }
+
+  export type MemberOrderItemUncheckedUpdateWithoutCustomItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    memberId?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MemberOrderItemUncheckedUpdateManyWithoutCustomItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    memberId?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type MemberOrderItemCreateManyMemberInput = {
     id?: string
-    menuId: string
+    menuId?: string | null
+    customItemId?: string | null
     createdAt?: Date | string
   }
 
   export type MemberOrderItemUpdateWithoutMemberInput = {
     id?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    menu?: MenuUpdateOneRequiredWithoutOrderItemsNestedInput
+    menu?: MenuUpdateOneWithoutOrderItemsNestedInput
+    customItem?: PartyCustomItemUpdateOneWithoutOrderItemsNestedInput
   }
 
   export type MemberOrderItemUncheckedUpdateWithoutMemberInput = {
     id?: StringFieldUpdateOperationsInput | string
-    menuId?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    customItemId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MemberOrderItemUncheckedUpdateManyWithoutMemberInput = {
     id?: StringFieldUpdateOperationsInput | string
-    menuId?: StringFieldUpdateOperationsInput | string
+    menuId?: NullableStringFieldUpdateOperationsInput | string | null
+    customItemId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

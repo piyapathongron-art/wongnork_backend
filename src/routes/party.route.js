@@ -8,7 +8,8 @@ import {
   kickMemberController,
   addOrderItemController,
   removeOrderItemController,
-  getSplitBillController
+  getSplitBillController,
+  addCustomItemController
 } from "../controllers/party.controller.js";
 
 const partyRoute = express.Router();
@@ -189,7 +190,38 @@ partyRoute.post("/:id/items", authUserCheck, addOrderItemController);
  *       404:
  *         description: Item not found
  */
-partyRoute.delete("/:id/items/:menuId", authUserCheck, removeOrderItemController);
+partyRoute.delete("/:id/items/:itemId", authUserCheck, removeOrderItemController);
+
+/**
+ * @swagger
+ * /api/parties/{id}/custom-items:
+ *   post:
+ *     summary: Add a custom menu item to the party (available only for this party)
+ *     tags: [Parties, Split Bill]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *     responses:
+ *       201:
+ *         description: Custom item added successfully
+ */
+partyRoute.post("/:id/custom-items", authUserCheck, addCustomItemController);
 
 /**
  * @swagger

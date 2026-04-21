@@ -1,5 +1,5 @@
 import createHttpError from "http-errors";
-import { createPartySchema, createOrderItemSchema } from "../validations/schema.js";
+import { createPartySchema, createOrderItemSchema, createCustomItemSchema } from "../validations/schema.js";
 import {
   createPartyService,
   getAllPartiesService,
@@ -9,7 +9,8 @@ import {
   kickMemberService,
   addOrderItemService,
   removeOrderItemService,
-  calculateSplitBillService
+  calculateSplitBillService,
+  addCustomItemService
 } from "../services/party.service.js";
 
 // ดึงรายการปาร์ตี้ทั้งหมด
@@ -118,14 +119,14 @@ export const addOrderItemController = async (req, res, next) => {
   try {
     const { id: partyId } = req.params;
     const userId = req.user.id;
-    const { menuId } = createOrderItemSchema.parse(req.body);
+    const orderData = createOrderItemSchema.parse(req.body);
 
-    const orderItem = await addOrderItemService(partyId, userId, menuId);
+    const orderItem = await addOrderItemService(partyId, userId, orderData);
     res.status(201).json({ message: "Order item added successfully", data: orderItem });
   } catch (error) {
     // ถ้ามีการ add ซ้ำ P2002 Unique Constraint
     if (error.code === 'P2002') {
-      return next(createHttpError(400, "คุณได้เลือกเมนูนี้ไปแล้ว"));
+      return next(createHttpError(400, "คุณได้เลือกรายการนี้ไปแล้ว"));
     }
     next(error);
   }
@@ -133,20 +134,36 @@ export const addOrderItemController = async (req, res, next) => {
 
 /**
  * @desc ลบรายการเมนูที่สมาชิกเลือก (ติ๊กออก)
- * @route DELETE /api/parties/:id/items/:menuId
+ * @route DELETE /api/parties/:id/items/:itemId
  */
 export const removeOrderItemController = async (req, res, next) => {
   try {
-    const { id: partyId, menuId } = req.params;
+    const { id: partyId, itemId } = req.params;
     const userId = req.user.id;
 
-    await removeOrderItemService(partyId, userId, menuId);
+    await removeOrderItemService(partyId, userId, { menuId: itemId, customItemId: itemId });
     res.json({ message: "Order item removed successfully" });
   } catch (error) {
-    // ถ้าพยายามลบตัวที่ไม่มีอยู่แล้ว (P2025: Record to delete does not exist)
     if (error.code === 'P2025') {
-      return next(createHttpError(404, "ไม่พบรายการเมนูที่ต้องการลบ"));
+      return next(createHttpError(404, "ไม่พบรายการที่ต้องการลบ"));
     }
+    next(error);
+  }
+};
+
+/**
+ * @desc เพิ่มเมนูพิเศษ (Manual) เฉพาะในปาร์ตี้
+ * @route POST /api/parties/:id/custom-items
+ */
+export const addCustomItemController = async (req, res, next) => {
+  try {
+    const { id: partyId } = req.params;
+    const userId = req.user.id;
+    const data = createCustomItemSchema.parse(req.body);
+
+    const customItem = await addCustomItemService(partyId, userId, data);
+    res.status(201).json({ message: "Custom item added to party", data: customItem });
+  } catch (error) {
     next(error);
   }
 };

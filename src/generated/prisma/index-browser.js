@@ -198,6 +198,14 @@ exports.Prisma.PartyScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.PartyCustomItemScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  price: 'price',
+  partyId: 'partyId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.PartyMemberScalarFieldEnum = {
   id: 'id',
   joinedAt: 'joinedAt',
@@ -209,6 +217,7 @@ exports.Prisma.MemberOrderItemScalarFieldEnum = {
   id: 'id',
   memberId: 'memberId',
   menuId: 'menuId',
+  customItemId: 'customItemId',
   createdAt: 'createdAt'
 };
 
@@ -286,6 +295,12 @@ exports.Prisma.PartyOrderByRelevanceFieldEnum = {
   leaderId: 'leaderId'
 };
 
+exports.Prisma.PartyCustomItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  partyId: 'partyId'
+};
+
 exports.Prisma.PartyMemberOrderByRelevanceFieldEnum = {
   id: 'id',
   partyId: 'partyId',
@@ -295,7 +310,8 @@ exports.Prisma.PartyMemberOrderByRelevanceFieldEnum = {
 exports.Prisma.MemberOrderItemOrderByRelevanceFieldEnum = {
   id: 'id',
   memberId: 'memberId',
-  menuId: 'menuId'
+  menuId: 'menuId',
+  customItemId: 'customItemId'
 };
 
 exports.Prisma.ReviewOrderByRelevanceFieldEnum = {
@@ -340,6 +356,7 @@ exports.Prisma.ModelName = {
   SavedRestaurant: 'SavedRestaurant',
   Menu: 'Menu',
   Party: 'Party',
+  PartyCustomItem: 'PartyCustomItem',
   PartyMember: 'PartyMember',
   MemberOrderItem: 'MemberOrderItem',
   Review: 'Review'
