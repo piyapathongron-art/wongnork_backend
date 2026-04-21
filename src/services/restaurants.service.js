@@ -9,7 +9,8 @@ export const getAllRestaurantService = async () => {
         include: {
             images: true,
             reviews: true,
-            operatingHours: true
+            operatingHours: true,
+            menus: true,
         }
     });
 
@@ -119,3 +120,43 @@ export const deleteRestaurantService = async (id, ownerId) => {
     })
     return restaurant
 }
+
+export const toggleSaveRestaurantService = async (userId, restaurantId) => {
+    // 1. เช็คว่ามีร้านนี้จริงไหม
+    const restaurant = await prisma.restaurant.findUnique({
+        where: { id: restaurantId, deletedAt: null }
+    });
+
+    if (!restaurant) {
+        throw createHttpError(404, "Restaurant not found");
+    }
+
+    // 2. เช็คว่า User เซฟร้านนี้ไปหรือยัง
+    const existingSaved = await prisma.savedRestaurant.findUnique({
+        where: {
+            userId_restaurantId: {
+                userId,
+                restaurantId
+            }
+        }
+    });
+
+    if (existingSaved) {
+        // ถ้าเซฟแล้วให้ยกเลิกการเซฟ (Unsave)
+        await prisma.savedRestaurant.delete({
+            where: {
+                id: existingSaved.id
+            }
+        });
+        return { isSaved: false, message: "Restaurant unsaved successfully" };
+    } else {
+        // ถ้ายังไม่เซฟให้ทำการเซฟ (Save)
+        await prisma.savedRestaurant.create({
+            data: {
+                userId,
+                restaurantId
+            }
+        });
+        return { isSaved: true, message: "Restaurant saved successfully" };
+    }
+};

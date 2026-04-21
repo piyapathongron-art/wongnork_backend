@@ -1,8 +1,11 @@
 import createHttpError from "http-errors";
 import { loginSchema, registerSchema, updateProfileSchema } from "../validations/schema.js";
-import { createNewUser, findUseerByEmail, findUserBy, updateUserService } from "../services/auth.service.js";
+import { createNewUser, findUseerByEmail, findUserBy, updateUserService, upsertGoogleUser } from "../services/auth.service.js";
 import { comparePassword } from "../utils/bcryptUtils.js";
 import { createToken } from "../utils/jwt.js";
+import { OAuth2Client } from 'google-auth-library';
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export async function authRegisterController(req, res, next) {
   const data = await registerSchema.parseAsync(req.body);
@@ -71,10 +74,10 @@ export async function authUpdateProfileController(req, res, next) {
   try {
     const id = req.user.id;
     const data = await updateProfileSchema.parseAsync(req.body);
-    
+
     // ตรวจสอบว่าไม่มีข้อมูลอะไรส่งมาเลยหรือไม่
     if (Object.keys(data).length === 0) {
-       throw createHttpError(400, "No data provided to update");
+      throw createHttpError(400, "No data provided to update");
     }
 
     const updatedUser = await updateUserService(id, data);
@@ -90,5 +93,51 @@ export async function authUpdateProfileController(req, res, next) {
     });
   } catch (error) {
     next(error);
+  }
+}
+
+export async function authGoogleLoginController(req, res, next) {
+  try {
+    const { token } = req.body;
+
+    if (!token) {
+      return next(createHttpError(400, "Google token is required"));
+    }
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { sub: googleId, email, name, picture: avatarUrl } = payload;
+
+    const user = await upsertGoogleUser(email, name, googleId, avatarUrl);
+
+    const jwtPayload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      role: user.role,
+      provider: user.provider,
+      googleId: user.googleId,
+    };
+    
+    const appToken = createToken(jwtPayload);
+
+    res.json({
+      message: "Google login successful",
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        avatarUrl: user.avatarUrl,
+      },
+      token: appToken,
+    });
+  } catch (error) {
+    console.error("Google verify error:", error);
+    next(createHttpError(401, "Invalid Google Token"));
   }
 }

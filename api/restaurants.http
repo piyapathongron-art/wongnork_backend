@@ -1,5 +1,5 @@
 @BASE_URL=http://localhost:3000
 
 ### Register
-GET {{BASE_URL}}/api/restaurants
+DELETE {{BASE_URL}}/api/restaurants/3
 Content-Type: application/json

@@ -115,7 +115,15 @@ async function main() {
     });
     createdParties.push(party);
 
-    // จำลองให้มีคนเข้าร่วมตี้ (เอา User คนถัดไปมาเข้าตี้ เพื่อไม่ให้ซ้ำกับ Leader)
+    // จำลองให้ Leader เข้าร่วมตี้ตัวเองเป็นคนแรก
+    await prisma.partyMember.create({
+      data: {
+        partyId: party.id,
+        userId: leader.id
+      }
+    });
+
+    // จำลองให้มีคนเข้าร่วมตี้เพิ่ม (เอา User คนถัดไปมาเข้าตี้ เพื่อไม่ให้ซ้ำกับ Leader)
     const joinerIndex = (i + 1) % 10; 
     await prisma.partyMember.create({
       data: {
