@@ -1,5 +1,5 @@
 import express from "express"
-import { authGetmeController, authGoogleLoginController, authLoginController, authRegisterController, authUpdateProfileController } from "../controllers/auth.controller.js"
+import { authGetmeController, authGoogleLoginController, authLoginController, authRegisterController, authUpdateProfileController,authVerifyEmailConroller } from "../controllers/auth.controller.js"
 import authUserCheck from "../middlewares/userAuthen.middleware.js"
 const authRoute = express.Router()
 
@@ -119,5 +119,5 @@ authRoute.put('/profile', authUserCheck, authUpdateProfileController)
 
 
 authRoute.post('/google', authGoogleLoginController)
-
+authRoute.get("/verify-email",authVerifyEmailConroller);
 export default authRoute

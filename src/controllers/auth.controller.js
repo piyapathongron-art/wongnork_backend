@@ -1,9 +1,12 @@
 import createHttpError from "http-errors";
 import { loginSchema, registerSchema, updateProfileSchema } from "../validations/schema.js";
-import { createNewUser, findUseerByEmail, findUserBy, updateUserService, upsertGoogleUser } from "../services/auth.service.js";
+import { createNewUser, findUseerByEmail, findUserBy, updateUserService, upsertGoogleUser, verifyUpdateUserService } from "../services/auth.service.js";
 import { comparePassword } from "../utils/bcryptUtils.js";
-import { createToken } from "../utils/jwt.js";
-import { OAuth2Client } from 'google-auth-library';
+import { createToken, verifyToken } from "../utils/jwt.js";
+import jwt from "jsonwebtoken";import { OAuth2Client } from 'google-auth-library';
+
+import { sendVerificationEmail } from "../utils/email.js";
+
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -15,8 +18,21 @@ export async function authRegisterController(req, res, next) {
   }
   const newUser = await createNewUser(data);
 
+  const verifyEmailToken = jwt.sign(
+    {userId:newUser.id},
+    process.env.JWT_SECRET,
+    {
+      algorithm:'HS256',
+      expiresIn:'15m',
+    }
+  )
+
+  const verifyLink = `${process.env.BACKEND_URL}/api/auth/verify-email?token=${verifyEmailToken}`;
+
+  await sendVerificationEmail(newUser.email,verifyLink)
+
   res.json({
-    message: "Register Successful",
+    message: "Register Successful , Please check your email to verify account.",
     user: {
       id: newUser.id,
       email: newUser.email,
@@ -26,6 +42,23 @@ export async function authRegisterController(req, res, next) {
   });
 }
 
+export async function authVerifyEmailConroller(req,res,next){
+  try{
+    const {token} = req.query
+    if(!token){
+      return next(createHttpError(400,"Token required"))
+    }
+      const decoded = verifyToken(token)
+      await verifyUpdateUserService(decoded.userId)
+      return res.redirect(`${process.env.FRONTEND_URL}/login?verified=true`);
+  
+    }
+  
+  catch(err){
+    next(createHttpError(400,'Invalid or Expired link'))
+  }
+}
+
 export async function authLoginController(req, res, next) {
   const data = loginSchema.parse(req.body);
 
@@ -33,6 +66,10 @@ export async function authLoginController(req, res, next) {
   if (!foundUser) {
     return next(createHttpError[401]("This email does not exist"));
   }
+if (!foundUser.isVerified) {
+      return next(createHttpError(403, "Please verify your email before logging in. Check your inbox."));
+    }
+
   let checkedPassword = await comparePassword(
     data.password,
     foundUser.password,

@@ -53,6 +53,7 @@ model User {
   role      Role     @default(USER) // 🌟 ปรับให้ใช้ Enum Role
   provider  Provider @default(LOCAL) // 🌟 ปรับให้ใช้ Enum Provider
   googleId  String?  @unique
+  isVerified Boolean @default(false)
 
   // Relations
   reviews          Review[]

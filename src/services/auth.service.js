@@ -77,6 +77,13 @@ export const updateUserService = async (id, data) => {
   return user;
 };
 
+export const verifyUpdateUserService = async(id)=>{
+  await prisma.user.update({
+      where: { id: id },
+      data: { isVerified: true }
+    });
+}
+
 export const upsertGoogleUser = async (email, name, googleId, avatarUrl) => {
   const user = await prisma.user.upsert({
     where: { email },
