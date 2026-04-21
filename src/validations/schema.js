@@ -13,18 +13,18 @@ export const registerSchema = z.object({
   confirmPassword: z.string()
     .min(1, "กรุณายืนยันรหัสผ่าน"),
 })
-.refine((input) => input.password === input.confirmPassword, {
-  message: "รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน",
-  path: ["confirmPassword"],
-})
-.transform(async (data) => {
-  return {
-    name: data.name,
-    email: data.email,
-    password: hashPassword(data.password), 
-    role : data.role
-  };
-});
+  .refine((input) => input.password === input.confirmPassword, {
+    message: "รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน",
+    path: ["confirmPassword"],
+  })
+  .transform(async (data) => {
+    return {
+      name: data.name,
+      email: data.email,
+      password: hashPassword(data.password),
+      role: data.role
+    };
+  });
 
 
 export const loginSchema = z.object({
@@ -44,23 +44,23 @@ const restaurantSchema = z.object({
   name: z.string()
     .min(1, "กรุณากรอกชื่อร้าน")
     .max(255, "ชื่อร้านต้องไม่เกิน 255 ตัวอักษร"),
-  
+
   description: z.string()
     .max(255, "รายละเอียดร้านต้องไม่เกิน 255 ตัวอักษร")
     .optional(),
-  
+
   category: z.string()
     .min(1, "กรุณากรอกประเภทร้าน")
     .max(255, "ประเภทร้านต้องไม่เกิน 255 ตัวอักษร"),
-  
+
   lat: z.number({ required_error: "กรุณากรอกละติจูด", invalid_type_error: "ละติจูดต้องเป็นตัวเลข" })
     .min(-90, "ละติจูดต้องไม่ต่ำกว่า -90")
     .max(90, "ละติจูดต้องไม่เกิน 90"),
-  
+
   lng: z.number({ required_error: "กรุณากรอกลองจิจูด", invalid_type_error: "ลองจิจูดต้องเป็นตัวเลข" })
     .min(-180, "ลองจิจูดต้องไม่ต่ำกว่า -180")
     .max(180, "ลองจิจูดต้องไม่เกิน 180"),
-  
+
   operatingHours: z.array(z.object({
     day: z.enum(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']),
     openTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "รูปแบบเวลาไม่ถูกต้อง (HH:mm)"),
@@ -86,9 +86,9 @@ const menuSchema = z.object({
     .optional()
     .nullable(),
 
-  price: z.number({ 
-    required_error: "กรุณากรอกราคา", 
-    invalid_type_error: "ราคาต้องเป็นตัวเลข" 
+  price: z.number({
+    required_error: "กรุณากรอกราคา",
+    invalid_type_error: "ราคาต้องเป็นตัวเลข"
   }).min(0, "ราคาต้องไม่ต่ำกว่า 0"),
 
   category: z.string()
@@ -120,9 +120,9 @@ export const createPartySchema = z.object({
     .refine((val) => !isNaN(Date.parse(val)), "รูปแบบวันที่และเวลาไม่ถูกต้อง")
     .transform((val) => new Date(val)),
 
-  maxParticipants: z.number({ 
-    required_error: "กรุณากรอกจำนวนคนรับ", 
-    invalid_type_error: "จำนวนคนต้องเป็นตัวเลข" 
+  maxParticipants: z.number({
+    required_error: "กรุณากรอกจำนวนคนรับ",
+    invalid_type_error: "จำนวนคนต้องเป็นตัวเลข"
   }).min(2, "จำนวนคนต้องมีอย่างน้อย 2 คน"),
 
   contactInfo: z.string()
@@ -131,28 +131,36 @@ export const createPartySchema = z.object({
 
   serviceCharge: z.number().min(0).optional().default(0),
   vat: z.number().min(0).optional().default(0),
-  });
+});
 
-  // --- Review Validation Schema ---
-  export const createReviewSchema = z.object({
-  rating: z.number({ 
-    required_error: "กรุณาให้คะแนน", 
-    invalid_type_error: "คะแนนต้องเป็นตัวเลข" 
+// --- Review Validation Schema ---
+export const createReviewSchema = z.object({
+  rating: z.number({
+    required_error: "กรุณาให้คะแนน",
+    invalid_type_error: "คะแนนต้องเป็นตัวเลข"
   }).min(1, "คะแนนต่ำสุดคือ 1").max(5, "คะแนนสูงสุดคือ 5"),
 
   comment: z.string()
     .max(1000, "คอมเมนต์ต้องไม่เกิน 1000 ตัวอักษร")
     .optional()
     .nullable(),
-  });
+});
 
-  // --- Profile Validation Schema ---
-  export const updateProfileSchema = z.object({
-    name: z.string().min(2, "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร").transform((val) => val.trim()).optional(),
-    avatarUrl: z.string().url("รูปแบบ URL ของรูปภาพไม่ถูกต้อง").optional().nullable(),
-  });
+// --- Profile Validation Schema ---
+export const updateProfileSchema = z.object({
+  name: z.string().min(2, "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร").transform((val) => val.trim()).optional(),
+  avatarUrl: z.string().url("รูปแบบ URL ของรูปภาพไม่ถูกต้อง").optional().nullable(),
+});
 
-  // --- Split Bill / Order Item Schema ---
-  export const createOrderItemSchema = z.object({
-    menuId: z.string({ required_error: "กรุณาระบุ Menu ID" }).uuid("รูปแบบ Menu ID ไม่ถูกต้อง"),
-  });
+// --- Split Bill / Order Item Schema ---
+export const createCustomItemSchema = z.object({
+  name: z.string().min(1, "กรุณากรอกชื่อเมนู").max(255, "ชื่อเมนูต้องไม่เกิน 255 ตัวอักษร"),
+  price: z.number({ required_error: "กรุณากรอกราคา", invalid_type_error: "ราคาต้องเป็นตัวเลข" }).min(0, "ราคาต้องไม่ต่ำกว่า 0"),
+});
+
+export const createOrderItemSchema = z.object({
+  customItemId: z.string().uuid("รูปแบบ Custom Item ID ไม่ถูกต้อง").optional().nullable(),
+}).refine(data => data.customItemId, {
+  message: "ต้องระบุ customItemId อย่างใดอย่างหนึ่ง",
+  path: ["customItemId"]
+});

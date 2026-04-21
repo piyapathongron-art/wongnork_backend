@@ -161,10 +161,23 @@ model Party {
   leaderId String // 🌟 เปลี่ยน Foreign Key เป็น String
   leader   User   @relation("PartyLeader", fields: [leaderId], references: [id], onDelete: Cascade)
 
-  members PartyMember[]
+  members     PartyMember[]
+  customItems PartyCustomItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PartyCustomItem {
+  id      String @id @default(uuid())
+  name    String
+  price   Float
+  partyId String
+  party   Party  @relation(fields: [partyId], references: [id], onDelete: Cascade)
+
+  orderItems MemberOrderItem[]
+
+  createdAt DateTime @default(now())
 }
 
 model PartyMember {
@@ -187,15 +200,22 @@ model PartyMember {
 model MemberOrderItem {
   id       String @id @default(uuid())
   memberId String
-  menuId   String
+
+  // กรณีเป็นเมนูหลักของร้าน
+  menuId String?
+  menu   Menu?   @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  // กรณีเป็นเมนูพิเศษที่เพิ่มเองในตี้
+  customItemId String?
+  customItem   PartyCustomItem? @relation(fields: [customItemId], references: [id], onDelete: Cascade)
 
   member PartyMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  menu   Menu        @relation(fields: [menuId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
-  // ป้องกันสมาชิกคนเดิมเลือกเมนูเดิมซ้ำในตี้ (ใช้ Quantity แทนถ้าต้องการ)
+  // ป้องกันสมาชิกคนเดิมเลือกเมนูเดิมซ้ำในตี้
   @@unique([memberId, menuId])
+  @@unique([memberId, customItemId])
 }
 
 model Review {
