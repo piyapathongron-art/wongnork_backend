@@ -5,7 +5,7 @@ import 'dotenv/config';
 import { prisma } from '../src/lib/prisma.js';
 
 async function main() {
-  console.log('🌱 กำลังเริ่มทำ Seeding ข้อมูลชุดใหญ่ (30 รายการต่อโมเดล)...');
+  console.log('🌱 กำลังเริ่มทำ Seeding ข้อมูลชุดใหญ่ (20 รายการต่อโมเดล)...');
 
   // 1. เคลียร์ข้อมูลเก่าทิ้ง (ลำดับการลบจากตารางลูกไปตารางแม่)
   await prisma.memberOrderItem.deleteMany();
@@ -23,11 +23,11 @@ async function main() {
   const hashedPassword = await bcrypt.hash('123456', 10);
 
   // ---------------------------------------------------------
-  // 2. สร้าง Users (30 คน)
+  // 2. สร้าง Users (20 คน)
   // ---------------------------------------------------------
   const users = [];
-  for (let i = 1; i <= 30; i++) {
-    const role = i === 1 ? 'ADMIN' : (i <= 7 ? 'OWNER' : 'USER');
+  for (let i = 1; i <= 20; i++) {
+    const role = i === 1 ? 'ADMIN' : (i <= 5 ? 'OWNER' : 'USER');
     const user = await prisma.user.create({
       data: {
         email: i === 1 ? 'admin@wongnork.com' : `user${i}@example.com`,
@@ -40,23 +40,23 @@ async function main() {
     });
     users.push(user);
   }
-  console.log(`👤 สร้างข้อมูล User สำเร็จ ${users.length} คน (Admin 1, Owner 6, User 23)`);
+  console.log(`👤 สร้างข้อมูล User สำเร็จ ${users.length} คน (Admin 1, Owner 4, User 15)`);
 
   // ---------------------------------------------------------
-  // 3. สร้าง Restaurants (30 ร้าน)
+  // 3. สร้าง Restaurants (20 ร้าน)
   // ---------------------------------------------------------
   const categories = ['Shabu', 'Cafe', 'Japanese', 'BBQ', 'Thai', 'Western', 'Izakaya', 'Dessert', 'Street Food', 'Fine Dining'];
   const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
   
   const restaurants = [];
-  for (let i = 1; i <= 30; i++) {
-    const owner = users[Math.floor(Math.random() * 7)]; // เจ้าของร้านสุ่มจาก 7 คนแรก
+  for (let i = 1; i <= 20; i++) {
+    const owner = users[Math.floor(Math.random() * 5)]; // เจ้าของร้านสุ่มจาก 5 คนแรก
     const restaurant = await prisma.restaurant.create({
       data: {
         name: `ร้านอาหารที่ ${i} - ${categories[i % categories.length]}`,
-        description: `คำอธิบายร้านอาหารอันดับที่ ${i} บรรยากาศดี อาหารอร่อย ราคาย่อมเยา เหมาะสำหรับทุกเพศทุกวัย และการมาเปิดตี้กับเพื่อนๆ`,
-        lat: 13.7 + (Math.random() * 0.15),
-        lng: 100.5 + (Math.random() * 0.15),
+        description: `คำอธิบายร้านอาหารอันดับที่ ${i} บรรยากาศดี อาหารอร่อย ราคาย่อมเยา เหมาะสำหรับทุกเพศทุกวัย`,
+        lat: 13.7 + (Math.random() * 0.1),
+        lng: 100.5 + (Math.random() * 0.1),
         category: categories[i % categories.length],
         ownerId: owner.id,
         images: {
@@ -74,10 +74,10 @@ async function main() {
           }))
         },
         menus: {
-          create: Array.from({ length: 6 }).map((_, j) => ({
+          create: Array.from({ length: 5 }).map((_, j) => ({
             name: `เมนู ${j + 1} ของร้าน ${i}`,
             description: `รายละเอียดเมนูแสนอร่อยลำดับที่ ${j + 1}`,
-            price: 80 + (Math.random() * 800),
+            price: 50 + (Math.random() * 500),
             category: j === 0 ? 'Recommend' : 'General',
             imageUrl: `https://picsum.photos/seed/menu${i}-${j}/400/300`
           }))
@@ -90,22 +90,22 @@ async function main() {
   console.log(`🍲 สร้างข้อมูลร้านอาหาร สำเร็จ ${restaurants.length} ร้าน (พร้อมรูปภาพ, เวลาเปิด-ปิด และเมนู)`);
 
   // ---------------------------------------------------------
-  // 4. สร้าง Parties (30 ปาร์ตี้)
+  // 4. สร้าง Parties (20 ปาร์ตี้)
   // ---------------------------------------------------------
   const parties = [];
-  for (let i = 1; i <= 30; i++) {
-    const restaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
+  for (let i = 1; i <= 20; i++) {
+    const restaurant = restaurants[i - 1];
     const leader = users[Math.floor(Math.random() * users.length)];
     const meetupTime = new Date();
-    meetupTime.setDate(meetupTime.getDate() + (i % 10)); // นัดหมายใน 1-10 วันข้างหน้า
+    meetupTime.setDate(meetupTime.getDate() + (i % 7)); // นัดหมายใน 1-7 วันข้างหน้า
 
     const party = await prisma.party.create({
       data: {
-        name: `ตี้หารที่ ${restaurant.name} (ตี้ที่ ${i})`,
-        details: `ใครว่างมาเจอกันครับ อยากทาน ${restaurant.category} ร้านนี้มานานแล้ว หารเท่ากันทุกคนครับ`,
+        name: `ไปกิน ${restaurant.name} กันเถอะ ตี้ที่ ${i}`,
+        details: `หาเพื่อนร่วมโต๊ะหารค่าอาหารที่ร้าน ${restaurant.name} มากันเยอะๆ นะครับ`,
         meetupTime: meetupTime,
-        maxParticipants: 4 + Math.floor(Math.random() * 5),
-        contactInfo: `Line: user${i}_wongnork / Tel: 08${i.toString().padStart(2, '0')}-000-0000`,
+        maxParticipants: 4 + Math.floor(Math.random() * 5), // 4-8 คน
+        contactInfo: `Line: user${i}_connect / Tel: 081-234-56${i.toString().padStart(2, '0')}`,
         status: 'OPEN',
         serviceCharge: 10,
         vat: 7,
@@ -115,86 +115,57 @@ async function main() {
     });
     parties.push(party);
 
-    // 🌟 ฟิกซ์: เพิ่ม Leader เข้าเป็น Member คนแรกของตี้เสมอ
-    const leaderMember = await prisma.partyMember.create({
-      data: {
-        partyId: party.id,
-        userId: leader.id
-      }
-    });
+    // จำลองคนเข้าร่วมตี้ (2-4 คนต่อตี้)
+    const memberCount = 2 + Math.floor(Math.random() * 3);
+    const shuffledUsers = [...users].sort(() => 0.5 - Math.random());
+    const potentialMembers = shuffledUsers.slice(0, memberCount);
 
-    // จำลองให้คนอื่นเข้าร่วมตี้เพิ่ม (สุ่ม 1-4 คน ไม่รวม leader)
-    const extraMemberCount = 1 + Math.floor(Math.random() * 4);
-    const otherUsers = users.filter(u => u.id !== leader.id).sort(() => 0.5 - Math.random());
-    const joiners = otherUsers.slice(0, extraMemberCount);
-
-    for (const joiner of joiners) {
+    for (const memberUser of potentialMembers) {
+      // ตรวจสอบไม่ให้ซ้ำกับ Leader (ถ้าจะเข้มงวด แต่ใน seed นี้เอาแบบง่ายๆ ก่อน)
       try {
         const member = await prisma.partyMember.create({
           data: {
             partyId: party.id,
-            userId: joiner.id
+            userId: memberUser.id
           }
         });
 
-        // 🌟 จำลองการสั่งอาหาร (Split Bill) สุ่มสั่ง 1-3 อย่าง
-        const menuToOrderCount = 1 + Math.floor(Math.random() * 3);
-        const shuffledMenus = [...restaurant.menus].sort(() => 0.5 - Math.random());
-        const orders = shuffledMenus.slice(0, menuToOrderCount);
-
-        for (const menu of orders) {
-          await prisma.memberOrderItem.create({
-            data: {
-              memberId: member.id,
-              menuId: menu.id
-            }
-          });
-        }
-        
-        // ให้หัวหน้าตี้สั่งบ้าง 1 อย่าง
-        const leaderOrder = restaurant.menus[0];
-        await prisma.memberOrderItem.upsert({
-            where: {
-                memberId_menuId: {
-                    memberId: leaderMember.id,
-                    menuId: leaderOrder.id
-                }
-            },
-            create: {
-                memberId: leaderMember.id,
-                menuId: leaderOrder.id
-            },
-            update: {}
-        })
-
+        // จำลองการสั่งอาหาร (Split Bill) สุ่มสั่ง 1-2 อย่าง
+        const menuToOrder = restaurant.menus[Math.floor(Math.random() * restaurant.menus.length)];
+        await prisma.memberOrderItem.create({
+          data: {
+            memberId: member.id,
+            menuId: menuToOrder.id
+          }
+        });
       } catch (e) {
-        // ข้ามกรณี Error
+        // ข้ามกรณี Unique Constraint Error (User เดิมเข้าตี้เดิม)
       }
     }
   }
-  console.log(`🎉 สร้างข้อมูล Party สำเร็จ ${parties.length} ปาร์ตี้ (พร้อมฟิกซ์ Leader เป็นสมาชิก และสุ่มการสั่งอาหาร)`);
+  console.log(`🎉 สร้างข้อมูล Party สำเร็จ ${parties.length} ปาร์ตี้ (พร้อมสมาชิกและการสั่งอาหาร)`);
 
   // ---------------------------------------------------------
-  // 5. สร้าง Reviews (30 รายการ)
+  // 5. สร้าง Reviews (20 รายการ)
   // ---------------------------------------------------------
-  for (let i = 1; i <= 30; i++) {
+  for (let i = 1; i <= 20; i++) {
     const user = users[Math.floor(Math.random() * users.length)];
     const restaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
     await prisma.review.create({
       data: {
         rating: 1 + Math.floor(Math.random() * 5),
-        comment: `รีวิวที่ ${i}: รสชาติอาหาร ${restaurant.category} ร้านนี้ถือว่าใช้ได้เลยครับ แนะนำให้มาลอง!`,
+        comment: `รีวิวลำดับที่ ${i}: ร้านนี้บริการดีมาก อาหารอร่อย คุ้มค่าเงินที่จ่ายไป แนะนำเลยครับ!`,
         userId: user.id,
         restaurantId: restaurant.id
       }
     });
   }
-  console.log(`⭐ สร้างข้อมูล Review สำเร็จ 30 รายการ`);
+  console.log(`⭐ สร้างข้อมูล Review สำเร็จ 20 รายการ`);
 
   // ---------------------------------------------------------
-  // 6. สร้าง SavedRestaurants (30 รายการ)
+  // 6. สร้าง SavedRestaurants (20 รายการ)
   // ---------------------------------------------------------
-  for (let i = 1; i <= 30; i++) {
+  for (let i = 1; i <= 20; i++) {
     const user = users[Math.floor(Math.random() * users.length)];
     const restaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
     try {
@@ -204,11 +175,13 @@ async function main() {
           restaurantId: restaurant.id
         }
       });
-    } catch (e) {}
+    } catch (e) {
+      // ข้ามกรณีเซฟซ้ำ
+    }
   }
-  console.log(`📌 สร้างข้อมูล Saved Restaurant สำเร็จ (ประมาณ 30 รายการ)`);
+  console.log(`📌 สร้างข้อมูล Saved Restaurant สำเร็จ (ประมาณ 20 รายการ)`);
 
-  console.log('✅ Seeding ชุดใหม่ 30 รายการเสร็จสมบูรณ์! 🚀');
+  console.log('✅ Seeding เสร็จสมบูรณ์! พร้อมสำหรับการพัฒนาต่อแล้ว 🚀');
 }
 
 main()
