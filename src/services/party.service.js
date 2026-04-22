@@ -32,8 +32,12 @@ export const getAllPartiesService = async () => {
     where: { status: "OPEN" },
     include: {
       restaurant: true,
-      _count: { select: { members: true } },
-      leader: { select: { id: true, name: true, avatarUrl: true } },
+      _count: {
+        select: { members: true }
+      },
+      leader: {
+        select: { id: true, name: true, avatarUrl: true }
+      },
       members: {
         include: {
           user: { select: { id: true, name: true, avatarUrl: true } }
@@ -42,6 +46,55 @@ export const getAllPartiesService = async () => {
     },
     orderBy: { meetupTime: "asc" }
   });
+};
+
+export const getPartiesWithPaginationService = async (page = 1, limit = 10) => {
+  const skip = (page - 1) * limit;
+
+  const [parties, totalItems] = await prisma.$transaction([
+    // 1. ตัวดึงข้อมูล
+    prisma.party.findMany({
+      where: { 
+        status: { in: ["OPEN", "FULL"] } // 🌟 ยัดเงื่อนไขลงไปตรงๆ
+      },
+      skip: skip,
+      take: limit,
+      include: {
+        restaurant: true,
+        _count: {
+          select: { members: true }
+        },
+        leader: {
+          select: { id: true, name: true, avatarUrl: true }
+        },
+        members: {
+          include: {
+            user: {
+              select: { id: true, name: true, avatarUrl: true }
+            }
+          }
+        }
+      },
+      orderBy: { meetupTime: "asc" }
+    }),
+    
+    // 2. ตัวนับจำนวน (นับหน้า)
+    prisma.party.count({
+      where: { 
+        status: { in: ["OPEN", "FULL"] } // 🌟 ยัดเงื่อนไขลงไปตรงๆ (ต้องเหมือนตัวบนเป๊ะๆ)
+      }
+    })
+  ]);
+
+  return {
+    data: parties,
+    meta: {
+      totalItems: totalItems,
+      currentPage: page,
+      itemsPerPage: limit,
+      totalPages: Math.ceil(totalItems / limit)
+    }
+  };
 };
 
 export const getPartyByIdService = async (id) => {

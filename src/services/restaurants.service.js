@@ -17,6 +17,51 @@ export const getAllRestaurantService = async () => {
     return restaurant
 }
 
+export const paginationRestaurantService = async (page =1,limit=10) =>{
+    const skip = (page-1)*limit
+     const [restaurants, totalItems] = await prisma.$transaction([
+        prisma.restaurant.findMany({
+            where: {
+                deletedAt: null
+            },
+            skip: skip, 
+            take: limit, 
+            include: {
+                images: true,
+                reviews: true,
+                operatingHours: true,
+                menus: true,
+                _count: {
+                    select: { reviews: true }
+                }
+            },
+           orderBy: [
+                {
+                    reviews: {
+                        _count: 'desc' 
+                    }
+                },
+                {
+                    createdAt: 'desc' 
+                }
+            ]
+        }),
+        prisma.restaurant.count({
+            where: { deletedAt: null }
+        })
+    ]);
+
+      return {
+        data: restaurants,
+        meta: {
+            totalItems: totalItems,
+            currentPage: page,
+            itemsPerPage: limit,
+            totalPages: Math.ceil(totalItems / limit) 
+        }
+    };
+}
+
 export const createRestaurantService = async (data, ownerId) => {
     const { operatingHours, ...restData } = data;
     const checkExistRestaurant = await findRestaurantBy("name", data.name)

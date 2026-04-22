@@ -1,4 +1,4 @@
-import { createRestaurantService, deleteRestaurantService, findRestaurantBy, getAllRestaurantService, updateRestaurantService, toggleSaveRestaurantService } from "../services/restaurants.service.js";
+import { createRestaurantService, deleteRestaurantService, findRestaurantBy, getAllRestaurantService, updateRestaurantService, toggleSaveRestaurantService, paginationRestaurantService } from "../services/restaurants.service.js";
 import { createRestaurantSchema, updateRestaurantSchema } from "../validations/schema.js";
 import createHttpError from "http-errors";
 
@@ -21,6 +21,22 @@ export async function getRestaurantByIdController(req, res, next) {
     })
 }
 
+export async function paginationRestaurantController(req, res, next) {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const result = await paginationRestaurantService(page, limit);
+        
+        res.json({
+            message: "Success",
+            data: result.data,
+            meta: result.meta 
+        });
+    } catch (error) {
+        next(error);
+    }
+}
 
 export async function createRestaurantController(req, res, next) {
     const ownerId = req.user.id

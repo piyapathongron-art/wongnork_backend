@@ -18,7 +18,8 @@ import {
   togglePartyOrderItemSharerService,
   removePartyOrderItemService,
   calculateSplitBillService,
-  updatePartySettingsService
+  updatePartySettingsService,
+  getPartiesWithPaginationService
 } from "../services/party.service.js";
 
 /**
@@ -56,6 +57,23 @@ export const getPartyByIdController = async (req, res, next) => {
     const party = await getPartyByIdService(id);
     if (!party) throw createHttpError(404, "Party not found");
     res.json({ message: "Success", data: party });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const paginationPartyController = async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const result = await getPartiesWithPaginationService(page, limit);
+    
+    res.json({ 
+      message: "Success", 
+      data: result.data,
+      meta: result.meta 
+    });
   } catch (error) {
     next(error);
   }
