@@ -133,6 +133,17 @@ export const createPartySchema = z.object({
   vat: z.number().min(0).optional().default(0),
 });
 
+export const updatePartySettingsSchema = z.object({
+  name: z.string().min(2, "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร").optional(),
+  details: z.string().max(1000, "รายละเอียดต้องไม่เกิน 1000 ตัวอักษร").optional(),
+  meetupTime: z.string().transform((val) => new Date(val)).optional(),
+  maxParticipants: z.number().min(2, "จำนวนคนต้องมีอย่างน้อย 2 คน").optional(),
+  contactInfo: z.string().min(1, "กรุณากรอกช่องทางติดต่อ").optional(),
+  vat: z.number().min(0).optional(),
+  serviceCharge: z.number().min(0).optional(),
+  status: z.enum(["OPEN", "FULL", "COMPLETED", "CANCELLED"]).optional(),
+});
+
 // --- Review Validation Schema ---
 export const createReviewSchema = z.object({
   rating: z.number({
@@ -152,15 +163,25 @@ export const updateProfileSchema = z.object({
   avatarUrl: z.string().url("รูปแบบ URL ของรูปภาพไม่ถูกต้อง").optional().nullable(),
 });
 
-// --- Split Bill / Order Item Schema ---
-export const createCustomItemSchema = z.object({
-  name: z.string().min(1, "กรุณากรอกชื่อเมนู").max(255, "ชื่อเมนูต้องไม่เกิน 255 ตัวอักษร"),
-  price: z.number({ required_error: "กรุณากรอกราคา", invalid_type_error: "ราคาต้องเป็นตัวเลข" }).min(0, "ราคาต้องไม่ต่ำกว่า 0"),
+// --- Split Bill / Party Order Item Schema ---
+export const createPartyOrderItemSchema = z.object({
+  menuId: z.string().uuid("รูปแบบ Menu ID ไม่ถูกต้อง").optional().nullable(),
+  isCustom: z.boolean().optional().default(false),
+  name: z.string().max(255).optional().nullable(),
+  price: z.number().min(0).optional().nullable(),
+  quantity: z.number().min(1).optional().default(1),
+}).refine(data => {
+  if (!data.isCustom && !data.menuId) return false;
+  if (data.isCustom && (!data.name || data.price === undefined || data.price === null)) return false;
+  return true;
+}, {
+  message: "ข้อมูลเมนูไม่ครบถ้วน (ระบุ menuId หรือระบุ name และ price สำหรับเมนูพิเศษ)",
 });
 
-export const createOrderItemSchema = z.object({
-  customItemId: z.string().uuid("รูปแบบ Custom Item ID ไม่ถูกต้อง").optional().nullable(),
-}).refine(data => data.customItemId, {
-  message: "ต้องระบุ customItemId อย่างใดอย่างหนึ่ง",
-  path: ["customItemId"]
+export const updatePartyOrderItemQuantitySchema = z.object({
+  action: z.enum(["increment", "decrement"])
+});
+
+export const toggleSharerSchema = z.object({
+  action: z.enum(["join", "leave"])
 });

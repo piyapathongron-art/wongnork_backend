@@ -1,5 +1,11 @@
 import createHttpError from "http-errors";
-import { createPartySchema, createOrderItemSchema, createCustomItemSchema } from "../validations/schema.js";
+import {
+  createPartySchema,
+  createPartyOrderItemSchema,
+  updatePartyOrderItemQuantitySchema,
+  toggleSharerSchema,
+  updatePartySettingsSchema
+} from "../validations/schema.js";
 import {
   createPartyService,
   getAllPartiesService,
@@ -7,12 +13,32 @@ import {
   joinPartyService,
   leavePartyService,
   kickMemberService,
-  addOrderItemService,
-  removeOrderItemService,
+  addPartyOrderItemService,
+  updatePartyOrderItemQuantityService,
+  togglePartyOrderItemSharerService,
+  removePartyOrderItemService,
   calculateSplitBillService,
-  addCustomItemService,
+  updatePartySettingsService,
   getPartiesWithPaginationService
 } from "../services/party.service.js";
+
+/**
+ * @desc อัปเดตการตั้งค่าบิล (VAT, Service Charge) หรือปิดปาร์ตี้ (เฉพาะ Leader)
+ * @route PUT /api/parties/:id/settings
+ */
+export const updatePartySettingsController = async (req, res, next) => {
+  try {
+    const { id: partyId } = req.params;
+    const leaderId = req.user.id;
+    const data = updatePartySettingsSchema.parse(req.body);
+    console.log(data)
+
+    const updatedParty = await updatePartySettingsService(partyId, leaderId, data);
+    res.json({ message: "Party settings updated successfully", data: updatedParty });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // ดึงรายการปาร์ตี้ทั้งหมด
 export const getAllPartiesController = async (req, res, next) => {
@@ -63,7 +89,6 @@ export const createPartyController = async (req, res, next) => {
     const newParty = await createPartyService(restaurantId, leaderId, data);
     res.status(201).json({ message: "Party created successfully", data: newParty });
   } catch (error) {
-    // If it's a known constraint error, pass it directly
     if (error.status === 400 && error.message) {
       return next(error);
     }
@@ -80,12 +105,9 @@ export const joinPartyController = async (req, res, next) => {
     const newMember = await joinPartyService(partyId, userId);
     res.json({ message: "Joined party successfully", data: newMember });
   } catch (error) {
-    // ส่งผ่าน error message แบบ Custom (เช่น constraint หรือ validation errors) ให้ Frontend ตรงๆ
     if (error.status === 400 && error.message) {
       return next(error);
     }
-
-    // สำหรับ error อื่นๆ ที่อาจจะไม่ได้มาจาก http-errors โดยตรง แต่ต้องการส่ง message เดิม
     if (error.message === "Party is already full" || error.message === "Party is not open for joining") {
       return next(createHttpError(400, error.message));
     }
@@ -126,61 +148,71 @@ export const kickMemberController = async (req, res, next) => {
 };
 
 // ------------------------------------------------------------------
-// Split Bill Controllers
+// Split Bill Controllers (PartyOrderItem Flow)
 // ------------------------------------------------------------------
 
 /**
- * @desc เพิ่มรายการเมนูที่สมาชิกเลือก (ติ๊กกิน)
+ * @desc เพิ่มรายการเมนูเข้าบิลโต๊ะ (Opt-in คนแอดเป็นคนแรกอัตโนมัติ)
  * @route POST /api/parties/:id/items
  */
-export const addOrderItemController = async (req, res, next) => {
+export const addPartyOrderItemController = async (req, res, next) => {
   try {
     const { id: partyId } = req.params;
     const userId = req.user.id;
-    const orderData = createOrderItemSchema.parse(req.body);
+    const orderData = createPartyOrderItemSchema.parse(req.body);
 
-    const orderItem = await addOrderItemService(partyId, userId, orderData);
-    res.status(201).json({ message: "Order item added successfully", data: orderItem });
+    const orderItem = await addPartyOrderItemService(partyId, userId, orderData);
+    res.status(201).json({ message: "Added item to party bill successfully", data: orderItem });
   } catch (error) {
-    // ถ้ามีการ add ซ้ำ P2002 Unique Constraint
-    if (error.code === 'P2002') {
-      return next(createHttpError(400, "คุณได้เลือกรายการนี้ไปแล้ว"));
-    }
     next(error);
   }
 };
 
 /**
- * @desc ลบรายการเมนูที่สมาชิกเลือก (ติ๊กออก)
+ * @desc ปรับเพิ่ม/ลด จำนวน Quantity ของเมนูในโต๊ะ
+ * @route PUT /api/parties/:id/items/:itemId/quantity
+ */
+export const updatePartyOrderItemQuantityController = async (req, res, next) => {
+  try {
+    const { id: partyId, itemId } = req.params;
+    const userId = req.user.id;
+    const { action } = updatePartyOrderItemQuantitySchema.parse(req.body);
+
+    const result = await updatePartyOrderItemQuantityService(partyId, userId, itemId, action);
+    res.json({ message: "Quantity updated successfully", data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc ให้สมาชิกกดเข้าร่วมหาร (Join) หรือออกจากการหาร (Leave) เมนูนั้น
+ * @route PUT /api/parties/:id/items/:itemId/sharers
+ */
+export const togglePartyOrderItemSharerController = async (req, res, next) => {
+  try {
+    const { id: partyId, itemId } = req.params;
+    const userId = req.user.id;
+    const { action } = toggleSharerSchema.parse(req.body);
+
+    const result = await togglePartyOrderItemSharerService(partyId, userId, itemId, action);
+    res.json({ message: "Toggled sharer status successfully", data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc ลบเมนูนี้ออกจากบิลโต๊ะเลย
  * @route DELETE /api/parties/:id/items/:itemId
  */
-export const removeOrderItemController = async (req, res, next) => {
+export const removePartyOrderItemController = async (req, res, next) => {
   try {
     const { id: partyId, itemId } = req.params;
     const userId = req.user.id;
 
-    await removeOrderItemService(partyId, userId, { menuId: itemId, customItemId: itemId });
+    await removePartyOrderItemService(partyId, userId, itemId);
     res.json({ message: "Order item removed successfully" });
-  } catch (error) {
-    if (error.code === 'P2025') {
-      return next(createHttpError(404, "ไม่พบรายการที่ต้องการลบ"));
-    }
-    next(error);
-  }
-};
-
-/**
- * @desc เพิ่มเมนูพิเศษ (Manual) เฉพาะในปาร์ตี้
- * @route POST /api/parties/:id/custom-items
- */
-export const addCustomItemController = async (req, res, next) => {
-  try {
-    const { id: partyId } = req.params;
-    const userId = req.user.id;
-    const data = createCustomItemSchema.parse(req.body);
-
-    const customItem = await addCustomItemService(partyId, userId, data);
-    res.status(201).json({ message: "Custom item added to party", data: customItem });
   } catch (error) {
     next(error);
   }
@@ -194,7 +226,6 @@ export const getSplitBillController = async (req, res, next) => {
   try {
     const { id: partyId } = req.params;
 
-    // ตรวจสอบสิทธิ์ว่าอยู่ในตี้จริงๆ ไหม (Optional: แต่ควรมี)
     const party = await getPartyByIdService(partyId);
     if (!party) throw createHttpError(404, "Party not found");
 

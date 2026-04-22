@@ -3,7 +3,8 @@ import { loginSchema, registerSchema, updateProfileSchema } from "../validations
 import { createNewUser, findUseerByEmail, findUserBy, updateUserService, upsertGoogleUser, verifyUpdateUserService } from "../services/auth.service.js";
 import { comparePassword } from "../utils/bcryptUtils.js";
 import { createToken, verifyToken } from "../utils/jwt.js";
-import jwt from "jsonwebtoken";import { OAuth2Client } from 'google-auth-library';
+import jwt from "jsonwebtoken";
+import { OAuth2Client } from 'google-auth-library';
 
 import { sendVerificationEmail } from "../utils/email.js";
 
@@ -19,17 +20,17 @@ export async function authRegisterController(req, res, next) {
   const newUser = await createNewUser(data);
 
   const verifyEmailToken = jwt.sign(
-    {userId:newUser.id},
+    { userId: newUser.id },
     process.env.JWT_SECRET,
     {
-      algorithm:'HS256',
-      expiresIn:'15m',
+      algorithm: 'HS256',
+      expiresIn: '15m',
     }
   )
 
   const verifyLink = `${process.env.BACKEND_URL}/api/auth/verify-email?token=${verifyEmailToken}`;
 
-  await sendVerificationEmail(newUser.email,verifyLink)
+  await sendVerificationEmail(newUser.email, verifyLink)
 
   res.json({
     message: "Register Successful , Please check your email to verify account.",
@@ -42,20 +43,20 @@ export async function authRegisterController(req, res, next) {
   });
 }
 
-export async function authVerifyEmailConroller(req,res,next){
-  try{
-    const {token} = req.query
-    if(!token){
-      return next(createHttpError(400,"Token required"))
+export async function authVerifyEmailConroller(req, res, next) {
+  try {
+    const { token } = req.query
+    if (!token) {
+      return next(createHttpError(400, "Token required"))
     }
-      const decoded = verifyToken(token)
-      await verifyUpdateUserService(decoded.userId)
-      return res.redirect(`${process.env.FRONTEND_URL}/login?verified=true`);
-  
-    }
-  
-  catch(err){
-    next(createHttpError(400,'Invalid or Expired link'))
+    const decoded = verifyToken(token)
+    await verifyUpdateUserService(decoded.userId)
+    return res.redirect(`${process.env.FRONTEND_URL}/login?verified=true`);
+
+  }
+
+  catch (err) {
+    next(createHttpError(400, 'Invalid or Expired link'))
   }
 }
 
@@ -66,9 +67,9 @@ export async function authLoginController(req, res, next) {
   if (!foundUser) {
     return next(createHttpError[401]("This email does not exist"));
   }
-if (!foundUser.isVerified) {
-      return next(createHttpError(403, "Please verify your email before logging in. Check your inbox."));
-    }
+  if (!foundUser.isVerified) {
+    return next(createHttpError(403, "Please verify your email before logging in. Check your inbox."));
+  }
 
   let checkedPassword = await comparePassword(
     data.password,
@@ -160,7 +161,7 @@ export async function authGoogleLoginController(req, res, next) {
       provider: user.provider,
       googleId: user.googleId,
     };
-    
+
     const appToken = createToken(jwtPayload);
 
     res.json({

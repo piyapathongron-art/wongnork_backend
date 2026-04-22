@@ -1,11 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -45,29 +39,31 @@ enum DayOfWeek {
 // ---------------------------------------------------------
 
 model User {
-  id        String   @id @default(uuid()) // 🌟 เปลี่ยนเป็น UUID
-  email     String   @unique
-  password  String?
-  name      String
-  avatarUrl String?
-  role      Role     @default(USER) // 🌟 ปรับให้ใช้ Enum Role
-  provider  Provider @default(LOCAL) // 🌟 ปรับให้ใช้ Enum Provider
-  googleId  String?  @unique
-  isVerified Boolean @default(false)
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String?
+  name       String
+  avatarUrl  String?
+  role       Role     @default(USER)
+  provider   Provider @default(LOCAL)
+  googleId   String?  @unique
+  isVerified Boolean  @default(false)
 
   // Relations
   reviews          Review[]
-  partiesLed       Party[]           @relation("PartyLeader")
+  partiesLed       Party[]                @relation("PartyLeader")
   joinedParties    PartyMember[]
-  ownedRestaurants Restaurant[]      @relation("RestaurantOwner")
+  ownedRestaurants Restaurant[]           @relation("RestaurantOwner")
   savedRestaurants SavedRestaurant[]
+  addedOrderItems  PartyOrderItem[]       @relation("AddedBy")
+  sharedOrderItems PartyOrderItemSharer[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Restaurant {
-  id          String  @id @default(uuid()) // 🌟 เปลี่ยนเป็น UUID
+  id          String  @id @default(uuid())
   name        String
   description String? @db.Text
   lat         Float
@@ -101,12 +97,11 @@ model OperatingHour {
 }
 
 model RestaurantImage {
-  id      String  @id @default(uuid()) // 🌟 เปลี่ยนเป็น UUID
+  id      String  @id @default(uuid())
   url     String
   isCover Boolean @default(false)
 
-  // Relations
-  restaurantId String // 🌟 เปลี่ยน Foreign Key เป็น String
+  restaurantId String
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
@@ -121,113 +116,112 @@ model SavedRestaurant {
   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
-  // ป้องกัน 1 User กดเซฟร้านเดิมซ้ำ
   @@unique([userId, restaurantId])
 }
 
 model Menu {
-  id          String  @id @default(uuid()) // 🌟 เปลี่ยนเป็น UUID
+  id          String  @id @default(uuid())
   name        String
   description String? @db.Text
   price       Float
   category    String  @default("others")
   imageUrl    String?
 
-  // Relations
-  restaurantId String // 🌟 เปลี่ยน Foreign Key เป็น String
+  restaurantId String
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
-  orderItems MemberOrderItem[]
+  orderItems PartyOrderItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Party {
-  id              String      @id @default(uuid()) // 🌟 เปลี่ยนเป็น UUID
+  id              String      @id @default(uuid())
   name            String?
   details         String?     @db.Text
   meetupTime      DateTime
   maxParticipants Int
   status          PartyStatus @default(OPEN)
   contactInfo     String
-  serviceCharge   Float       @default(0) // 🌟 เพิ่มสำหรับ Split Bill
-  vat             Float       @default(0) // 🌟 เพิ่มสำหรับ Split Bill
+  serviceCharge   Float       @default(0)
+  vat             Float       @default(0)
 
-  // Relations
-  restaurantId String // 🌟 เปลี่ยน Foreign Key เป็น String
+  restaurantId String
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
-  leaderId String // 🌟 เปลี่ยน Foreign Key เป็น String
+  leaderId String
   leader   User   @relation("PartyLeader", fields: [leaderId], references: [id], onDelete: Cascade)
 
-  members     PartyMember[]
-  customItems PartyCustomItem[]
+  members    PartyMember[]
+  orderItems PartyOrderItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model PartyCustomItem {
-  id      String @id @default(uuid())
-  name    String
-  price   Float
+model PartyMember {
+  id       String   @id @default(uuid())
+  joinedAt DateTime @default(now())
+
   partyId String
   party   Party  @relation(fields: [partyId], references: [id], onDelete: Cascade)
 
-  orderItems MemberOrderItem[]
-
-  createdAt DateTime @default(now())
-}
-
-model PartyMember {
-  id       String   @id @default(uuid()) // 🌟 เปลี่ยนเป็น UUID
-  joinedAt DateTime @default(now())
-
-  // Relations
-  partyId String // 🌟 เปลี่ยน Foreign Key เป็น String
-  party   Party  @relation(fields: [partyId], references: [id], onDelete: Cascade)
-
-  userId String // 🌟 เปลี่ยน Foreign Key เป็น String
+  userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  orderItems MemberOrderItem[]
-
-  // Constraint: ป้องกัน User คนเดิมกดเข้าร่วมตี้เดิมซ้ำ
   @@unique([partyId, userId])
 }
 
-model MemberOrderItem {
+model PartyOrderItem {
   id       String @id @default(uuid())
-  memberId String
+  
+  partyId  String
+  party    Party  @relation(fields: [partyId], references: [id], onDelete: Cascade)
 
-  // กรณีเป็นเมนูหลักของร้าน
-  menuId String?
-  menu   Menu?   @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  addedById String
+  addedBy   User  @relation("AddedBy", fields: [addedById], references: [id], onDelete: Cascade)
 
-  // กรณีเป็นเมนูพิเศษที่เพิ่มเองในตี้
-  customItemId String?
-  customItem   PartyCustomItem? @relation(fields: [customItemId], references: [id], onDelete: Cascade)
+  // เมนูทางการ (อ้างอิง Menu)
+  menuId   String?
+  menu     Menu?   @relation(fields: [menuId], references: [id], onDelete: Cascade)
 
-  member PartyMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  // เมนูพิเศษ (Custom Item)
+  isCustom Boolean @default(false)
+  name     String? // ชื่อเมนู (กรณี custom)
+  price    Float?  // ราคาต่อหน่วย (กรณี custom)
+
+  quantity Int     @default(1) // จำนวนที่สั่ง
+
+  sharers  PartyOrderItemSharer[]
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
-  // ป้องกันสมาชิกคนเดิมเลือกเมนูเดิมซ้ำในตี้
-  @@unique([memberId, menuId])
-  @@unique([memberId, customItemId])
+model PartyOrderItemSharer {
+  id               String @id @default(uuid())
+  
+  partyOrderItemId String
+  partyOrderItem   PartyOrderItem @relation(fields: [partyOrderItemId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  joinedAt DateTime @default(now())
+
+  @@unique([partyOrderItemId, userId])
 }
 
 model Review {
-  id      String  @id @default(uuid()) // 🌟 เปลี่ยนเป็น UUID
+  id      String  @id @default(uuid())
   rating  Int
   comment String? @db.Text
 
-  // Relations
-  userId String // 🌟 เปลี่ยน Foreign Key เป็น String
+  userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  restaurantId String // 🌟 เปลี่ยน Foreign Key เป็น String
+  restaurantId String
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())

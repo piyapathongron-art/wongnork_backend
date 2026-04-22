@@ -1,7 +1,6 @@
 import { prisma } from "../lib/prisma.js";
 import createHttpError from "http-errors";
 
-// Helper function to check if a user can join or create a party
 const checkPartyConstraints = async (tx, userId, targetRestaurantId, targetMeetupTime) => {
   const activeParties = await tx.partyMember.findMany({
     where: {
@@ -14,17 +13,13 @@ const checkPartyConstraints = async (tx, userId, targetRestaurantId, targetMeetu
   });
 
   const targetTime = new Date(targetMeetupTime).getTime();
-  const overlapWindowMs = 60 * 60 * 1000; // 1 ชั่วโมง (1 hour in milliseconds)
+  const overlapWindowMs = 60 * 60 * 1000;
 
   for (const member of activeParties) {
     const existingParty = member.party;
-
-    // กฎข้อที่ 1: ห้าม Join/Create ร้านอาหารซ้ำที่ยังมีปาร์ตี้ค้างอยู่ (OPEN/FULL)
     if (existingParty.restaurantId === targetRestaurantId) {
       throw createHttpError(400, "คุณกำลังอยู่ในปาร์ตี้ของร้านนี้ที่ยังไม่จบ");
     }
-
-    // กฎข้อที่ 2: ห้ามเวลาทับซ้อนกันในระยะ 1 ชั่วโมง
     const existingTime = new Date(existingParty.meetupTime).getTime();
     if (Math.abs(targetTime - existingTime) <= overlapWindowMs) {
       throw createHttpError(400, "คุณมี party ที่มีระยะเวลาใกล้กันอยู่");
@@ -32,7 +27,6 @@ const checkPartyConstraints = async (tx, userId, targetRestaurantId, targetMeetu
   }
 };
 
-// ดึงรายการปาร์ตี้ทั้งหมด (ที่ยังเปิดอยู่)
 export const getAllPartiesService = async () => {
   return await prisma.party.findMany({
     where: { status: "OPEN" },
@@ -46,9 +40,7 @@ export const getAllPartiesService = async () => {
       },
       members: {
         include: {
-          user: {
-            select: { id: true, name: true, avatarUrl: true }
-          }
+          user: { select: { id: true, name: true, avatarUrl: true } }
         }
       }
     },
@@ -105,34 +97,35 @@ export const getPartiesWithPaginationService = async (page = 1, limit = 10) => {
   };
 };
 
-// ดึงรายละเอียดปาร์ตี้รายอัน
 export const getPartyByIdService = async (id) => {
   return await prisma.party.findUnique({
     where: { id },
     include: {
       restaurant: true,
-      customItems: true, // 🌟 เพิ่มข้อมูลเมนูพิเศษของตี้
-      leader: {
-        select: { id: true, name: true, avatarUrl: true }
+      orderItems: {
+        include: {
+          menu: true,
+          addedBy: { select: { id: true, name: true, avatarUrl: true } },
+          sharers: {
+            include: {
+              user: { select: { id: true, name: true, avatarUrl: true } }
+            }
+          }
+        }
       },
+      leader: { select: { id: true, name: true, avatarUrl: true } },
       members: {
         include: {
-          user: {
-            select: { id: true, name: true, avatarUrl: true }
-          }
+          user: { select: { id: true, name: true, avatarUrl: true } }
         }
       }
     }
   });
 };
 
-// สร้างปาร์ตี้ใหม่
 export const createPartyService = async (restaurantId, leaderId, data) => {
   return await prisma.$transaction(async (tx) => {
-    // 1. ตรวจสอบเงื่อนไขการสร้างปาร์ตี้ของ Leader (ทับซ้อนเวลา / ร้านเดียวกัน)
     await checkPartyConstraints(tx, leaderId, restaurantId, data.meetupTime);
-
-    // 2. สร้าง Party
     const newParty = await tx.party.create({
       data: {
         ...data,
@@ -140,248 +133,250 @@ export const createPartyService = async (restaurantId, leaderId, data) => {
         leaderId,
       }
     });
-
-    // 3. เพิ่ม Leader เข้าเป็น Member คนแรกอัตโนมัติ
     await tx.partyMember.create({
-      data: {
-        partyId: newParty.id,
-        userId: leaderId
-      }
+      data: { partyId: newParty.id, userId: leaderId }
     });
-
     return newParty;
   });
 };
 
-// เข้าร่วมปาร์ตี้
 export const joinPartyService = async (partyId, userId) => {
   return await prisma.$transaction(async (tx) => {
-    // 1. เช็คว่าปาร์ตี้ยังมีที่ว่างไหม
     const party = await tx.party.findUnique({
       where: { id: partyId },
       include: { _count: { select: { members: true } } }
     });
-
     if (!party) throw createHttpError(404, "Party not found");
     if (party.status !== "OPEN") throw createHttpError(400, "Party is not open for joining");
     if (party._count.members >= party.maxParticipants) {
       throw createHttpError(400, "Party is already full");
     }
-
-    // 2. ตรวจสอบเงื่อนไขการเข้าร่วมปาร์ตี้ของ Member (ทับซ้อนเวลา / ร้านเดียวกัน)
     await checkPartyConstraints(tx, userId, party.restaurantId, party.meetupTime);
-
-    // 3. เพิ่มสมาชิกใหม่
-    const newMember = await tx.partyMember.create({
-      data: {
-        partyId,
-        userId
-      }
-    });
-
-    // 4. ถ้าคนครบแล้ว ให้เปลี่ยนสถานะเป็น FULL อัตโนมัติ
+    const newMember = await tx.partyMember.create({ data: { partyId, userId } });
     if (party._count.members + 1 === party.maxParticipants) {
-      await tx.party.update({
-        where: { id: partyId },
-        data: { status: "FULL" }
-      });
+      await tx.party.update({ where: { id: partyId }, data: { status: "FULL" } });
     }
-
     return newMember;
   });
 };
 
-// ออกจากปาร์ตี้
 export const leavePartyService = async (partyId, userId) => {
   return await prisma.$transaction(async (tx) => {
-    // ดึงข้อมูลปาร์ตี้เพื่อตรวจสอบว่า user เป็น leader หรือไม่
     const party = await tx.party.findUnique({
       where: { id: partyId },
-      include: {
-        members: {
-          orderBy: { joinedAt: "asc" },
-        },
-      },
+      include: { members: { orderBy: { joinedAt: "asc" } } },
     });
-
     if (!party) throw createHttpError(404, "Party not found");
-
     const isLeader = party.leaderId === userId;
     const remainingMembers = party.members.filter((m) => m.userId !== userId);
 
-    // 1. ลบออกจากตาราง Member (ใช้ deleteMany เพื่อป้องกัน P2025 ในกรณีที่ไม่มี Record จาก Seed Data)
-    await tx.partyMember.deleteMany({
-      where: {
-        partyId: partyId,
-        userId: userId
-      }
+    await tx.partyOrderItemSharer.deleteMany({
+      where: { partyOrderItem: { partyId }, userId }
     });
 
-    // 2. ถ้าผู้ใช้เป็น Leader ให้โอนตำแหน่งหรือยุบตี้
+    await tx.partyMember.deleteMany({
+      where: { partyId: partyId, userId: userId }
+    });
+
     if (isLeader) {
       if (remainingMembers.length > 0) {
-        // โอนตำแหน่งให้คนที่เข้ามาเป็นลำดับถัดไป
         const newLeader = remainingMembers[0];
-        await tx.party.update({
-          where: { id: partyId },
-          data: { leaderId: newLeader.userId },
-        });
+        await tx.party.update({ where: { id: partyId }, data: { leaderId: newLeader.userId } });
       } else {
-        // ถ้าไม่มีสมาชิกเหลือเลย ให้เปลี่ยนสถานะเป็น CANCELLED
-        await tx.party.update({
-          where: { id: partyId },
-          data: { status: "CANCELLED" },
-        });
+        await tx.party.update({ where: { id: partyId }, data: { status: "CANCELLED" } });
       }
     }
-
-    // 3. ถ้าคนออกแล้วสถานะเคย FULL (และตี้ยังไม่ถูก CANCELLED) ให้กลับมาเป็น OPEN
     if (party.status === "FULL" && remainingMembers.length > 0) {
-      await tx.party.update({
-        where: { id: partyId },
-        data: { status: "OPEN" }
-      });
+      await tx.party.update({ where: { id: partyId }, data: { status: "OPEN" } });
     }
   });
 };
 
-// เตะสมาชิกออกจากปาร์ตี้ (เฉพาะ Leader)
 export const kickMemberService = async (partyId, leaderId, memberUserId) => {
   return await prisma.$transaction(async (tx) => {
-    const party = await tx.party.findUnique({
-      where: { id: partyId },
-    });
-
+    const party = await tx.party.findUnique({ where: { id: partyId } });
     if (!party) throw createHttpError(404, "Party not found");
-    if (party.leaderId !== leaderId) {
-      throw createHttpError(403, "คุณไม่ใช่หัวหน้าปาร์ตี้นี้");
-    }
-    if (memberUserId === leaderId) {
-      throw createHttpError(400, "หัวหน้าปาร์ตี้ไม่สามารถเตะตัวเองได้ (กรุณากดออกเอง)");
-    }
+    if (party.leaderId !== leaderId) throw createHttpError(403, "คุณไม่ใช่หัวหน้าปาร์ตี้นี้");
+    if (memberUserId === leaderId) throw createHttpError(400, "หัวหน้าปาร์ตี้ไม่สามารถเตะตัวเองได้");
 
-    // ลบออกจากตาราง Member
-    await tx.partyMember.delete({
-      where: {
-        partyId_userId: {
-          partyId,
-          userId: memberUserId
-        }
-      }
+    await tx.partyOrderItemSharer.deleteMany({
+      where: { partyOrderItem: { partyId }, userId: memberUserId }
     });
-
+    await tx.partyMember.deleteMany({ where: { partyId, userId: memberUserId } });
     if (party.status === "FULL") {
-      await tx.party.update({
-        where: { id: partyId },
-        data: { status: "OPEN" }
+      await tx.party.update({ where: { id: partyId }, data: { status: "OPEN" } });
+    }
+  });
+};
+
+// ------------------------------------------------------------------
+// Split Bill / Party Order Items Logic (Hybrid Opt-in Flow)
+// ------------------------------------------------------------------
+
+const checkIsMemberActive = async (partyId, userId) => {
+  const member = await prisma.partyMember.findUnique({ where: { partyId_userId: { partyId, userId } } });
+  if (!member) throw createHttpError(403, "คุณไม่ใช่สมาชิกในปาร์ตี้นี้");
+
+  const party = await prisma.party.findUnique({ where: { id: partyId } });
+  if (party.status === "COMPLETED" || party.status === "CANCELLED") {
+    throw createHttpError(400, "ไม่สามารถแก้ไขรายการอาหารในปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
+  }
+  return { member, party };
+};
+
+export const addPartyOrderItemService = async (partyId, userId, orderData) => {
+  await checkIsMemberActive(partyId, userId);
+
+  return await prisma.$transaction(async (tx) => {
+    if (!orderData.isCustom && orderData.menuId) {
+      const existingItem = await tx.partyOrderItem.findFirst({
+        where: { partyId, menuId: orderData.menuId, isCustom: false }
       });
-    }
-  });
-};
+      if (existingItem) {
+        const updated = await tx.partyOrderItem.update({
+          where: { id: existingItem.id },
+          data: { quantity: { increment: orderData.quantity || 1 } }
+        });
 
-// ------------------------------------------------------------------
-// Split Bill / Order Items Logic
-// ------------------------------------------------------------------
-
-// เพิ่มเมนูพิเศษสำหรับปาร์ตี้นี้ (เฉพาะสมาชิกในตี้)
-export const addCustomItemService = async (partyId, userId, data) => {
-  // เช็คว่าเป็นสมาชิกในตี้ไหม
-  const member = await prisma.partyMember.findUnique({
-    where: { partyId_userId: { partyId, userId } }
-  });
-  if (!member) throw createHttpError(403, "คุณไม่ใช่สมาชิกในปาร์ตี้นี้");
-
-  return await prisma.partyCustomItem.create({
-    data: {
-      name: data.name,
-      price: data.price,
-      partyId: partyId
-    }
-  });
-};
-
-// เพิ่มเมนูที่เลือกกิน (Order Item) - รองรับทั้งเมนูร้าน และ เมนูพิเศษ
-export const addOrderItemService = async (partyId, userId, orderData) => {
-  const { menuId, customItemId } = orderData;
-
-  // 1. หา PartyMember ID ของ User คนนี้ในปาร์ตี้
-  const member = await prisma.partyMember.findUnique({
-    where: {
-      partyId_userId: { partyId, userId }
-    }
-  });
-
-  if (!member) throw createHttpError(403, "คุณไม่ใช่สมาชิกในปาร์ตี้นี้");
-
-  // 2. เช็คว่าตี้ปิดหรือยัง
-  const party = await prisma.party.findUnique({ where: { id: partyId } });
-  if (party.status === "COMPLETED" || party.status === "CANCELLED") {
-    throw createHttpError(400, "ไม่สามารถแก้ไขรายการอาหารในปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
-  }
-
-  // 3. เพิ่มลงตาราง (รองรับทั้งคู่)
-  return await prisma.memberOrderItem.create({
-    data: {
-      memberId: member.id,
-      menuId: menuId || null,
-      customItemId: customItemId || null
-    }
-  });
-};
-
-// ลบเมนูที่เลือกกิน
-export const removeOrderItemService = async (partyId, userId, orderData) => {
-  const { menuId, customItemId } = orderData;
-
-  const member = await prisma.partyMember.findUnique({
-    where: {
-      partyId_userId: { partyId, userId }
-    }
-  });
-
-  if (!member) throw createHttpError(403, "คุณไม่ใช่สมาชิกในปาร์ตี้นี้");
-
-  const party = await prisma.party.findUnique({ where: { id: partyId } });
-  if (party.status === "COMPLETED" || party.status === "CANCELLED") {
-    throw createHttpError(400, "ไม่สามารถแก้ไขรายการอาหารในปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
-  }
-
-  if (menuId) {
-    return await prisma.memberOrderItem.delete({
-      where: {
-        memberId_menuId: {
-          memberId: member.id,
-          menuId: menuId
+        const existingSharer = await tx.partyOrderItemSharer.findUnique({
+          where: { partyOrderItemId_userId: { partyOrderItemId: existingItem.id, userId } }
+        });
+        if (!existingSharer) {
+          await tx.partyOrderItemSharer.create({
+            data: { partyOrderItemId: existingItem.id, userId }
+          });
         }
+        return updated;
+      }
+    }
+
+    let price = orderData.price;
+    if (!orderData.isCustom && orderData.menuId) {
+      const menu = await tx.menu.findUnique({ where: { id: orderData.menuId } });
+      if (!menu) throw createHttpError(404, "ไม่พบเมนูในร้านนี้");
+      price = menu.price;
+    }
+
+    const newItem = await tx.partyOrderItem.create({
+      data: {
+        partyId,
+        addedById: userId,
+        menuId: orderData.menuId || null,
+        isCustom: orderData.isCustom,
+        name: orderData.name || null,
+        price: price,
+        quantity: orderData.quantity || 1
       }
     });
-  } else if (customItemId) {
-    return await prisma.memberOrderItem.delete({
-      where: {
-        memberId_customItemId: {
-          memberId: member.id,
-          customItemId: customItemId
-        }
-      }
+
+    await tx.partyOrderItemSharer.create({
+      data: { partyOrderItemId: newItem.id, userId }
     });
+
+    return newItem;
+  });
+};
+
+export const updatePartyOrderItemQuantityService = async (partyId, userId, itemId, action) => {
+  await checkIsMemberActive(partyId, userId);
+
+  return await prisma.$transaction(async (tx) => {
+    const item = await tx.partyOrderItem.findUnique({ where: { id: itemId } });
+    if (!item) throw createHttpError(404, "ไม่พบรายการในบิล");
+    if (item.partyId !== partyId) throw createHttpError(400, "ไอเท็มนี้ไม่ได้อยู่ในปาร์ตี้นี้");
+
+    if (action === "increment") {
+      return await tx.partyOrderItem.update({
+        where: { id: itemId },
+        data: { quantity: { increment: 1 } }
+      });
+    } else if (action === "decrement") {
+      if (item.quantity <= 1) {
+        await tx.partyOrderItem.delete({ where: { id: itemId } });
+        return { deleted: true };
+      } else {
+        return await tx.partyOrderItem.update({
+          where: { id: itemId },
+          data: { quantity: { decrement: 1 } }
+        });
+      }
+    }
+  });
+};
+
+export const togglePartyOrderItemSharerService = async (partyId, userId, itemId, action) => {
+  await checkIsMemberActive(partyId, userId);
+
+  const item = await prisma.partyOrderItem.findUnique({ where: { id: itemId } });
+  if (!item || item.partyId !== partyId) throw createHttpError(404, "ไม่พบรายการในบิล");
+
+  if (action === "join") {
+    try {
+      return await prisma.partyOrderItemSharer.create({
+        data: { partyOrderItemId: itemId, userId }
+      });
+    } catch (e) {
+      if (e.code === 'P2002') return { alreadyJoined: true };
+      throw e;
+    }
+  } else {
+    try {
+      await prisma.partyOrderItemSharer.delete({
+        where: {
+          partyOrderItemId_userId: { partyOrderItemId: itemId, userId }
+        }
+      });
+      return { success: true };
+    } catch (e) {
+      if (e.code === 'P2025') return { success: true };
+      throw e;
+    }
   }
 };
 
-// คำนวณหารค่าอาหาร (Split Bill Aggregation)
+export const removePartyOrderItemService = async (partyId, userId, itemId) => {
+  await checkIsMemberActive(partyId, userId);
+  const item = await prisma.partyOrderItem.findUnique({ where: { id: itemId } });
+  if (!item || item.partyId !== partyId) throw createHttpError(404, "ไม่พบรายการในบิล");
+
+  await prisma.partyOrderItem.delete({ where: { id: itemId } });
+  return { deleted: true };
+};
+
+export const updatePartySettingsService = async (partyId, leaderId, data) => {
+  return await prisma.$transaction(async (tx) => {
+    const party = await tx.party.findUnique({ where: { id: partyId } });
+    if (!party) throw createHttpError(404, "Party not found");
+    if (party.leaderId !== leaderId) throw createHttpError(403, "คุณไม่ใช่หัวหน้าปาร์ตี้");
+    if (party.status === "COMPLETED" || party.status === "CANCELLED") {
+      throw createHttpError(400, "ไม่สามารถแก้ไขปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
+    }
+
+    return await tx.party.update({
+      where: { id: partyId },
+      data: {
+        name: data.name !== undefined ? data.name : party.name,
+        maxParticipants: data.maxParticipants !== undefined ? data.maxParticipants : party.maxParticipants,
+        vat: data.vat !== undefined ? parseFloat(data.vat) : party.vat,
+        serviceCharge: data.serviceCharge !== undefined ? parseFloat(data.serviceCharge) : party.serviceCharge,
+        status: data.status || party.status,
+      }
+    });
+  });
+};
+
 export const calculateSplitBillService = async (partyId) => {
-  // 1. ดึงข้อมูลปาร์ตี้ทั้งหมดพร้อมข้อมูลลูกตี้และเมนูที่เลือก (ทั้งแบบร้าน และ แบบพิเศษ)
   const party = await prisma.party.findUnique({
     where: { id: partyId },
     include: {
       members: {
+        include: { user: { select: { id: true, name: true, avatarUrl: true } } }
+      },
+      orderItems: {
         include: {
-          user: { select: { id: true, name: true, avatarUrl: true } },
-          orderItems: {
-            include: {
-              menu: true,
-              customItem: true
-            }
-          }
+          menu: true,
+          sharers: { include: { user: { select: { id: true, name: true, avatarUrl: true } } } },
+          addedBy: { select: { id: true, name: true, avatarUrl: true } }
         }
       }
     }
@@ -389,88 +384,86 @@ export const calculateSplitBillService = async (partyId) => {
 
   if (!party) throw createHttpError(404, "Party not found");
 
-  // 2. คำนวณว่าแต่ละเมนู (ทั้ง 2 ประเภท) มีคนหารกี่คน
-  const menuSharerCount = {}; // { menuId: count }
-  const customSharerCount = {}; // { customItemId: count }
+  const totalMembers = party.members.length;
+  // Calculate extra fee per person (VAT and Service Charge shared equally)
+  const extraFeePerPerson = totalMembers > 0 ? (party.vat + party.serviceCharge) / totalMembers : 0;
 
-  party.members.forEach(member => {
-    member.orderItems.forEach(item => {
-      if (item.menuId) {
-        menuSharerCount[item.menuId] = (menuSharerCount[item.menuId] || 0) + 1;
-      } else if (item.customItemId) {
-        customSharerCount[item.customItemId] = (customSharerCount[item.customItemId] || 0) + 1;
-      }
-    });
-  });
-
-  // 3. คำนวณยอดของแต่ละคน
-  let grandTotal = 0;
-
-  const membersSummary = party.members.map(member => {
-    let subtotal = 0;
-
-    // หาค่าอาหารรวมของคนนี้
-    const itemsDetail = member.orderItems.map(item => {
-      let price = 0;
-      let name = "";
-      let sharers = 0;
-      let id = "";
-      let type = "";
-
-      if (item.menu) {
-        id = item.menu.id;
-        name = item.menu.name;
-        price = item.menu.price;
-        sharers = menuSharerCount[id];
-        type = "OFFICIAL";
-      } else if (item.customItem) {
-        id = item.customItem.id;
-        name = item.customItem.name;
-        price = item.customItem.price;
-        sharers = customSharerCount[id];
-        type = "CUSTOM";
-      }
-
-      const costPerPerson = price / sharers;
-      subtotal += costPerPerson;
-
-      return {
-        itemId: id,
-        name: name,
-        price: price,
-        sharedBy: sharers,
-        costPerPerson: costPerPerson,
-        type: type
-      };
-    });
-
-    // 4. คำนวณ Service Charge และ VAT ให้แต่ละคน (แบบทบต้นตามมาตรฐานร้านอาหารไทย)
-    const serviceChargeAmount = subtotal * (party.serviceCharge / 100);
-    const subtotalWithSc = subtotal + serviceChargeAmount;
-    const vatAmount = subtotalWithSc * (party.vat / 100);
-    const netTotal = subtotalWithSc + vatAmount;
-
-    grandTotal += netTotal; // สะสมยอดรวมทั้งโต๊ะ
-
-    return {
-      memberId: member.id,
-      user: member.user,
-      items: itemsDetail,
-      summary: {
-        subtotal: subtotal,
-        serviceCharge: serviceChargeAmount,
-        vat: vatAmount,
-        netTotal: netTotal
-      }
+  const memberSummaryMap = {};
+  party.members.forEach(m => {
+    memberSummaryMap[m.userId] = {
+      memberId: m.id,
+      user: m.user,
+      items: [],
+      summary: { subtotal: 0, serviceCharge: 0, vat: 0, netTotal: 0 }
     };
   });
 
-  // 5. ส่งกลับผลลัพธ์
+  const tableItems = party.orderItems.map(item => {
+    const totalItemPrice = item.price * item.quantity;
+    const sharers = item.sharers;
+    const sharerCount = sharers.length;
+
+    let costPerPerson = 0;
+    if (sharerCount > 0) {
+      costPerPerson = totalItemPrice / sharerCount;
+      const itemName = item.isCustom ? item.name : item.menu?.name;
+      const itemType = item.isCustom ? "CUSTOM" : "OFFICIAL";
+
+      sharers.forEach(sharer => {
+        if (memberSummaryMap[sharer.userId]) {
+          memberSummaryMap[sharer.userId].items.push({
+            itemId: item.id,
+            name: itemName,
+            imageUrl: item.menu?.imageUrl || null,
+            price: totalItemPrice,
+            quantity: item.quantity,
+            sharedBy: sharerCount,
+            costPerPerson: costPerPerson,
+            type: itemType
+          });
+          memberSummaryMap[sharer.userId].summary.subtotal += costPerPerson;
+        }
+      });
+    }
+
+    return {
+      id: item.id,
+      name: item.isCustom ? item.name : item.menu?.name,
+      imageUrl: item.menu?.imageUrl || null,
+      price: item.price,
+      quantity: item.quantity,
+      isCustom: item.isCustom,
+      totalPrice: totalItemPrice,
+      addedBy: item.addedBy,
+      sharers: sharers.map(s => s.user),
+      costPerPerson: costPerPerson
+    };
+  });
+
+  let grandTotal = 0;
+  const membersSummary = Object.values(memberSummaryMap).map(memberData => {
+    const subtotal = memberData.summary.subtotal;
+
+    // Share VAT and SC equally among all members
+    const serviceChargePerPerson = totalMembers > 0 ? party.serviceCharge / totalMembers : 0;
+    const vatPerPerson = totalMembers > 0 ? party.vat / totalMembers : 0;
+
+    const netTotal = subtotal + serviceChargePerPerson + vatPerPerson;
+    grandTotal += netTotal;
+
+    memberData.summary.serviceCharge = serviceChargePerPerson;
+    memberData.summary.vat = vatPerPerson;
+    memberData.summary.netTotal = netTotal;
+
+    return memberData;
+  });
+
   return {
     partyId: party.id,
-    serviceChargePercent: party.serviceCharge,
-    vatPercent: party.vat,
+    serviceChargeAmount: party.serviceCharge,
+    vatAmount: party.vat,
     grandTotal: grandTotal,
+    tableItems: tableItems,
     members: membersSummary
   };
 };
