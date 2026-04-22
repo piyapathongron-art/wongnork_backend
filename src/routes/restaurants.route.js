@@ -5,7 +5,8 @@ import {
   getAllRestaurantController,
   getRestaurantByIdController,
   updateRestaurantController,
-  toggleSaveRestaurantController
+  toggleSaveRestaurantController,
+  paginationRestaurantController
 } from "../controllers/restaurants.controller.js";
 import authUserCheck from "../middlewares/userAuthen.middleware.js";
 import menuRoute from "./menu.route.js";
@@ -13,6 +14,8 @@ import reviewRoute from "./review.route.js";
 import { createPartyController } from "../controllers/party.controller.js";
 
 const restaurantsRoute = express.Router();
+
+restaurantsRoute.get("/page", paginationRestaurantController);
 
 /**
  * @swagger
@@ -172,6 +175,7 @@ restaurantsRoute.post("/", authUserCheck, createRestaurantController);
 restaurantsRoute.get("/:id", getRestaurantByIdController);
 restaurantsRoute.put("/:id", authUserCheck, updateRestaurantController);
 restaurantsRoute.delete("/:id", authUserCheck, deleteRestaurantController);
+
 
 /**
  * @swagger

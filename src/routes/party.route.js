@@ -9,10 +9,13 @@ import {
   addOrderItemController,
   removeOrderItemController,
   getSplitBillController,
-  addCustomItemController
+  addCustomItemController,
+  paginationPartyController
 } from "../controllers/party.controller.js";
 
 const partyRoute = express.Router();
+
+partyRoute.get('/page', paginationPartyController);
 
 /**
  * @swagger

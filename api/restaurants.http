@@ -1,5 +1,5 @@
-@BASE_URL=http://localhost:3000
+@BASE_URL=http://localhost:8899
 
 ### Register
-DELETE {{BASE_URL}}/api/restaurants/3
+GET {{BASE_URL}}/api/restaurants/page?page=2&limit=10
 Content-Type: application/json
