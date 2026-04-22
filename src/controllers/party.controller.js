@@ -68,11 +68,11 @@ export const paginationPartyController = async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 10;
 
     const result = await getPartiesWithPaginationService(page, limit);
-    
-    res.json({ 
-      message: "Success", 
+
+    res.json({
+      message: "Success",
       data: result.data,
-      meta: result.meta 
+      meta: result.meta
     });
   } catch (error) {
     next(error);

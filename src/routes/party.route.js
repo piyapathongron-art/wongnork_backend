@@ -11,8 +11,7 @@ import {
   togglePartyOrderItemSharerController,
   removePartyOrderItemController,
   getSplitBillController,
-  addCustomItemController,
-  paginationPartyController
+  paginationPartyController,
   updatePartySettingsController
 } from "../controllers/party.controller.js";
 
