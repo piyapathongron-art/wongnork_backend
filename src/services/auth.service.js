@@ -59,9 +59,7 @@ export const findUserBy = async (col, val) => {
       },
       ownedRestaurants: {
         include: {
-          restaurant: {
-            include: { images: true }
-          }
+          images: true
         }
       },
       savedRestaurants: {
