@@ -94,10 +94,10 @@ const menuSchema = z.object({
   category: z.string()
     .default("others"),
 
-  imageUrl: z.string()
-    .url("รูปแบบ URL ของรูปภาพไม่ถูกต้อง")
-    .optional()
-    .nullable(),
+  imageUrl: z.preprocess(
+    (val) => (val === "" ? undefined : val),
+    z.string().url("รูปแบบ URL ของรูปภาพไม่ถูกต้อง").optional().nullable()
+  ),
 });
 
 export const createMenuSchema = menuSchema;
