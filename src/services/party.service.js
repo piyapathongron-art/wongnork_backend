@@ -13,7 +13,7 @@ const checkPartyConstraints = async (tx, userId, targetRestaurantId, targetMeetu
   });
 
   const targetTime = new Date(targetMeetupTime).getTime();
-  const overlapWindowMs = 60 * 60 * 1000; 
+  const overlapWindowMs = 60 * 60 * 1000;
 
   for (const member of activeParties) {
     const existingParty = member.party;
@@ -116,7 +116,7 @@ export const leavePartyService = async (partyId, userId) => {
     if (!party) throw createHttpError(404, "Party not found");
     const isLeader = party.leaderId === userId;
     const remainingMembers = party.members.filter((m) => m.userId !== userId);
-    
+
     await tx.partyOrderItemSharer.deleteMany({
       where: { partyOrderItem: { partyId }, userId }
     });
@@ -163,7 +163,7 @@ export const kickMemberService = async (partyId, leaderId, memberUserId) => {
 const checkIsMemberActive = async (partyId, userId) => {
   const member = await prisma.partyMember.findUnique({ where: { partyId_userId: { partyId, userId } } });
   if (!member) throw createHttpError(403, "คุณไม่ใช่สมาชิกในปาร์ตี้นี้");
-  
+
   const party = await prisma.party.findUnique({ where: { id: partyId } });
   if (party.status === "COMPLETED" || party.status === "CANCELLED") {
     throw createHttpError(400, "ไม่สามารถแก้ไขรายการอาหารในปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
@@ -184,7 +184,7 @@ export const addPartyOrderItemService = async (partyId, userId, orderData) => {
           where: { id: existingItem.id },
           data: { quantity: { increment: orderData.quantity || 1 } }
         });
-        
+
         const existingSharer = await tx.partyOrderItemSharer.findUnique({
           where: { partyOrderItemId_userId: { partyOrderItemId: existingItem.id, userId } }
         });
@@ -263,7 +263,7 @@ export const togglePartyOrderItemSharerService = async (partyId, userId, itemId,
         data: { partyOrderItemId: itemId, userId }
       });
     } catch (e) {
-      if (e.code === 'P2002') return { alreadyJoined: true }; 
+      if (e.code === 'P2002') return { alreadyJoined: true };
       throw e;
     }
   } else {
@@ -275,7 +275,7 @@ export const togglePartyOrderItemSharerService = async (partyId, userId, itemId,
       });
       return { success: true };
     } catch (e) {
-      if (e.code === 'P2025') return { success: true }; 
+      if (e.code === 'P2025') return { success: true };
       throw e;
     }
   }
@@ -285,7 +285,7 @@ export const removePartyOrderItemService = async (partyId, userId, itemId) => {
   await checkIsMemberActive(partyId, userId);
   const item = await prisma.partyOrderItem.findUnique({ where: { id: itemId } });
   if (!item || item.partyId !== partyId) throw createHttpError(404, "ไม่พบรายการในบิล");
-  
+
   await prisma.partyOrderItem.delete({ where: { id: itemId } });
   return { deleted: true };
 };
@@ -302,6 +302,8 @@ export const updatePartySettingsService = async (partyId, leaderId, data) => {
     return await tx.party.update({
       where: { id: partyId },
       data: {
+        name: data.name !== undefined ? data.name : party.name,
+        maxParticipants: data.maxParticipants !== undefined ? data.maxParticipants : party.maxParticipants,
         vat: data.vat !== undefined ? parseFloat(data.vat) : party.vat,
         serviceCharge: data.serviceCharge !== undefined ? parseFloat(data.serviceCharge) : party.serviceCharge,
         status: data.status || party.status,
@@ -388,11 +390,11 @@ export const calculateSplitBillService = async (partyId) => {
   let grandTotal = 0;
   const membersSummary = Object.values(memberSummaryMap).map(memberData => {
     const subtotal = memberData.summary.subtotal;
-    
+
     // Share VAT and SC equally among all members
     const serviceChargePerPerson = totalMembers > 0 ? party.serviceCharge / totalMembers : 0;
     const vatPerPerson = totalMembers > 0 ? party.vat / totalMembers : 0;
-    
+
     const netTotal = subtotal + serviceChargePerPerson + vatPerPerson;
     grandTotal += netTotal;
 

@@ -134,6 +134,11 @@ export const createPartySchema = z.object({
 });
 
 export const updatePartySettingsSchema = z.object({
+  name: z.string().min(2, "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร").optional(),
+  details: z.string().max(1000, "รายละเอียดต้องไม่เกิน 1000 ตัวอักษร").optional(),
+  meetupTime: z.string().transform((val) => new Date(val)).optional(),
+  maxParticipants: z.number().min(2, "จำนวนคนต้องมีอย่างน้อย 2 คน").optional(),
+  contactInfo: z.string().min(1, "กรุณากรอกช่องทางติดต่อ").optional(),
   vat: z.number().min(0).optional(),
   serviceCharge: z.number().min(0).optional(),
   status: z.enum(["OPEN", "FULL", "COMPLETED", "CANCELLED"]).optional(),

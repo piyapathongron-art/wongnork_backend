@@ -30,6 +30,7 @@ export const updatePartySettingsController = async (req, res, next) => {
     const { id: partyId } = req.params;
     const leaderId = req.user.id;
     const data = updatePartySettingsSchema.parse(req.body);
+    console.log(data)
 
     const updatedParty = await updatePartySettingsService(partyId, leaderId, data);
     res.json({ message: "Party settings updated successfully", data: updatedParty });
