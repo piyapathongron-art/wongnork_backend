@@ -57,7 +57,13 @@ export const findUserBy = async (col, val) => {
           }
         }
       },
-      ownedRestaurants: true,
+      ownedRestaurants: {
+        include: {
+          restaurant: {
+            include: { images: true }
+          }
+        }
+      },
       savedRestaurants: {
         include: {
           restaurant:
@@ -77,11 +83,11 @@ export const updateUserService = async (id, data) => {
   return user;
 };
 
-export const verifyUpdateUserService = async(id)=>{
+export const verifyUpdateUserService = async (id) => {
   await prisma.user.update({
-      where: { id: id },
-      data: { isVerified: true }
-    });
+    where: { id: id },
+    data: { isVerified: true }
+  });
 }
 
 export const upsertGoogleUser = async (email, name, googleId, avatarUrl) => {
