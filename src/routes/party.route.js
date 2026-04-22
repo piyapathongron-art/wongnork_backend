@@ -10,7 +10,8 @@ import {
   updatePartyOrderItemQuantityController,
   togglePartyOrderItemSharerController,
   removePartyOrderItemController,
-  getSplitBillController
+  getSplitBillController,
+  updatePartySettingsController
 } from "../controllers/party.controller.js";
 
 const partyRoute = express.Router();
@@ -27,6 +28,17 @@ partyRoute.get("/:id", getPartyByIdController);
 partyRoute.post("/:id/join", authUserCheck, joinPartyController);
 partyRoute.delete("/:id/leave", authUserCheck, leavePartyController);
 partyRoute.delete("/:id/members/:userId", authUserCheck, kickMemberController);
+
+/**
+ * @swagger
+ * /api/parties/{id}/settings:
+ *   put:
+ *     summary: Update party settings (VAT, Service Charge, Status)
+ *     tags: [Parties]
+ *     security:
+ *       - bearerAuth: []
+ */
+partyRoute.put("/:id/settings", authUserCheck, updatePartySettingsController);
 
 // ---------------------------------------------------------
 // Split Bill Routes (Hybrid Opt-in Flow)

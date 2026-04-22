@@ -290,6 +290,26 @@ export const removePartyOrderItemService = async (partyId, userId, itemId) => {
   return { deleted: true };
 };
 
+export const updatePartySettingsService = async (partyId, leaderId, data) => {
+  return await prisma.$transaction(async (tx) => {
+    const party = await tx.party.findUnique({ where: { id: partyId } });
+    if (!party) throw createHttpError(404, "Party not found");
+    if (party.leaderId !== leaderId) throw createHttpError(403, "คุณไม่ใช่หัวหน้าปาร์ตี้");
+    if (party.status === "COMPLETED" || party.status === "CANCELLED") {
+      throw createHttpError(400, "ไม่สามารถแก้ไขปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
+    }
+
+    return await tx.party.update({
+      where: { id: partyId },
+      data: {
+        vat: data.vat !== undefined ? parseFloat(data.vat) : party.vat,
+        serviceCharge: data.serviceCharge !== undefined ? parseFloat(data.serviceCharge) : party.serviceCharge,
+        status: data.status || party.status,
+      }
+    });
+  });
+};
+
 export const calculateSplitBillService = async (partyId) => {
   const party = await prisma.party.findUnique({
     where: { id: partyId },
@@ -309,7 +329,9 @@ export const calculateSplitBillService = async (partyId) => {
 
   if (!party) throw createHttpError(404, "Party not found");
 
-  let grandTotal = 0;
+  const totalMembers = party.members.length;
+  // Calculate extra fee per person (VAT and Service Charge shared equally)
+  const extraFeePerPerson = totalMembers > 0 ? (party.vat + party.serviceCharge) / totalMembers : 0;
 
   const memberSummaryMap = {};
   party.members.forEach(m => {
@@ -363,17 +385,19 @@ export const calculateSplitBillService = async (partyId) => {
     };
   });
 
+  let grandTotal = 0;
   const membersSummary = Object.values(memberSummaryMap).map(memberData => {
     const subtotal = memberData.summary.subtotal;
-    const serviceChargeAmount = subtotal * (party.serviceCharge / 100);
-    const subtotalWithSc = subtotal + serviceChargeAmount;
-    const vatAmount = subtotalWithSc * (party.vat / 100);
-    const netTotal = subtotalWithSc + vatAmount;
-
+    
+    // Share VAT and SC equally among all members
+    const serviceChargePerPerson = totalMembers > 0 ? party.serviceCharge / totalMembers : 0;
+    const vatPerPerson = totalMembers > 0 ? party.vat / totalMembers : 0;
+    
+    const netTotal = subtotal + serviceChargePerPerson + vatPerPerson;
     grandTotal += netTotal;
 
-    memberData.summary.serviceCharge = serviceChargeAmount;
-    memberData.summary.vat = vatAmount;
+    memberData.summary.serviceCharge = serviceChargePerPerson;
+    memberData.summary.vat = vatPerPerson;
     memberData.summary.netTotal = netTotal;
 
     return memberData;
@@ -381,8 +405,8 @@ export const calculateSplitBillService = async (partyId) => {
 
   return {
     partyId: party.id,
-    serviceChargePercent: party.serviceCharge,
-    vatPercent: party.vat,
+    serviceChargeAmount: party.serviceCharge,
+    vatAmount: party.vat,
     grandTotal: grandTotal,
     tableItems: tableItems,
     members: membersSummary

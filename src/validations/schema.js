@@ -133,6 +133,12 @@ export const createPartySchema = z.object({
   vat: z.number().min(0).optional().default(0),
 });
 
+export const updatePartySettingsSchema = z.object({
+  vat: z.number().min(0).optional(),
+  serviceCharge: z.number().min(0).optional(),
+  status: z.enum(["OPEN", "FULL", "COMPLETED", "CANCELLED"]).optional(),
+});
+
 // --- Review Validation Schema ---
 export const createReviewSchema = z.object({
   rating: z.number({

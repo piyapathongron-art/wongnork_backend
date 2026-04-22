@@ -1,5 +1,11 @@
 import createHttpError from "http-errors";
-import { createPartySchema, createPartyOrderItemSchema, updatePartyOrderItemQuantitySchema, toggleSharerSchema } from "../validations/schema.js";
+import {
+  createPartySchema,
+  createPartyOrderItemSchema,
+  updatePartyOrderItemQuantitySchema,
+  toggleSharerSchema,
+  updatePartySettingsSchema
+} from "../validations/schema.js";
 import {
   createPartyService,
   getAllPartiesService,
@@ -11,8 +17,26 @@ import {
   updatePartyOrderItemQuantityService,
   togglePartyOrderItemSharerService,
   removePartyOrderItemService,
-  calculateSplitBillService
+  calculateSplitBillService,
+  updatePartySettingsService
 } from "../services/party.service.js";
+
+/**
+ * @desc อัปเดตการตั้งค่าบิล (VAT, Service Charge) หรือปิดปาร์ตี้ (เฉพาะ Leader)
+ * @route PUT /api/parties/:id/settings
+ */
+export const updatePartySettingsController = async (req, res, next) => {
+  try {
+    const { id: partyId } = req.params;
+    const leaderId = req.user.id;
+    const data = updatePartySettingsSchema.parse(req.body);
+
+    const updatedParty = await updatePartySettingsService(partyId, leaderId, data);
+    res.json({ message: "Party settings updated successfully", data: updatedParty });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // ดึงรายการปาร์ตี้ทั้งหมด
 export const getAllPartiesController = async (req, res, next) => {
