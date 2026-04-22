@@ -54,7 +54,7 @@ export const getPartiesWithPaginationService = async (page = 1, limit = 10) => {
   const [parties, totalItems] = await prisma.$transaction([
     // 1. ตัวดึงข้อมูล
     prisma.party.findMany({
-      where: { 
+      where: {
         status: { in: ["OPEN", "FULL"] } // 🌟 ยัดเงื่อนไขลงไปตรงๆ
       },
       skip: skip,
@@ -77,10 +77,10 @@ export const getPartiesWithPaginationService = async (page = 1, limit = 10) => {
       },
       orderBy: { meetupTime: "asc" }
     }),
-    
+
     // 2. ตัวนับจำนวน (นับหน้า)
     prisma.party.count({
-      where: { 
+      where: {
         status: { in: ["OPEN", "FULL"] } // 🌟 ยัดเงื่อนไขลงไปตรงๆ (ต้องเหมือนตัวบนเป๊ะๆ)
       }
     })
@@ -101,7 +101,7 @@ export const getPartyByIdService = async (id) => {
   return await prisma.party.findUnique({
     where: { id },
     include: {
-      restaurant: true,
+      restaurant: { include: { reviews: true } },
       orderItems: {
         include: {
           menu: true,

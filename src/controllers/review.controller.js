@@ -23,6 +23,10 @@ export const createReviewController = async (req, res, next) => {
   try {
     const { restaurantId } = req.params;
     const userId = req.user.id;
+    console.log(restaurantId)
+    console.log(req.body)
+
+    // 🌟 parse จะได้ object ที่มี partyId รวมอยู่ด้วยแล้วตามที่เราแก้ schema ไป
     const data = createReviewSchema.parse(req.body);
 
     const newReview = await createReviewService(restaurantId, userId, data);

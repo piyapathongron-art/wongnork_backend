@@ -155,6 +155,7 @@ export const createReviewSchema = z.object({
     .max(1000, "คอมเมนต์ต้องไม่เกิน 1000 ตัวอักษร")
     .optional()
     .nullable(),
+  partyId: z.string().uuid("รูปแบบ Party ID ไม่ถูกต้อง").optional().nullable(),
 });
 
 // --- Profile Validation Schema ---
