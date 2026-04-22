@@ -49,7 +49,7 @@ async function main() {
   // ---------------------------------------------------------
   const categories = ['Shabu', 'Cafe', 'Japanese', 'BBQ', 'Thai', 'Western', 'Izakaya', 'Dessert', 'Street Food', 'Fine Dining'];
   const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
-  
+
   const restaurants = [];
   for (let i = 1; i <= 50; i++) {
     const owner = users[Math.floor(Math.random() * 10)]; // เจ้าของร้านสุ่มจาก 10 คนแรก
@@ -96,7 +96,7 @@ async function main() {
   // ---------------------------------------------------------
   const partyStatuses = ['OPEN', 'FULL', 'COMPLETED'];
   const parties = [];
-  
+
   for (let i = 1; i <= 50; i++) {
     const restaurant = restaurants[Math.floor(Math.random() * restaurants.length)];
     const leader = users[Math.floor(Math.random() * users.length)];
@@ -104,9 +104,9 @@ async function main() {
     // บางปาร์ตี้ให้เป็นอดีต (สำหรับสถานะ COMPLETED) บางอันเป็นอนาคต
     const status = partyStatuses[i % 3];
     if (status === 'COMPLETED') {
-        meetupTime.setDate(meetupTime.getDate() - (1 + Math.floor(Math.random() * 10)));
+      meetupTime.setDate(meetupTime.getDate() - (1 + Math.floor(Math.random() * 10)));
     } else {
-        meetupTime.setDate(meetupTime.getDate() + (1 + Math.floor(Math.random() * 10)));
+      meetupTime.setDate(meetupTime.getDate() + (1 + Math.floor(Math.random() * 10)));
     }
 
     const party = await prisma.party.create({
@@ -136,64 +136,64 @@ async function main() {
     // เพิ่มสมาชิกสุ่ม 2-5 คน
     const memberCount = 2 + Math.floor(Math.random() * 4);
     const potentialMembers = users.filter(u => u.id !== leader.id).sort(() => 0.5 - Math.random()).slice(0, memberCount);
-    
+
     const members = [];
     for (const u of potentialMembers) {
-        const m = await prisma.partyMember.create({
-            data: { partyId: party.id, userId: u.id }
-        });
-        members.push(m);
+      const m = await prisma.partyMember.create({
+        data: { partyId: party.id, userId: u.id }
+      });
+      members.push(m);
     }
 
     // 🌟 จำลองการสั่งอาหาร (Split Bill)
     // 1. สั่งเมนูจากร้านอาหาร (3-5 รายการ)
     const orderItemCount = 3 + Math.floor(Math.random() * 3);
-    for (let k = 0; j < orderItemCount; k++) {
-        const menu = restaurant.menus[Math.floor(Math.random() * restaurant.menus.length)];
-        const orderItem = await prisma.partyOrderItem.create({
-            data: {
-                partyId: party.id,
-                addedById: leader.id,
-                menuId: menu.id,
-                isCustom: false,
-                quantity: 1 + Math.floor(Math.random() * 2)
-            }
-        });
-
-        // สุ่มคนมาร่วมหารรายการนี้
-        const sharerCount = 1 + Math.floor(Math.random() * (members.length + 1));
-        const shuffledUsers = [leader, ...potentialMembers].sort(() => 0.5 - Math.random()).slice(0, sharerCount);
-        
-        for (const sharer of shuffledUsers) {
-            await prisma.partyOrderItemSharer.create({
-                data: {
-                    partyOrderItemId: orderItem.id,
-                    userId: sharer.id
-                }
-            });
+    for (let k = 0; k < orderItemCount; k++) {
+      const menu = restaurant.menus[Math.floor(Math.random() * restaurant.menus.length)];
+      const orderItem = await prisma.partyOrderItem.create({
+        data: {
+          partyId: party.id,
+          addedById: leader.id,
+          menuId: menu.id,
+          isCustom: false,
+          quantity: 1 + Math.floor(Math.random() * 2)
         }
+      });
+
+      // สุ่มคนมาร่วมหารรายการนี้
+      const sharerCount = 1 + Math.floor(Math.random() * (members.length + 1));
+      const shuffledUsers = [leader, ...potentialMembers].sort(() => 0.5 - Math.random()).slice(0, sharerCount);
+
+      for (const sharer of shuffledUsers) {
+        await prisma.partyOrderItemSharer.create({
+          data: {
+            partyOrderItemId: orderItem.id,
+            userId: sharer.id
+          }
+        });
+      }
     }
 
     // 2. สั่ง Custom Item (1 รายการ เช่น ค่าเปิดขวด)
     const customItem = await prisma.partyOrderItem.create({
-        data: {
-            partyId: party.id,
-            addedById: leader.id,
-            isCustom: true,
-            name: 'ค่าเครื่องดื่มพิเศษ / ค่าเปิดขวด',
-            price: 200 + Math.random() * 500,
-            quantity: 1
-        }
+      data: {
+        partyId: party.id,
+        addedById: leader.id,
+        isCustom: true,
+        name: 'ค่าเครื่องดื่มพิเศษ / ค่าเปิดขวด',
+        price: 200 + Math.random() * 500,
+        quantity: 1
+      }
     });
     // ให้ทุกคนในตี้หารรายการพิเศษนี้
     const allUsersInParty = [leader, ...potentialMembers];
     for (const u of allUsersInParty) {
-        await prisma.partyOrderItemSharer.create({
-            data: {
-                partyOrderItemId: customItem.id,
-                userId: u.id
-            }
-        });
+      await prisma.partyOrderItemSharer.create({
+        data: {
+          partyOrderItemId: customItem.id,
+          userId: u.id
+        }
+      });
     }
   }
   console.log(`🎉 สร้างข้อมูล Party สำเร็จ ${parties.length} ปาร์ตี้ (พร้อมจำลองระบบ Split Bill ครบวงจร)`);
@@ -228,7 +228,7 @@ async function main() {
           restaurantId: restaurant.id
         }
       });
-    } catch (e) {}
+    } catch (e) { }
   }
   console.log(`📌 สร้างข้อมูล Saved Restaurant สำเร็จ (ประมาณ 50 รายการ)`);
 
