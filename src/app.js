@@ -10,8 +10,15 @@ import partyRoute from "./routes/party.route.js";
 import reviewRoute from "./routes/review.route.js";
 import featuresRoute from "./routes/features.route.js";
 import { swaggerDocs } from "./config/swagger.js";
+import { Server } from "socket.io";
+import "dotenv/config";
+import { socketAuthMiddleware } from "./middlewares/authSocket.middleware.js";
+import { registerSocketHandler } from "./socket/handlers.js";
+import http from "http";
+import socketRoute from "./routes/socket.routes.js";
 
 const app = express();
+const server = http.createServer(app);
 
 app.use(express.json());
 
@@ -25,9 +32,26 @@ app.use(
 
 app.use(helmet());
 
+//socket.io
+const FRONTEND_URL = process.env.FRONTEND_URL;
+const io = new Server(server, {
+  cors: {
+    origin: FRONTEND_URL,
+    methods: ["GET", "POST"]
+  }
+})
+
+io.use(socketAuthMiddleware)
+
+
+io.on('connection', (socket) => {
+  registerSocketHandler(io, socket)
+})
+
 // Swagger Documentation
 swaggerDocs(app);
 
+// Routes
 app.use("/api/auth", authRoute);
 
 
@@ -42,7 +66,11 @@ app.use("/api/features", featuresRoute);
 
 app.use("/api/cloudinary", cloudinaryRoute);
 
+app.use("/api/socket", socketRoute)
+
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
+export { server };
 export default app;
+
