@@ -162,6 +162,11 @@ export const createReviewSchema = z.object({
 export const updateProfileSchema = z.object({
   name: z.string().min(2, "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร").transform((val) => val.trim()).optional(),
   avatarUrl: z.string().url("รูปแบบ URL ของรูปภาพไม่ถูกต้อง").optional().nullable(),
+  promptPayNumber: z.string()
+    .regex(/^(\d{10}|\d{13})$/, "เบอร์ PromptPay ต้องเป็นตัวเลข 10 หรือ 13 หลัก")
+    .optional()
+    .nullable(),
+  promptPayName: z.string().max(100).optional().nullable(),
 });
 
 // --- Split Bill / Party Order Item Schema ---

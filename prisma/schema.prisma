@@ -48,6 +48,10 @@ model User {
   provider   Provider @default(LOCAL)
   googleId   String?  @unique
   isVerified Boolean  @default(false)
+  
+  // Payment Info
+  promptPayNumber String?
+  promptPayName   String?
 
   // Relations
   reviews          Review[]

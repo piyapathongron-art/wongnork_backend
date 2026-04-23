@@ -113,7 +113,7 @@ export const getPartyByIdService = async (id) => {
           }
         }
       },
-      leader: { select: { id: true, name: true, avatarUrl: true } },
+      leader: { select: { id: true, name: true, avatarUrl: true, promptPayName: true, promptPayNumber: true } },
       members: {
         include: {
           user: { select: { id: true, name: true, avatarUrl: true } }
