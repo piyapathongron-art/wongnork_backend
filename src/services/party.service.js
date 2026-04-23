@@ -29,7 +29,7 @@ const checkPartyConstraints = async (tx, userId, targetRestaurantId, targetMeetu
 
 export const getAllPartiesService = async () => {
   return await prisma.party.findMany({
-    where: { status: "OPEN" },
+    where: { status: { in: ["OPEN", "FULL"] } },
     include: {
       restaurant: true,
       _count: {
