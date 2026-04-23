@@ -17,7 +17,7 @@ export function registerSocketHandler(io, socket) {
     });
 
     // send message
-    socket.on('send_message', async ({ text, partyId }) => {
+    socket.on('send_message', async ({ text, partyId, type }) => {
         if (!text?.trim() || !partyId) return;
 
         try {
@@ -25,7 +25,8 @@ export function registerSocketHandler(io, socket) {
             const savedMessage = await createMessageService({
                 text: text.trim(),
                 userId: user.id,
-                partyId: partyId
+                partyId: partyId,
+                type: type || "MESSAGE"
             });
 
             // 2. emit to every in the room

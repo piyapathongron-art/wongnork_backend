@@ -14,7 +14,8 @@ export async function createMessageService(data) {
                 connect: {
                     id: data.partyId
                 }
-            }
+            },
+            type: data.type
         },
         include: {
             user: {
@@ -49,7 +50,7 @@ export async function getMessageService(req, res, next) {
                 createdAt: "asc"
             }
         });
-        
+
         return res.json({
             message: "Messages fetched successfully",
             data: messages
