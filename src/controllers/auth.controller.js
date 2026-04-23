@@ -100,6 +100,21 @@ export async function authLoginController(req, res, next) {
   });
 }
 
+export async function authGetPublicProfileController(req, res, next) {
+  try {
+    const { id } = req.params;
+    const user = await findUserBy('id', id);
+    if (!user) {
+      throw createHttpError(404, "User not found");
+    }
+    res.json({
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function authGetmeController(req, res) {
   const id = req.user.id
   const user = await findUserBy('id', id)

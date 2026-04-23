@@ -1,7 +1,29 @@
 import express from "express"
-import { authGetmeController, authGoogleLoginController, authLoginController, authRegisterController, authUpdateProfileController,authVerifyEmailConroller } from "../controllers/auth.controller.js"
+import { authGetmeController, authGoogleLoginController, authLoginController, authRegisterController, authUpdateProfileController,authVerifyEmailConroller, authGetPublicProfileController } from "../controllers/auth.controller.js"
 import authUserCheck from "../middlewares/userAuthen.middleware.js"
 const authRoute = express.Router()
+
+/**
+ * @swagger
+ * /api/auth/profile/{id}:
+ *   get:
+ *     summary: Get public user profile by ID
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Public profile retrieved
+ *       404:
+ *         description: User not found
+ */
+authRoute.get('/profile/:id', authUserCheck, authGetPublicProfileController)
 
 /**
  * @swagger
