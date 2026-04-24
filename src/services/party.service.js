@@ -345,21 +345,43 @@ export const removePartyOrderItemService = async (partyId, userId, itemId) => {
 
 export const updatePartySettingsService = async (partyId, leaderId, data) => {
   return await prisma.$transaction(async (tx) => {
-    const party = await tx.party.findUnique({ where: { id: partyId } });
+    const party = await tx.party.findUnique({
+      where: { id: partyId },
+      include: { _count: { select: { members: true } } }
+    });
     if (!party) throw createHttpError(404, "Party not found");
     if (party.leaderId !== leaderId) throw createHttpError(403, "คุณไม่ใช่หัวหน้าปาร์ตี้");
     if (party.status === "COMPLETED" || party.status === "CANCELLED") {
       throw createHttpError(400, "ไม่สามารถแก้ไขปาร์ตี้ที่จบหรือยกเลิกแล้วได้");
     }
 
+    const currentMembersCount = party._count.members;
+    const newMaxParticipants = data.maxParticipants !== undefined ? data.maxParticipants : party.maxParticipants;
+
+    let newStatus = data.status || party.status;
+
+    // 🌟 Auto-update status logic:
+    // ถ้าปาร์ตี้อยู่ในสถานะ OPEN/FULL และมีการปรับจำนวนคน
+    // ให้เช็คว่าจำนวนสมาชิกปัจจุบันเกินขีดจำกัดใหม่หรือยัง
+    if (newStatus === "OPEN" || newStatus === "FULL") {
+      if (currentMembersCount >= newMaxParticipants) {
+        newStatus = "FULL";
+      } else {
+        newStatus = "OPEN";
+      }
+    }
+
     return await tx.party.update({
       where: { id: partyId },
       data: {
         name: data.name !== undefined ? data.name : party.name,
-        maxParticipants: data.maxParticipants !== undefined ? data.maxParticipants : party.maxParticipants,
+        details: data.details !== undefined ? data.details : party.details,
+        meetupTime: data.meetupTime !== undefined ? data.meetupTime : party.meetupTime,
+        maxParticipants: newMaxParticipants,
         vat: data.vat !== undefined ? parseFloat(data.vat) : party.vat,
         serviceCharge: data.serviceCharge !== undefined ? parseFloat(data.serviceCharge) : party.serviceCharge,
-        status: data.status || party.status,
+        status: newStatus,
+        contactInfo: data.contactInfo !== undefined ? data.contactInfo : party.contactInfo,
       }
     });
   });
