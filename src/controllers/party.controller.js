@@ -19,8 +19,43 @@ import {
   removePartyOrderItemService,
   calculateSplitBillService,
   updatePartySettingsService,
-  getPartiesWithPaginationService
+  getPartiesWithPaginationService,
+  notifyPaymentService,
+  verifyPaymentService
 } from "../services/party.service.js";
+
+/**
+ * @desc สมาชิกแจ้งชำระเงิน (PAID) และแนบรูปสลิป
+ * @route POST /api/parties/:id/payment/notify
+ */
+export const notifyPaymentController = async (req, res, next) => {
+  try {
+    const { id: partyId } = req.params;
+    const userId = req.user.id;
+    const { paymentSlipUrl } = req.body;
+
+    const result = await notifyPaymentService(partyId, userId, paymentSlipUrl);
+    res.json({ message: "Payment notified successfully", data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc หัวหน้าปาร์ตี้กดยืนยันยอด (VERIFIED) หลังจากเช็คบัญชีแล้ว
+ * @route POST /api/parties/:id/payment/verify/:userId
+ */
+export const verifyPaymentController = async (req, res, next) => {
+  try {
+    const { id: partyId, userId: memberUserId } = req.params;
+    const leaderId = req.user.id;
+
+    const result = await verifyPaymentService(partyId, leaderId, memberUserId);
+    res.json({ message: "Payment verified successfully", data: result });
+  } catch (error) {
+    next(error);
+  }
+};
 
 /**
  * @desc อัปเดตการตั้งค่าบิล (VAT, Service Charge) หรือปิดปาร์ตี้ (เฉพาะ Leader)

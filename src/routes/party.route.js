@@ -12,12 +12,18 @@ import {
   removePartyOrderItemController,
   getSplitBillController,
   paginationPartyController,
-  updatePartySettingsController
+  updatePartySettingsController,
+  notifyPaymentController,
+  verifyPaymentController
 } from "../controllers/party.controller.js";
 
 const partyRoute = express.Router();
 
 partyRoute.get('/page', paginationPartyController);
+
+// Payment Tracking
+partyRoute.post("/:id/payment/notify", authUserCheck, notifyPaymentController);
+partyRoute.post("/:id/payment/verify/:userId", authUserCheck, verifyPaymentController);
 
 /**
  * @swagger
