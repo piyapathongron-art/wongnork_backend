@@ -31,7 +31,7 @@ export const getAllPartiesService = async () => {
   return await prisma.party.findMany({
     where: { status: { in: ["OPEN", "FULL"] } },
     include: {
-      restaurant: true,
+      restaurant: { include: { images: { where: { isCover: true } } } },
       _count: {
         select: { members: true }
       },
