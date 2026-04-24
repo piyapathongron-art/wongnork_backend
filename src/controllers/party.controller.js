@@ -21,8 +21,25 @@ import {
   updatePartySettingsService,
   getPartiesWithPaginationService,
   notifyPaymentService,
-  verifyPaymentService
+  verifyPaymentService,
+  cancelPaymentService
 } from "../services/party.service.js";
+
+/**
+ * @desc สมาชิกยกเลิกการแจ้งชำระเงิน (เพื่อแก้ไขสลิปหรือรายการอาหาร)
+ * @route POST /api/parties/:id/payment/cancel
+ */
+export const cancelPaymentController = async (req, res, next) => {
+  try {
+    const { id: partyId } = req.params;
+    const userId = req.user.id;
+
+    const result = await cancelPaymentService(partyId, userId);
+    res.json({ message: "Payment cancelled successfully", data: result });
+  } catch (error) {
+    next(error);
+  }
+};
 
 /**
  * @desc สมาชิกแจ้งชำระเงิน (PAID) และแนบรูปสลิป

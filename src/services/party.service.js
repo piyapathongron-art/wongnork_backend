@@ -2,6 +2,17 @@ import { prisma } from "../lib/prisma.js";
 import createHttpError from "http-errors";
 import { createMessageService } from "./socket.service.js";
 
+// Helper: send a SYSTEM type chat message
+const sendSystemMessage = (partyId, userId, text) => {
+  return createMessageService({
+    partyId,
+    userId,
+    text,
+    imageUrl: null,
+    type: "SYSTEM"
+  });
+};
+
 const checkPartyConstraints = async (tx, userId, targetRestaurantId, targetMeetupTime) => {
   const activeParties = await tx.partyMember.findMany({
     where: {
@@ -54,7 +65,7 @@ const checkAndTransitionExpiredParties = async () => {
 
     // Send system message for each
     expiredParties.forEach(p => {
-      createMessageService(p.id, p.leaderId, "--- มื้ออาหารผ่านไป 5 ชม. แล้ว รบกวนหัวหน้าสรุปยอดบิลด้วยครับ ---");
+      sendSystemMessage(p.id, p.leaderId, "--- มื้ออาหารผ่านไป 5 ชม. แล้ว รบกวนหัวหน้าสรุปยอดบิลด้วยครับ ---");
     });
   }
 };
@@ -520,6 +531,32 @@ export const verifyPaymentService = async (partyId, leaderId, memberUserId) => {
 
   // 🌟 Send System Message
   sendSystemMessage(partyId, leaderId, `หัวหน้ากดยืนยันยอดเงินของ ${updatedMember.user.name} เรียบร้อยแล้ว ✅`);
+
+  return updatedMember;
+};
+
+export const cancelPaymentService = async (partyId, userId) => {
+  const member = await prisma.partyMember.findUnique({
+    where: { partyId_userId: { partyId, userId } }
+  });
+
+  if (!member) throw createHttpError(404, "Member not found");
+  if (member.paymentStatus === "VERIFIED") {
+    throw createHttpError(400, "ไม่สามารถยกเลิกได้เนื่องจากหัวหน้ายืนยันยอดเงินเรียบร้อยแล้ว");
+  }
+
+  const updatedMember = await prisma.partyMember.update({
+    where: { partyId_userId: { partyId, userId } },
+    data: {
+      paymentStatus: "PENDING",
+      paymentSlipUrl: null,
+      paidAt: null
+    },
+    include: { user: { select: { name: true } } }
+  });
+
+  // 🌟 Send System Message
+  sendSystemMessage(partyId, userId, `${updatedMember.user.name} ได้ยกเลิกการแจ้งโอนเงิน (กำลังแก้ไขข้อมูล)`);
 
   return updatedMember;
 };
