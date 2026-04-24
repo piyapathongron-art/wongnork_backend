@@ -17,13 +17,15 @@ export function registerSocketHandler(io, socket) {
     });
 
     // send message
-    socket.on('send_message', async ({ text, partyId, type }) => {
-        if (!text?.trim() || !partyId) return;
+    socket.on('send_message', async ({ text, imageUrl, partyId, type }) => {
+        // Must have at least text or imageUrl
+        if ((!text?.trim() && !imageUrl) || !partyId) return;
 
         try {
             // 1. save to database
             const savedMessage = await createMessageService({
-                text: text.trim(),
+                text: text?.trim(),
+                imageUrl: imageUrl,
                 userId: user.id,
                 partyId: partyId,
                 type: type || "MESSAGE"
