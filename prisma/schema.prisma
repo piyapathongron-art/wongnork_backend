@@ -241,7 +241,8 @@ model Review {
 
 model ChatMessage {
   id        String   @id @default(uuid())
-  text      String   @db.Text
+  text      String?  @db.Text
+  imageUrl  String?  @db.Text
   type      String   @default("MESSAGE") // MESSAGE, SYSTEM
   
   userId    String

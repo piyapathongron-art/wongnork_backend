@@ -5,6 +5,7 @@ export async function createMessageService(data) {
     const message = await prisma.chatMessage.create({
         data: {
             text: data.text,
+            imageUrl: data.imageUrl,
             user: {
                 connect: {
                     id: data.userId
