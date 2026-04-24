@@ -27,7 +27,23 @@ const checkPartyConstraints = async (tx, userId, targetRestaurantId, targetMeetu
   }
 };
 
+const checkAndTransitionExpiredParties = async () => {
+  const fiveHoursAgo = new Date(Date.now() - 5 * 60 * 60 * 1000);
+  
+  // Update OPEN/FULL parties that are older than 5 hours to PENDING_SETTLEMENT
+  await prisma.party.updateMany({
+    where: {
+      status: { in: ["OPEN", "FULL"] },
+      meetupTime: { lt: fiveHoursAgo }
+    },
+    data: {
+      status: "PENDING_SETTLEMENT"
+    }
+  });
+};
+
 export const getAllPartiesService = async () => {
+  await checkAndTransitionExpiredParties();
   return await prisma.party.findMany({
     where: { status: { in: ["OPEN", "FULL"] } },
     include: {
@@ -49,13 +65,14 @@ export const getAllPartiesService = async () => {
 };
 
 export const getPartiesWithPaginationService = async (page = 1, limit = 10) => {
+  await checkAndTransitionExpiredParties();
   const skip = (page - 1) * limit;
 
   const [parties, totalItems] = await prisma.$transaction([
     // 1. ตัวดึงข้อมูล
     prisma.party.findMany({
       where: {
-        status: { in: ["OPEN", "FULL"] } // 🌟 ยัดเงื่อนไขลงไปตรงๆ
+        status: { in: ["OPEN", "FULL"] }
       },
       skip: skip,
       take: limit,
@@ -81,7 +98,7 @@ export const getPartiesWithPaginationService = async (page = 1, limit = 10) => {
     // 2. ตัวนับจำนวน (นับหน้า)
     prisma.party.count({
       where: {
-        status: { in: ["OPEN", "FULL"] } // 🌟 ยัดเงื่อนไขลงไปตรงๆ (ต้องเหมือนตัวบนเป๊ะๆ)
+        status: { in: ["OPEN", "FULL"] }
       }
     })
   ]);
