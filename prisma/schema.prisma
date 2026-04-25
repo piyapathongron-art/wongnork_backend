@@ -158,6 +158,7 @@ model Party {
   contactInfo     String
   serviceCharge   Float       @default(0)
   vat             Float       @default(0)
+  discount        Float       @default(0)
 
   restaurantId String
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)

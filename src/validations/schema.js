@@ -141,7 +141,8 @@ export const updatePartySettingsSchema = z.object({
   contactInfo: z.string().min(1, "กรุณากรอกช่องทางติดต่อ").optional(),
   vat: z.number().min(0).optional(),
   serviceCharge: z.number().min(0).optional(),
-  status: z.enum(["OPEN", "FULL", "COMPLETED", "CANCELLED"]).optional(),
+  discount: z.number().min(0).optional(),
+  status: z.enum(["OPEN", "FULL", "PENDING_SETTLEMENT", "COMPLETED", "CANCELLED"]).optional(),
 });
 
 // --- Review Validation Schema ---

@@ -443,7 +443,14 @@ export const removePartyOrderItemService = async (partyId, userId, itemId) => {
   const item = await prisma.partyOrderItem.findUnique({ where: { id: itemId } });
   if (!item || item.partyId !== partyId) throw createHttpError(404, "ไม่พบรายการในบิล");
 
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  const itemName = item.isCustom ? item.name : (await prisma.menu.findUnique({ where: { id: item.menuId } })).name;
+
   await prisma.partyOrderItem.delete({ where: { id: itemId } });
+  
+  // 🌟 Send System Message
+  sendSystemMessage(partyId, userId, `${user.name} ได้ลบรายการ ${itemName} ออกจากบิล`);
+
   return { deleted: true };
 };
 
@@ -489,6 +496,7 @@ export const updatePartySettingsService = async (partyId, leaderId, data) => {
         maxParticipants: newMaxParticipants,
         vat: data.vat !== undefined ? parseFloat(data.vat) : party.vat,
         serviceCharge: data.serviceCharge !== undefined ? parseFloat(data.serviceCharge) : party.serviceCharge,
+        discount: data.discount !== undefined ? parseFloat(data.discount) : party.discount,
         status: newStatus,
         contactInfo: data.contactInfo !== undefined ? data.contactInfo : party.contactInfo,
       }
@@ -656,8 +664,20 @@ export const calculateSplitBillService = async (partyId) => {
     partyId: party.id,
     serviceChargeAmount: party.serviceCharge,
     vatAmount: party.vat,
-    grandTotal: grandTotal,
+    discountAmount: party.discount,
+    grandTotal: grandTotal - party.discount,
     tableItems: tableItems,
-    members: membersSummary
+    members: membersSummary.map(m => {
+      const discountPerPerson = totalMembers > 0 ? party.discount / totalMembers : 0;
+      const calculatedNet = m.summary.netTotal - discountPerPerson;
+      return {
+        ...m,
+        summary: {
+          ...m.summary,
+          discount: discountPerPerson,
+          netTotal: Math.max(0, calculatedNet) // 🌟 ป้องกันยอดติดลบ
+        }
+      };
+    })
   };
 };
