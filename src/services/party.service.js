@@ -73,7 +73,10 @@ const checkAndTransitionExpiredParties = async () => {
 export const getAllPartiesService = async () => {
   await checkAndTransitionExpiredParties();
   return await prisma.party.findMany({
-    where: { status: { in: ["OPEN", "FULL"] } },
+    where: {
+      status: { in: ["OPEN", "FULL"] },
+      isPrivate: false
+    },
     include: {
       restaurant: { include: { images: { where: { isCover: true } } } },
       _count: {
@@ -100,7 +103,8 @@ export const getPartiesWithPaginationService = async (page = 1, limit = 10) => {
     // 1. ตัวดึงข้อมูล
     prisma.party.findMany({
       where: {
-        status: { in: ["OPEN", "FULL"] }
+        status: { in: ["OPEN", "FULL"] },
+        isPrivate: false
       },
       skip: skip,
       take: limit,
@@ -126,7 +130,8 @@ export const getPartiesWithPaginationService = async (page = 1, limit = 10) => {
     // 2. ตัวนับจำนวน (นับหน้า)
     prisma.party.count({
       where: {
-        status: { in: ["OPEN", "FULL"] }
+        status: { in: ["OPEN", "FULL"] },
+        isPrivate: false
       }
     })
   ]);
@@ -177,15 +182,20 @@ export const getPartyByIdService = async (partyId) => {
 };
 
 export const createPartyService = async (restaurantId, leaderId, data) => {
+  // 🌟 Normalize restaurantId (Handle "null" or "undefined" strings from route params)
+  const normalizedRestaurantId = (restaurantId === "null" || restaurantId === "undefined" || !restaurantId) ? null : restaurantId;
+
   return await prisma.$transaction(async (tx) => {
-    // 1. Check constraints
-    await checkPartyConstraints(tx, leaderId, restaurantId, data.meetupTime);
+    // 1. Check constraints if it's a public party with restaurant
+    if (normalizedRestaurantId && !data.isPrivate) {
+      await checkPartyConstraints(tx, leaderId, normalizedRestaurantId, data.meetupTime);
+    }
 
     // 2. Create party
     const newParty = await tx.party.create({
       data: {
         ...data,
-        restaurant: { connect: { id: restaurantId } },
+        restaurant: normalizedRestaurantId ? { connect: { id: normalizedRestaurantId } } : undefined,
         leader: { connect: { id: leaderId } }
       }
     });
@@ -217,8 +227,10 @@ export const joinPartyService = async (partyId, userId) => {
       throw createHttpError(400, "Party is already full");
     }
 
-    // Check overlaps
-    await checkPartyConstraints(tx, userId, party.restaurantId, party.meetupTime);
+    // Check overlaps only for non-private parties with restaurants
+    if (party.restaurantId && !party.isPrivate) {
+      await checkPartyConstraints(tx, userId, party.restaurantId, party.meetupTime);
+    }
 
     const newMember = await tx.partyMember.create({
       data: {
@@ -447,7 +459,7 @@ export const removePartyOrderItemService = async (partyId, userId, itemId) => {
   const itemName = item.isCustom ? item.name : (await prisma.menu.findUnique({ where: { id: item.menuId } })).name;
 
   await prisma.partyOrderItem.delete({ where: { id: itemId } });
-  
+
   // 🌟 Send System Message
   sendSystemMessage(partyId, userId, `${user.name} ได้ลบรายการ ${itemName} ออกจากบิล`);
 

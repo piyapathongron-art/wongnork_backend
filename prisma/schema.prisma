@@ -159,9 +159,10 @@ model Party {
   serviceCharge   Float       @default(0)
   vat             Float       @default(0)
   discount        Float       @default(0)
+  isPrivate       Boolean     @default(false)
 
-  restaurantId String
-  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  restaurantId String?
+  restaurant   Restaurant? @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
   leaderId String
   leader   User   @relation("PartyLeader", fields: [leaderId], references: [id], onDelete: Cascade)
