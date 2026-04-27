@@ -1,10 +1,10 @@
 import createHttpError from "http-errors";
 import {
-  createPartySchema,
   createPartyOrderItemSchema,
   updatePartyOrderItemQuantitySchema,
   toggleSharerSchema,
-  updatePartySettingsSchema
+  updatePartySettingsSchema,
+  createPartySchema
 } from "../validations/schema.js";
 import {
   createPartyService,
@@ -35,6 +35,10 @@ export const cancelPaymentController = async (req, res, next) => {
     const userId = req.user.id;
 
     const result = await cancelPaymentService(partyId, userId);
+
+    const io = req.app.get("io");
+    io.to(partyId.toString()).emit("BILL_UPDATED", { partyId });
+
     res.json({ message: "Payment cancelled successfully", data: result });
   } catch (error) {
     next(error);
@@ -52,6 +56,10 @@ export const notifyPaymentController = async (req, res, next) => {
     const { paymentSlipUrl } = req.body;
 
     const result = await notifyPaymentService(partyId, userId, paymentSlipUrl);
+
+    const io = req.app.get("io");
+    io.to(partyId.toString()).emit("BILL_UPDATED", { partyId });
+
     res.json({ message: "Payment notified successfully", data: result });
   } catch (error) {
     next(error);
@@ -68,6 +76,10 @@ export const verifyPaymentController = async (req, res, next) => {
     const leaderId = req.user.id;
 
     const result = await verifyPaymentService(partyId, leaderId, memberUserId);
+
+    const io = req.app.get("io");
+    io.to(partyId.toString()).emit("BILL_UPDATED", { partyId });
+
     res.json({ message: "Payment verified successfully", data: result });
   } catch (error) {
     next(error);
@@ -83,9 +95,12 @@ export const updatePartySettingsController = async (req, res, next) => {
     const { id: partyId } = req.params;
     const leaderId = req.user.id;
     const data = updatePartySettingsSchema.parse(req.body);
-    console.log(data)
 
     const updatedParty = await updatePartySettingsService(partyId, leaderId, data);
+
+    const io = req.app.get("io");
+    io.to(partyId.toString()).emit("BILL_UPDATED", { partyId });
+
     res.json({ message: "Party settings updated successfully", data: updatedParty });
   } catch (error) {
     next(error);
@@ -155,6 +170,10 @@ export const joinPartyController = async (req, res, next) => {
     const userId = req.user.id;
 
     const newMember = await joinPartyService(partyId, userId);
+
+    const io = req.app.get("io");
+    io.to(partyId.toString()).emit("BILL_UPDATED", { partyId });
+
     res.json({ message: "Joined party successfully", data: newMember });
   } catch (error) {
     if (error.status === 400 && error.message) {
@@ -174,6 +193,10 @@ export const leavePartyController = async (req, res, next) => {
     const userId = req.user.id;
 
     await leavePartyService(partyId, userId);
+
+    const io = req.app.get("io");
+    io.to(partyId.toString()).emit("BILL_UPDATED", { partyId });
+
     res.json({ message: "Left party successfully" });
   } catch (error) {
     if (error.code === 'P2025') {
@@ -190,6 +213,10 @@ export const kickMemberController = async (req, res, next) => {
     const leaderId = req.user.id;
 
     await kickMemberService(partyId, leaderId, memberUserId);
+
+    const io = req.app.get("io");
+    io.to(partyId.toString()).emit("BILL_UPDATED", { partyId });
+
     res.json({ message: "Kicked member successfully" });
   } catch (error) {
     if (error.code === 'P2025') {
@@ -214,6 +241,10 @@ export const addPartyOrderItemController = async (req, res, next) => {
     const orderData = createPartyOrderItemSchema.parse(req.body);
 
     const orderItem = await addPartyOrderItemService(partyId, userId, orderData);
+
+    const io = req.app.get("io");
+    io.to(partyId.toString()).emit("BILL_UPDATED", { partyId });
+
     res.status(201).json({ message: "Added item to party bill successfully", data: orderItem });
   } catch (error) {
     next(error);
@@ -231,6 +262,10 @@ export const updatePartyOrderItemQuantityController = async (req, res, next) => 
     const { action } = updatePartyOrderItemQuantitySchema.parse(req.body);
 
     const result = await updatePartyOrderItemQuantityService(partyId, userId, itemId, action);
+
+    const io = req.app.get("io");
+    io.to(partyId.toString()).emit("BILL_UPDATED", { partyId });
+
     res.json({ message: "Quantity updated successfully", data: result });
   } catch (error) {
     next(error);
@@ -248,6 +283,10 @@ export const togglePartyOrderItemSharerController = async (req, res, next) => {
     const { action } = toggleSharerSchema.parse(req.body);
 
     const result = await togglePartyOrderItemSharerService(partyId, userId, itemId, action);
+
+    const io = req.app.get("io");
+    io.to(partyId.toString()).emit("BILL_UPDATED", { partyId });
+
     res.json({ message: "Toggled sharer status successfully", data: result });
   } catch (error) {
     next(error);
@@ -264,6 +303,10 @@ export const removePartyOrderItemController = async (req, res, next) => {
     const userId = req.user.id;
 
     await removePartyOrderItemService(partyId, userId, itemId);
+
+    const io = req.app.get("io");
+    io.to(partyId.toString()).emit("BILL_UPDATED", { partyId });
+
     res.json({ message: "Order item removed successfully" });
   } catch (error) {
     next(error);
