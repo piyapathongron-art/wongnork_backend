@@ -25,3 +25,22 @@ export const sendVerificationEmail = async (to, link) => {
   };
   return transporter.sendMail(mailOptions);
 }
+
+
+export const sendResetPasswordEmail = async (email, resetUrl) => {
+  
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Wongnork - เปลี่ยนรหัสผ่านใหม่",
+    html: `
+      <h2>ขอเปลี่ยนรหัสผ่าน</h2>
+      <p>คุณได้ทำการขอเปลี่ยนรหัสผ่าน บัญชี Wongnork ของคุณ</p>
+      <p>กรุณาคลิกที่ลิงก์ด้านล่างเพื่อตั้งรหัสผ่านใหม่ (ลิงก์นี้มีอายุ 15 นาที):</p>
+      <a href="${resetUrl}" clicktracking=off>${resetUrl}</a>
+      <p>หากคุณไม่ได้ทำการร้องขอ โปรดละเว้นอีเมลฉบับนี้</p>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
