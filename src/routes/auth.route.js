@@ -1,5 +1,5 @@
 import express from "express"
-import { authGetmeController, authGoogleLoginController, authLoginController, authRegisterController, authUpdateProfileController,authVerifyEmailConroller, authGetPublicProfileController } from "../controllers/auth.controller.js"
+import { authGetmeController, authGoogleLoginController, authLoginController, authRegisterController, authUpdateProfileController,authVerifyEmailConroller, authGetPublicProfileController, authForgotPasswordController, authResetPasswordController } from "../controllers/auth.controller.js"
 import authUserCheck from "../middlewares/userAuthen.middleware.js"
 const authRoute = express.Router()
 
@@ -142,4 +142,6 @@ authRoute.put('/profile', authUserCheck, authUpdateProfileController)
 
 authRoute.post('/google', authGoogleLoginController)
 authRoute.get("/verify-email",authVerifyEmailConroller);
+authRoute.post('/forgot-password', authForgotPasswordController);
+authRoute.post('/reset-password/:id/:token', authResetPasswordController);
 export default authRoute
