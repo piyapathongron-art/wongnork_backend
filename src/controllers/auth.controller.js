@@ -8,6 +8,7 @@ import { OAuth2Client } from 'google-auth-library';
 
 import { sendResetPasswordEmail, sendVerificationEmail } from "../utils/email.js";
 import { use } from "react";
+import "dotenv/config"
 
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -30,6 +31,7 @@ export async function authRegisterController(req, res, next) {
   )
 
   const verifyLink = `${process.env.BACKEND_URL}/api/auth/verify-email?token=${verifyEmailToken}`;
+
 
   await sendVerificationEmail(newUser.email, verifyLink)
 
@@ -61,25 +63,25 @@ export async function authVerifyEmailConroller(req, res, next) {
   }
 }
 
-export async function authForgotPasswordController(req,res,next){
-  try{
-    const {email} = req.body;
+export async function authForgotPasswordController(req, res, next) {
+  try {
+    const { email } = req.body;
     const user = await findUseerByEmail(email)
-    if(!user){
-      return next(createHttpError(404,"ไม่พบ Email นี้ในระบบ"))
+    if (!user) {
+      return next(createHttpError(404, "ไม่พบ Email นี้ในระบบ"))
     }
     const secret = process.env.JWT_SECRET + user.password
-    const token = jwt.sign({email:user.email,id:user.id},secret,{
-      expiresIn : "15m",
+    const token = jwt.sign({ email: user.email, id: user.id }, secret, {
+      expiresIn: "15m",
     })
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${user.id}/${token}`
 
-    await sendResetPasswordEmail(user.email,resetUrl)
+    await sendResetPasswordEmail(user.email, resetUrl)
     res.json({
       message: "ส่งลิงก์เปลี่ยนรหัสผ่านไปที่อีเมลแล้ว กรุณาตรวจสอบกล่องจดหมาย"
     })
   }
-  catch(error){
+  catch (error) {
     next(error)
   }
 }
@@ -89,8 +91,8 @@ export async function authResetPasswordController(req, res, next) {
     const { id, token } = req.params;
     const { newPassword } = req.body;
 
-  
-    const user = await findUserBy("id",id);
+
+    const user = await findUserBy("id", id);
     if (!user) {
       return next(createHttpError(404, "ไม่พบผู้ใช้งาน"));
     }
@@ -103,7 +105,7 @@ export async function authResetPasswordController(req, res, next) {
       return next(createHttpError(400, "ลิงก์นี้หมดอายุหรือถูกใช้งานไปแล้ว"));
     }
 
-    
+
     const hashedPassword = await hashPassword(newPassword);
 
     // อัปเดตรหัสผ่านใหม่ลง DB (ใช้ Service เดิมที่คุณมีอยู่ได้เลย)
