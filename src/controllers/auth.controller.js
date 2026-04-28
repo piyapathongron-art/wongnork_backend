@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 import { OAuth2Client } from 'google-auth-library';
 
 import { sendResetPasswordEmail, sendVerificationEmail } from "../utils/email.js";
-import { use } from "react";
 
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
