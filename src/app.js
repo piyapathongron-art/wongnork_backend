@@ -24,7 +24,18 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["https://wongnork-frontend.vercel.app", "http://localhost:5173", "http://localhost:3000"],
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "https://wongnork-frontend.vercel.app",
+        "http://localhost:5173",
+        "http://localhost:3000",
+      ];
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }),
