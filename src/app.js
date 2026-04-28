@@ -70,6 +70,13 @@ app.use("/api/cloudinary", cloudinaryRoute);
 
 app.use("/api/socket", socketRoute)
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Welcome to WongNork Backend"
+  })
+})
+
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
