@@ -126,25 +126,21 @@ async function main() {
 
     // 3. สร้าง Restaurants (สร้าง 100 ร้าน)
     const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+    const categories = ['Shabu', 'Cafe', 'Japanese', 'BBQ', 'Thai', 'Western', 'Izakaya', 'Dessert', 'Street Food', 'Fine Dining'];
     const restaurants = [];
 
     for (let i = 0; i < 100; i++) {
         const owner = users[Math.floor(Math.random() * 20)]; // ดึงจาก 20 คนแรกที่เป็น OWNER
-        const baseRest = realBangkokRestaurants[i % realBangkokRestaurants.length];
+        let restData;
+        let menuData;
 
-        // สุ่มพิกัดให้กระจายๆ ไปรอบๆ พิกัดจริงเล็กน้อยเพื่อไม่ให้ทับกันเป๊ะๆ
-        const latOffset = (Math.random() - 0.5) * 0.05;
-        const lngOffset = (Math.random() - 0.5) * 0.05;
-
-        // ถ้าร้านแรกๆ ใช้ชื่อจริงเป๊ะๆ นอกนั้นเติมสาขา
-        const branchName = i < realBangkokRestaurants.length ? baseRest.name : `${baseRest.name} (สาขา ${Math.floor(i / realBangkokRestaurants.length) + 1})`;
-
-        const restaurant = await prisma.restaurant.create({
-            data: {
-                name: branchName,
+        if (i < realBangkokRestaurants.length) {
+            const baseRest = realBangkokRestaurants[i];
+            restData = {
+                name: baseRest.name,
                 description: baseRest.desc,
-                lat: baseRest.lat + latOffset,
-                lng: baseRest.lng + lngOffset,
+                lat: baseRest.lat,
+                lng: baseRest.lng,
                 category: baseRest.cat,
                 ownerId: owner.id,
                 images: {
@@ -160,24 +156,63 @@ async function main() {
                         closeTime: "22:00",
                         isClosed: false
                     }))
+                }
+            };
+            
+            if (baseRest.exactMenus) {
+                menuData = baseRest.exactMenus.map((m, j) => ({
+                    name: m.name,
+                    description: `เมนูเด็ดแซ่บนัว อร่อยถูกใจแน่นอน`,
+                    price: m.price,
+                    category: j < 3 ? 'Recommend' : 'General',
+                    imageUrl: m.img
+                }));
+            } else {
+                menuData = Array.from({ length: 6 }).map((_, j) => ({
+                    name: baseRest.menuNames[j % baseRest.menuNames.length] + (j >= 3 ? ` (พิเศษ)` : ''),
+                    description: `เมนูแนะนำ สดใหม่ทุกวัน จัดเต็มระดับพรีเมียม`,
+                    price: getRealisticPrice(),
+                    category: j < 2 ? 'Recommend' : 'General',
+                    imageUrl: baseRest.menuImgs[j % baseRest.menuImgs.length]
+                }));
+            }
+        } else {
+            restData = {
+                name: `ร้านอาหารที่ ${i} - ${categories[i % categories.length]}`,
+                description: `คำอธิบายร้านอาหารอันดับที่ ${i} บรรยากาศดี อาหารอร่อย ราคาย่อมเยา เหมาะสำหรับทุกเพศทุกวัย และการมาเปิดตี้กับเพื่อนๆ`,
+                lat: 13.7 + (Math.random() * 0.15),
+                lng: 100.5 + (Math.random() * 0.15),
+                category: categories[i % categories.length],
+                ownerId: owner.id,
+                images: {
+                    create: [
+                        { url: `https://picsum.photos/seed/rest${i}-1/800/600`, isCover: true },
+                        { url: `https://picsum.photos/seed/rest${i}-2/800/600`, isCover: false }
+                    ]
                 },
-                // 🌟 ระบบสุ่มราคาสมจริง
+                operatingHours: {
+                    create: days.map(day => ({
+                        day: day,
+                        openTime: "10:00",
+                        closeTime: "22:00",
+                        isClosed: false
+                    }))
+                }
+            };
+            menuData = Array.from({ length: 8 }).map((_, j) => ({
+                name: `เมนู ${j + 1} ของร้าน ${i}`,
+                description: `รายละเอียดเมนูแสนอร่อยลำดับที่ ${j + 1}`,
+                price: 80 + (Math.random() * 800),
+                category: j < 2 ? 'Recommend' : 'General',
+                imageUrl: `https://picsum.photos/seed/menu${i}-${j}/400/300`
+            }));
+        }
+
+        const restaurant = await prisma.restaurant.create({
+            data: {
+                ...restData,
                 menus: {
-                    create: baseRest.exactMenus && i === 0 // ให้เจ้ไก่ร้านแรกใช้ราคาเป๊ะ ส่วนสาขาอื่นสุ่ม
-                        ? baseRest.exactMenus.map((m, j) => ({
-                            name: m.name,
-                            description: `เมนูเด็ดแซ่บนัว อร่อยถูกใจแน่นอน`,
-                            price: m.price, // ดึงราคาจริงจากข้อมูล
-                            category: j < 3 ? 'Recommend' : 'General',
-                            imageUrl: m.img
-                        }))
-                        : Array.from({ length: 6 }).map((_, j) => ({
-                            name: baseRest.menuNames[j % baseRest.menuNames.length] + (j >= 3 ? ` (พิเศษ)` : ''),
-                            description: `เมนูแนะนำ สดใหม่ทุกวัน จัดเต็มระดับพรีเมียม`,
-                            price: getRealisticPrice(), // 🌟 ใช้ตัวช่วยสุ่มราคาสมจริงที่ตั้งไว้ข้างบน
-                            category: j < 2 ? 'Recommend' : 'General',
-                            imageUrl: baseRest.menuImgs[j % baseRest.menuImgs.length]
-                        }))
+                    create: menuData
                 }
             },
             include: { menus: true }
