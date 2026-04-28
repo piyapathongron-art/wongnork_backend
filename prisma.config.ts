@@ -9,7 +9,7 @@ export default defineConfig({
     seed: "node ./prisma/seed.js", // <-- เพิ่มบรรทัดนี้เข้าไปครับ
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    url: process.env["DIRECT_URL"] || process.env["DATABASE_URL"],
   },
 });
 

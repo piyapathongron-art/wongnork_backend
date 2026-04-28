@@ -1,9 +1,10 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  engineType      = "library"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
 enum Role {
@@ -55,7 +56,7 @@ model User {
   provider   Provider @default(LOCAL)
   googleId   String?  @unique
   isVerified Boolean  @default(false)
-  
+
   // Payment Info
   promptPayNumber String?
   promptPayName   String?
@@ -77,7 +78,7 @@ model User {
 model Restaurant {
   id          String  @id @default(uuid())
   name        String
-  description String? @db.Text
+  description String?
   lat         Float
   lng         Float
   category    String?
@@ -134,7 +135,7 @@ model SavedRestaurant {
 model Menu {
   id          String  @id @default(uuid())
   name        String
-  description String? @db.Text
+  description String?
   price       Float
   category    String  @default("others")
   imageUrl    String?
@@ -151,7 +152,7 @@ model Menu {
 model Party {
   id              String      @id @default(uuid())
   name            String?
-  details         String?     @db.Text
+  details         String?
   meetupTime      DateTime
   maxParticipants Int
   status          PartyStatus @default(OPEN)
@@ -167,9 +168,9 @@ model Party {
   leaderId String
   leader   User   @relation("PartyLeader", fields: [leaderId], references: [id], onDelete: Cascade)
 
-  members    PartyMember[]
-  orderItems PartyOrderItem[]
-  reviews    Review[]
+  members      PartyMember[]
+  orderItems   PartyOrderItem[]
+  reviews      Review[]
   chatMessages ChatMessage[]
 
   createdAt DateTime @default(now())
@@ -182,7 +183,7 @@ model PartyMember {
 
   // Payment Tracking
   paymentStatus  PaymentStatus @default(PENDING)
-  paymentSlipUrl String?       @db.Text
+  paymentSlipUrl String?
   paidAt         DateTime?
 
   partyId String
@@ -195,34 +196,34 @@ model PartyMember {
 }
 
 model PartyOrderItem {
-  id       String @id @default(uuid())
-  
-  partyId  String
-  party    Party  @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  id String @id @default(uuid())
+
+  partyId String
+  party   Party  @relation(fields: [partyId], references: [id], onDelete: Cascade)
 
   addedById String
-  addedBy   User  @relation("AddedBy", fields: [addedById], references: [id], onDelete: Cascade)
+  addedBy   User   @relation("AddedBy", fields: [addedById], references: [id], onDelete: Cascade)
 
   // เมนูทางการ (อ้างอิง Menu)
-  menuId   String?
-  menu     Menu?   @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  menuId String?
+  menu   Menu?   @relation(fields: [menuId], references: [id], onDelete: Cascade)
 
   // เมนูพิเศษ (Custom Item)
   isCustom Boolean @default(false)
   name     String? // ชื่อเมนู (กรณี custom)
-  price    Float?  // ราคาต่อหน่วย (กรณี custom)
+  price    Float? // ราคาต่อหน่วย (กรณี custom)
 
-  quantity Int     @default(1) // จำนวนที่สั่ง
+  quantity Int @default(1) // จำนวนที่สั่ง
 
-  sharers  PartyOrderItemSharer[]
+  sharers PartyOrderItemSharer[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model PartyOrderItemSharer {
-  id               String @id @default(uuid())
-  
+  id String @id @default(uuid())
+
   partyOrderItemId String
   partyOrderItem   PartyOrderItem @relation(fields: [partyOrderItemId], references: [id], onDelete: Cascade)
 
@@ -237,7 +238,7 @@ model PartyOrderItemSharer {
 model Review {
   id      String  @id @default(uuid())
   rating  Int
-  comment String? @db.Text
+  comment String?
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -253,16 +254,16 @@ model Review {
 }
 
 model ChatMessage {
-  id        String   @id @default(uuid())
-  text      String?  @db.Text
-  imageUrl  String?  @db.Text
-  type      String   @default("MESSAGE") // MESSAGE, SYSTEM
-  
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  partyId   String
-  party     Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
-  
+  id       String  @id @default(uuid())
+  text     String?
+  imageUrl String?
+  type     String  @default("MESSAGE") // MESSAGE, SYSTEM
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  partyId String
+  party   Party  @relation(fields: [partyId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
 }
