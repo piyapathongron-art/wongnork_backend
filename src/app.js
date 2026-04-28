@@ -36,7 +36,7 @@ app.use(helmet());
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const io = new Server(server, {
   cors: {
-    origin: FRONTEND_URL,
+    origin: "*",
     methods: ["GET", "POST"]
   }
 })
