@@ -24,8 +24,8 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "*",
-    method: ["GET", "POST", "PUT", "DELETE"],
+    origin: ["https://wongnork-frontend.vercel.app", "http://localhost:5173", "http://localhost:3000"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   }),
 );
@@ -35,7 +35,7 @@ app.use(helmet());
 //socket.io
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: ["https://wongnork-frontend.vercel.app", "http://localhost:5173", "http://localhost:3000"],
     methods: ["GET", "POST"]
   }
 })
@@ -53,6 +53,7 @@ io.on('connection', (socket) => {
 swaggerDocs(app);
 
 // Routes
+
 app.use("/api/auth", authRoute);
 
 
@@ -68,6 +69,8 @@ app.use("/api/features", featuresRoute);
 app.use("/api/cloudinary", cloudinaryRoute);
 
 app.use("/api/socket", socketRoute)
+
+
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

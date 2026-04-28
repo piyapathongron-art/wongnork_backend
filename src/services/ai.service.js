@@ -108,6 +108,8 @@ export const getAiRecommendationService = async (userPrompt, userId, userLocatio
   try {
     const result = await model.generateContent([systemContext, userPrompt]);
     const response = await result.response;
+    console.log("result", result)
+    console.log("response", response)
 
     // ไม่ต้องใช้ replace แล้ว เพราะ API บังคับตอบเป็น JSON มาให้เลย
     return JSON.parse(response.text());
