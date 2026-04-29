@@ -1,17 +1,20 @@
 import nodemailer from "nodemailer"
 import "dotenv/config"
 
+const Email = process.env.EMAIL_USER
+const Password = process.env.EMAIL_PASS
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: Email,
+    pass: Password,
   },
 })
 
 export const sendVerificationEmail = async (to, link) => {
   const mailOptions = {
-    from: `"Wongnork" <${process.env.EMAIL_USER}>`,
+    from: `"Wongnork" <${Email}>`,
     to,
     subject: "ยืนยันการสมัครสมาชิก เเอป Wongnork",
     html: `
