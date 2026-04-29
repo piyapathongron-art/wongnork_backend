@@ -163,11 +163,19 @@ export const createReviewSchema = z.object({
 export const updateProfileSchema = z.object({
   name: z.string().min(2, "ชื่อต้องมีอย่างน้อย 2 ตัวอักษร").transform((val) => val.trim()).optional(),
   avatarUrl: z.string().url("รูปแบบ URL ของรูปภาพไม่ถูกต้อง").optional().nullable(),
-  promptPayNumber: z.string()
-    .regex(/^(\d{10}|\d{13})$/, "เบอร์ PromptPay ต้องเป็นตัวเลข 10 หรือ 13 หลัก")
-    .optional()
-    .nullable(),
-  promptPayName: z.string().max(100).optional().nullable(),
+  // preprocess: แปลง empty string → null ก่อน validate
+  // ทำให้ "ไม่ใส่" ได้ แต่ถ้าใส่ต้องเป็นไปตามรูปแบบ
+  promptPayNumber: z.preprocess(
+    (val) => (val === "" || val === undefined ? null : val),
+    z.string()
+      .regex(/^(\d{10}|\d{13})$/, "เบอร์ PromptPay ต้องเป็นตัวเลข 10 หรือ 13 หลัก")
+      .nullable()
+      .optional()
+  ),
+  promptPayName: z.preprocess(
+    (val) => (val === "" || val === undefined ? null : val),
+    z.string().max(100).nullable().optional()
+  ),
 });
 
 // --- Split Bill / Party Order Item Schema ---
