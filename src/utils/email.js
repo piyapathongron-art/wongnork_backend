@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer"
+import "dotenv/config"
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -28,7 +29,7 @@ export const sendVerificationEmail = async (to, link) => {
 
 
 export const sendResetPasswordEmail = async (email, resetUrl) => {
-  
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
