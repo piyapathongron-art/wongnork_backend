@@ -1,6 +1,9 @@
 import nodemailer from "nodemailer"
 import "dotenv/config"
+import dns from "node:dns"
 
+// Force IPv4 for DNS resolution to fix Render IPv6 ENETUNREACH issues
+dns.setDefaultResultOrder('ipv4first');
 const Email = process.env.EMAIL_USER
 const Password = process.env.EMAIL_PASS
 
