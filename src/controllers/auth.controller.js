@@ -14,12 +14,16 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export async function authRegisterController(req, res, next) {
   try {
+    console.log("=== [DEBUG] authRegisterController STARTED ===");
+    console.log("=== [DEBUG] Request body email:", req.body?.email, "===");
     const data = await registerSchema.parseAsync(req.body);
+    console.log("=== [DEBUG] Schema parsed successfully ===");
     const foundUser = await findUseerByEmail(data.email);
     if (foundUser) {
       return next(createHttpError[409]("This user already register"));
     }
     const newUser = await createNewUser(data);
+    console.log("=== [DEBUG] User created in DB successfully! User ID:", newUser.id, "===");
 
     const verifyEmailToken = jwt.sign(
       { userId: newUser.id },
@@ -32,7 +36,9 @@ export async function authRegisterController(req, res, next) {
     const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8899"
     const verifyLink = `${BACKEND_URL}/api/auth/verify-email?token=${verifyEmailToken}`;
 
+    console.log("=== [DEBUG] Calling sendVerificationEmail... ===");
     await sendVerificationEmail(newUser.email, verifyLink)
+    console.log("=== [DEBUG] sendVerificationEmail completed! ===");
 
     res.json({
       message: "Register Successful , Please check your email to verify account.",

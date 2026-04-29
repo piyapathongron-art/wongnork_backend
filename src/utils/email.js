@@ -27,7 +27,16 @@ export const sendVerificationEmail = async (to, link) => {
       </div>
     `,
   };
-  return transporter.sendMail(mailOptions);
+  console.log("=== [DEBUG] mailOptions prepared for:", to, "===");
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("=== [DEBUG] Email sent successfully! MessageId:", info.messageId, "===");
+    return info;
+  } catch (error) {
+    console.error("=== [DEBUG] Error in transporter.sendMail! ===");
+    console.error(error);
+    throw error;
+  }
 }
 
 
