@@ -94,7 +94,7 @@ export const upsertGoogleUser = async (email, name, googleId, avatarUrl) => {
     where: { email },
     update: {
       googleId,
-      avatarUrl, // อัปเดตรูปโปรไฟล์ล่าสุดจาก Google เสมอ
+      // ไม่ update name และ avatarUrl เพื่อรักษาข้อมูลที่ user แก้ไขเอง
       provider: 'GOOGLE',
     },
     create: {
