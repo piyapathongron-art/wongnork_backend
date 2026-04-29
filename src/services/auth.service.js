@@ -11,7 +11,8 @@ export const findUseerByEmail = async (email) => {
 
 export const createNewUser = async (data) => {
   const newUser = await prisma.user.create({
-    data,
+    // TODO: Set isVerified back to false when email service is ready
+    data: { ...data, isVerified: true },
   });
   return newUser;
 };

@@ -33,12 +33,12 @@ export async function authRegisterController(req, res, next) {
         expiresIn: '15m',
       }
     )
-    const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8899"
-    const verifyLink = `${BACKEND_URL}/api/auth/verify-email?token=${verifyEmailToken}`;
-
-    console.log("=== [DEBUG] Calling sendVerificationEmail... ===");
-    await sendVerificationEmail(newUser.email, verifyLink)
-    console.log("=== [DEBUG] sendVerificationEmail completed! ===");
+    // TODO: Uncomment when email service is ready (Resend/SendGrid)
+    // const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8899"
+    // const verifyLink = `${BACKEND_URL}/api/auth/verify-email?token=${verifyEmailToken}`;
+    // console.log("=== [DEBUG] Calling sendVerificationEmail... ===");
+    // await sendVerificationEmail(newUser.email, verifyLink)
+    // console.log("=== [DEBUG] sendVerificationEmail completed! ===");
 
     res.json({
       message: "Register Successful , Please check your email to verify account.",
