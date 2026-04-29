@@ -13,35 +13,39 @@ import { sendResetPasswordEmail, sendVerificationEmail } from "../utils/email.js
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export async function authRegisterController(req, res, next) {
-  const data = await registerSchema.parseAsync(req.body);
-  const foundUser = await findUseerByEmail(data.email);
-  if (foundUser) {
-    return next(createHttpError[409]("This user already register"));
-  }
-  const newUser = await createNewUser(data);
-
-  const verifyEmailToken = jwt.sign(
-    { userId: newUser.id },
-    process.env.JWT_SECRET,
-    {
-      algorithm: 'HS256',
-      expiresIn: '15m',
+  try {
+    const data = await registerSchema.parseAsync(req.body);
+    const foundUser = await findUseerByEmail(data.email);
+    if (foundUser) {
+      return next(createHttpError[409]("This user already register"));
     }
-  )
-  const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8899"
-  const verifyLink = `${BACKEND_URL}/api/auth/verify-email?token=${verifyEmailToken}`;
+    const newUser = await createNewUser(data);
 
-  await sendVerificationEmail(newUser.email, verifyLink)
+    const verifyEmailToken = jwt.sign(
+      { userId: newUser.id },
+      process.env.JWT_SECRET,
+      {
+        algorithm: 'HS256',
+        expiresIn: '15m',
+      }
+    )
+    const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8899"
+    const verifyLink = `${BACKEND_URL}/api/auth/verify-email?token=${verifyEmailToken}`;
 
-  res.json({
-    message: "Register Successful , Please check your email to verify account.",
-    user: {
-      id: newUser.id,
-      email: newUser.email,
-      name: newUser.name,
-      role: newUser.role,
-    },
-  });
+    await sendVerificationEmail(newUser.email, verifyLink)
+
+    res.json({
+      message: "Register Successful , Please check your email to verify account.",
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        name: newUser.name,
+        role: newUser.role,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 }
 
 export async function authVerifyEmailConroller(req, res, next) {

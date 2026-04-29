@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
 export const sendVerificationEmail = async (to, link) => {
   const mailOptions = {
-    from: '"Wongnork" <${process.env.EMAIL_USER}>',
+    from: `"Wongnork" <${process.env.EMAIL_USER}>`,
     to,
     subject: "ยืนยันการสมัครสมาชิก เเอป Wongnork",
     html: `
